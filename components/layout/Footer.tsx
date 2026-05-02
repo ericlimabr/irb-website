@@ -1,14 +1,15 @@
+import { website_config_variables } from "@/config"
 import Link from "next/link"
 
 export default function Footer() {
   const footerLinks = [
-    { label: "Início", href: "/" },
-    { label: "Sobre", href: "/sobre" },
-    { label: "Confissões", href: "/confissoes" },
-    { label: "Doutrina", href: "/doutrina" },
-    { label: "Mídia", href: "/media" },
-    { label: "Agenda", href: "/agenda" },
-    { label: "Blog", href: "/blog" },
+    { label: "Início", href: "/", listable: true },
+    { label: "Sobre", href: "/sobre", listable: true },
+    { label: "Confissões", href: "/confissoes", listable: true },
+    { label: "Doutrina", href: "/doutrina", listable: true },
+    { label: "Mídia", href: "/media", listable: website_config_variables.media.active },
+    { label: "Agenda", href: "/agenda", listable: website_config_variables.agenda.active },
+    { label: "Blog", href: "/blog", listable: website_config_variables.blog.active },
   ]
 
   return (
@@ -21,16 +22,22 @@ export default function Footer() {
 
         {/* Center: Nav links */}
         <div className="flex flex-wrap items-center justify-center gap-4">
-          {footerLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 hover:text-gold-400 transition-colors duration-500"
-              style={{ fontSize: "9px" }}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {footerLinks
+            .filter((item) =>
+              !website_config_variables.blog.active
+                ? item.label != "Blog"
+                : item,
+            )
+            .map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 hover:text-gold-400 transition-colors duration-500"
+                style={{ fontSize: "9px" }}
+              >
+                {link.label}
+              </Link>
+            ))}
         </div>
 
         {/* Right: Soli Deo Gloria */}

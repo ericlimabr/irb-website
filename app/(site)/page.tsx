@@ -3,8 +3,6 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Navigation from "@/components/layout/Navigation"
-import Footer from "@/components/layout/Footer"
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import {
@@ -13,6 +11,13 @@ import {
   TestimonialCard,
   IRBButton,
 } from "@/components/layout/Cards"
+import {
+  AFTERNOON_LITURGY_TIME,
+  MOCKUP_HOME_BLOG,
+  MORNING_LITURGY_TIME,
+  SCHEDULE_DATA,
+} from "@/const"
+import { website_config_variables } from "@/config"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -64,7 +69,13 @@ export default function HomePage() {
           {[0, 1].map((i) => (
             <span key={i} className="flex items-center" aria-hidden={i === 1}>
               {Array.from({ length: 4 }, (_, r) =>
-                ["Sola Scriptura", "Sola Fide", "Sola Gratia", "Solus Christus", "Soli Deo Gloria"].map((s) => (
+                [
+                  "Sola Scriptura",
+                  "Sola Fide",
+                  "Sola Gratia",
+                  "Solus Christus",
+                  "Soli Deo Gloria",
+                ].map((s) => (
                   <span
                     key={`${r}-${s}`}
                     className="font-mono uppercase tracking-[0.2em] text-navy-700 text-xs flex items-center gap-8 px-4"
@@ -72,7 +83,7 @@ export default function HomePage() {
                     {s}
                     <span className="text-navy-700/30">·</span>
                   </span>
-                ))
+                )),
               )}
             </span>
           ))}
@@ -222,36 +233,7 @@ export default function HomePage() {
         </AnimatedContent>
 
         <div className="space-y-4 max-w-3xl">
-          {[
-            {
-              dateDay: "DOM",
-              dateMonth: "Semanal",
-              eyebrow: "Culto",
-              title: "Culto Dominical",
-              meta: "Domingos · 10h00",
-            },
-            {
-              dateDay: "DOM",
-              dateMonth: "Semanal",
-              eyebrow: "Educação",
-              title: "Escola Dominical",
-              meta: "Domingos · 09h00",
-            },
-            {
-              dateDay: "QUA",
-              dateMonth: "Semanal",
-              eyebrow: "Estudo",
-              title: "Estudo Bíblico",
-              meta: "Quartas · 19h30",
-            },
-            {
-              dateDay: "15",
-              dateMonth: "Mar",
-              eyebrow: "Conferência",
-              title: "Conferência de Teologia Reformada",
-              meta: "Sábado · 09h00 — 17h00",
-            },
-          ].map((ev) => (
+          {SCHEDULE_DATA.map((ev) => (
             <HorizontalCard key={ev.title} {...ev} href="/agenda" />
           ))}
         </div>
@@ -412,52 +394,38 @@ export default function HomePage() {
       </Section>
 
       {/* 1.11 Blog */}
-      <Section bg="surface-alt" texture="linen">
-        <AnimatedContent>
-          <p className="section-tag mb-6">Blog</p>
-          <h2
-            className="font-serif text-navy-700 mb-12"
-            style={{ fontSize: "var(--text-size-4xl)" }}
-          >
-            Reflexões
-            <br />
-            <em className="text-gold-500">& Artigos</em>
-          </h2>
-        </AnimatedContent>
+      {website_config_variables.blog.active && (
+        <Section bg="surface-alt" texture="linen">
+          <AnimatedContent>
+            <p className="section-tag mb-6">Blog</p>
+            <h2
+              className="font-serif text-navy-700 mb-12"
+              style={{ fontSize: "var(--text-size-4xl)" }}
+            >
+              Reflexões
+              <br />
+              <em className="text-gold-500">& Artigos</em>
+            </h2>
+          </AnimatedContent>
 
-        <div className="space-y-4 max-w-3xl">
-          {[
-            {
-              eyebrow: "Teologia",
-              title: "A Soberania de Deus na Eleição",
-              meta: "12 Fev 2024 · 8 min",
-            },
-            {
-              eyebrow: "Confissão",
-              title: "Por Que Confessamos a Fé Reformada",
-              meta: "28 Jan 2024 · 6 min",
-            },
-            {
-              eyebrow: "Vida Cristã",
-              title: "A Oração como Meio de Graça",
-              meta: "15 Jan 2024 · 5 min",
-            },
-          ].map((post) => (
-            <HorizontalCard
-              key={post.title}
-              {...post}
-              href="/blog"
-              linkText="Ler →"
-            />
-          ))}
-        </div>
+          <div className="space-y-4 max-w-3xl">
+            {MOCKUP_HOME_BLOG.map((post) => (
+              <HorizontalCard
+                key={post.title}
+                {...post}
+                href={post.href}
+                linkText="Ler →"
+              />
+            ))}
+          </div>
 
-        <AnimatedContent className="mt-8">
-          <IRBButton variant="secondary" href="/blog">
-            Ver Todos os Artigos →
-          </IRBButton>
-        </AnimatedContent>
-      </Section>
+          <AnimatedContent className="mt-8">
+            <IRBButton variant="secondary" href="/blog">
+              Ver Todos os Artigos →
+            </IRBButton>
+          </AnimatedContent>
+        </Section>
+      )}
 
       {/* 1.12 CTA Final */}
       <Section bg="inverse" texture="hatch" className="!bg-navy-900">
@@ -476,7 +444,8 @@ export default function HomePage() {
               className="font-sans text-primary-foreground/55 mb-8"
               style={{ fontSize: "var(--text-size-lg)" }}
             >
-              Às 10h00 — Brasília, DF.
+              Às {MORNING_LITURGY_TIME} e {AFTERNOON_LITURGY_TIME} · Brasília,
+              DF.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <IRBButton variant="inverse" href="/confissoes">

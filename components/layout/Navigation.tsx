@@ -5,19 +5,20 @@ import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { website_config_variables } from "@/config"
 
 const navLinks = [
-  { label: "Início", href: "/" },
-  { label: "Sobre", href: "/sobre" },
-  { label: "Confissões", href: "/confissoes" },
-  //{ label: "Doutrina", href: "/doutrina" }, // Remove
-  { label: "Mídia", href: "/media" },
-  { label: "Agenda", href: "/agenda" }, // Remove
-  //{ label: "Ministérios", href: "/ministerios" }, // Remove
-  { label: "Blog", href: "/blog" }, // Remove
-  { label: "Biblioteca", href: "/biblioteca" }, // Remove
-  { label: "Catecismo", href: "/catecismo" },
-  { label: "Links", href: "/links" }, // Remove
+  { label: "Início", href: "/", listable: true },
+  { label: "Sobre", href: "/sobre", listable: true },
+  { label: "Confissões", href: "/confissoes", listable: true },
+  //{ label: "Doutrina", href: "/doutrina", listable: true }, // Remove
+  { label: "Mídia", href: "/media", listable: website_config_variables.media.active },
+  { label: "Agenda", href: "/agenda", listable: website_config_variables.agenda.active }, // Remove
+  //{ label: "Ministérios", href: "/ministerios", listable: true }, // Remove
+  { label: "Blog", href: "/blog", listable: website_config_variables.blog.active }, // Remove
+  { label: "Biblioteca", href: "/biblioteca", listable: website_config_variables.library.active }, // Remove
+  { label: "Catecismo", href: "/catecismo", listable: true },
+  //{ label: "Links", href: "/links", listable: true }, // Remove
 ]
 
 export default function Navigation() {
@@ -38,19 +39,21 @@ export default function Navigation() {
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`font-mono uppercase tracking-[0.2em] transition-colors duration-500 ${pathname === link.href
-                  ? "text-gold-500"
-                  : "text-primary-foreground/65 hover:text-gold-400"
-                  }`}
-                style={{ fontSize: "11px" }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks
+              .filter((item) => item.listable)
+              .map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`font-mono uppercase tracking-[0.2em] transition-colors duration-500 ${pathname === link.href
+                    ? "text-gold-500"
+                    : "text-primary-foreground/65 hover:text-gold-400"
+                    }`}
+                  style={{ fontSize: "11px" }}
+                >
+                  {link.label}
+                </Link>
+              ))}
           </div>
 
           {/* Mobile toggle */}
@@ -74,19 +77,21 @@ export default function Navigation() {
             className="fixed inset-0 z-40 bg-navy-900 pt-14 lg:hidden"
           >
             <div className="flex flex-col items-center justify-center h-full gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`font-mono uppercase tracking-[0.2em] text-sm transition-colors duration-500 ${pathname === link.href
-                    ? "text-gold-500"
-                    : "text-primary-foreground/65 hover:text-gold-400"
-                    }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks
+                .filter((item) => item.listable)
+                .map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`font-mono uppercase tracking-[0.2em] text-sm transition-colors duration-500 ${pathname === link.href
+                      ? "text-gold-500"
+                      : "text-primary-foreground/65 hover:text-gold-400"
+                      }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
             </div>
           </motion.div>
         )}

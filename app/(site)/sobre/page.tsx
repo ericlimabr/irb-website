@@ -1,6 +1,7 @@
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import { IRBButton } from "@/components/layout/Cards"
+import { CHURCH_COUNSEL, CHURCH_EMAIL, CHURCH_HISTORY_TIMELINE } from "@/const"
 
 export default function SobrePage() {
   return (
@@ -84,38 +85,22 @@ export default function SobrePage() {
               </div>
               <div className="callout-scripture mt-6">
                 <p>
-                  "Para que a geração vindoura os conhecesse, os filhos que
-                  haviam de nascer, e se levantassem e os contassem a seus
-                  filhos."
+                  "Pois para vós outros é a promessa, para vossos filhos e para
+                  todos os que ainda estão longe, isto é, para quantos o Senhor,
+                  nosso Deus, chamar."
                 </p>
                 <p
                   className="font-mono text-gold-600 mt-2"
                   style={{ fontSize: "var(--text-size-xs)" }}
                 >
-                  Salmo 78.6 · ARA
+                  Atos 2:38 · ARA
                 </p>
               </div>
             </AnimatedContent>
 
             <AnimatedContent>
               <div className="space-y-0">
-                {[
-                  {
-                    year: "2015",
-                    title: "Fundação",
-                    desc: "Primeiros cultos em Brasília",
-                  },
-                  {
-                    year: "2017",
-                    title: "Organização",
-                    desc: "Estabelecimento do conselho",
-                  },
-                  {
-                    year: "2026",
-                    title: "Crescimento",
-                    desc: "Expansão dos ministérios",
-                  },
-                ].map((item, i) => (
+                {CHURCH_HISTORY_TIMELINE.map((item, i) => (
                   <div
                     key={item.year}
                     className="flex items-start gap-6 py-6 border-b border-border"
@@ -155,16 +140,7 @@ export default function SobrePage() {
             </h2>
           </AnimatedContent>
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
-            {[
-              {
-                name: "Pr. Marcel Tavares",
-                role: "Pastor",
-                initials: "MT",
-              },
-              { name: "André Lima", role: "Presbítero", initials: "AL" },
-              { name: "Thiago Montenegro", role: "Presbítero", initials: "TM" },
-              { name: "William Bessa", role: "Diácono", initials: "WB" },
-            ].map((leader) => (
+            {CHURCH_COUNSEL.map((leader) => (
               <AnimatedContent key={leader.name}>
                 <div className="text-center">
                   <div
@@ -268,7 +244,7 @@ export default function SobrePage() {
                   className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60"
                   style={{ fontSize: "var(--text-size-xs)" }}
                 >
-                  contato@irb.org.br
+                  {CHURCH_EMAIL}
                 </p>
                 <p
                   className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60"
