@@ -1,5 +1,6 @@
 import { website_config_variables } from "@/config"
 import Link from "next/link"
+import Logo from "@/components/ui/Logo"
 
 export default function Footer() {
   const footerLinks = [
@@ -16,9 +17,12 @@ export default function Footer() {
     <footer className="bg-navy-700 border-t-4 border-gold-500">
       <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Left: Church name */}
-        <p className="font-serif italic text-primary-foreground/60 text-sm">
-          Igreja Reformada de Brasília
-        </p>
+        <div className="flex items-center gap-3">
+          <Logo variant="mark" tone="gold" height={32} />
+          <p className="font-serif italic text-primary-foreground/60 text-sm">
+            Igreja Reformada de Brasília
+          </p>
+        </div>
 
         {/* Center: Nav links */}
         <div className="flex flex-wrap items-center justify-center gap-4">
