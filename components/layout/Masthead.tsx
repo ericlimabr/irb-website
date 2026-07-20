@@ -2,6 +2,7 @@
 
 import { useRef, ReactNode } from "react"
 import { motion } from "framer-motion"
+import Logo from "@/components/ui/Logo"
 
 interface MastheadProps {
   eyebrow?: string
@@ -9,6 +10,10 @@ interface MastheadProps {
   subtitle?: string
   children?: ReactNode
   fullHeight?: boolean
+  /** Shows the full crest (monogram + olive branches) above the eyebrow. */
+  logo?: boolean
+  /** Ghosts the full crest across the background as a watermark. On by default. */
+  watermark?: boolean
 }
 
 export default function Masthead({
@@ -17,6 +22,8 @@ export default function Masthead({
   subtitle,
   children,
   fullHeight = true,
+  logo = false,
+  watermark = true,
 }: MastheadProps) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -51,7 +58,46 @@ export default function Masthead({
         }}
       />
 
+      {/* Crest watermark — decorative background layer, sits under the content */}
+      {watermark && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2.4, ease: "easeOut" }}
+          aria-hidden
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        >
+          <div
+            className="aspect-[842/729] opacity-[0.07] w-[min(86vw,640px)]"
+            style={{
+              backgroundImage: "url(/logo/logo-gold.svg)",
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+          />
+        </motion.div>
+      )}
+
       <div className="relative z-10 container mx-auto px-6 text-center pt-20">
+        {logo && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            className="flex justify-center mb-8"
+          >
+            <Logo
+              variant="full"
+              tone="gold"
+              height={132}
+              alt="Brasão da Igreja Reformada de Brasília"
+              priority
+              className="h-[104px] w-auto md:h-[132px]"
+            />
+          </motion.div>
+        )}
+
         {eyebrow && (
           <motion.p
             initial={{ opacity: 0, y: 20 }}

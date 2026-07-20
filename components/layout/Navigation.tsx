@@ -6,19 +6,20 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { website_config_variables } from "@/config"
+import Logo from "@/components/ui/Logo"
 
 const navLinks = [
   { label: "Início", href: "/", listable: true },
   { label: "Sobre", href: "/sobre", listable: true },
   { label: "Confissões", href: "/confissoes", listable: true },
-  //{ label: "Doutrina", href: "/doutrina", listable: true }, // Remove
+  //{ label: "Doutrina", href: "/doutrina", listable: false }, // Remove
   { label: "Mídia", href: "/media", listable: website_config_variables.media.active },
   { label: "Agenda", href: "/agenda", listable: website_config_variables.agenda.active }, // Remove
-  //{ label: "Ministérios", href: "/ministerios", listable: true }, // Remove
+  //{ label: "Ministérios", href: "/ministerios", listable: false }, // Remove
   { label: "Blog", href: "/blog", listable: website_config_variables.blog.active }, // Remove
   { label: "Biblioteca", href: "/biblioteca", listable: website_config_variables.library.active }, // Remove
   { label: "Catecismo", href: "/catecismo", listable: true },
-  //{ label: "Links", href: "/links", listable: true }, // Remove
+  //{ label: "Links", href: "/links", listable: false }, // Remove
 ]
 
 export default function Navigation() {
@@ -32,8 +33,10 @@ export default function Navigation() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-serif text-lg italic text-primary-foreground"
+            className="flex items-center gap-2.5 font-serif text-lg italic text-primary-foreground"
+            aria-label="Igreja Reformada de Brasília — Início"
           >
+            <Logo variant="mark" tone="gold" height={26} priority />
             <span className="text-gold-400">IRB</span>
           </Link>
 

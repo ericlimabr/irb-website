@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model GlobalSettings {
+  id        String   @id @default(uuid())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  // --- IDENTITY AND BRAND ---
+  siteName    String  @default("Igreja Cristã Reformada")
+  siteTagline String?
+  logoUrl     String?
+  faviconUrl  String?
+
+  // --- AUTHOR INFORMATION ---
+  authorName      String  @default("Igreja Cristã Reformada")
+  authorBio       String? @db.Text
+  authorAvatarUrl String?
+
+  // --- SOCIAL NETWORKS ---
+  socialWhatsApp  String?
+  socialLinkedin  String?
+  socialX         String?
+  socialInstagram String?
+  socialFacebook  String?
+  socialYoutube   String?
+
+  // --- SEO ---
+  metaTitle         String?
+  metaDescription   String? @db.Text
+  ogImageUrl        String?
+  googleAnalyticsId String?
+
+  // --- BLOG PREFERENCES ---
+  postsPerPage        Int     @default(9)
+  enableComments      Boolean @default(false)
+  maintenanceMode     Boolean @default(false)
+  customScriptsHead   String? @db.Text
+  customScriptsFooter String? @db.Text
+
+  // --- FOOTER AND CONTACT ---
+  footerText   String? @default("© Todos os direitos reservados.")
+  contactEmail String?
+  contactPhone String?
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  USER
+}
+
+model User {
+  id    String   @id @default(uuid())
+  email String   @unique
+  name  String?
+  role  UserRole @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum PostType {
+  ARTICLE
+  VIDEO
+  STUDY
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Post {
+  id         String     @id @default(uuid())
+  title      String
+  slug       String     @unique
+  content    String     @db.Text
+  excerpt    String?    @db.Text
+  coverImage String?
+  status     PostStatus @default(DRAFT)
+  type       PostType   @default(ARTICLE)
+
+  authorId   String?
+  authorName String
+
+  tags Tag[] @relation("PostToTag")
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+
+  @@map("posts")
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+  slug String @unique
+
+  posts Post[] @relation("PostToTag")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tags")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  name    String
+  email   String
+  subject String
+  message String @db.Text
+
+  read    Boolean @default(false)
+  replied Boolean @default(false)
+
+  @@map("contact_messages")
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String   @db.Text
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faqs")
+}
