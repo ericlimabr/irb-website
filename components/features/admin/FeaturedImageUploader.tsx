@@ -178,7 +178,10 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
                   <button
                     key={img.name}
                     type="button"
-                    onClick={() => onChange(img.url) || setShowGallery(false)}
+                    onClick={() => {
+                      onChange(img.url)
+                      setShowGallery(false)
+                    }}
                     className="aspect-square overflow-hidden rounded border-2 border-transparent hover:border-primary transition-colors"
                   >
                     <img src={img.url} alt={img.name} className="h-full w-full object-cover" />
