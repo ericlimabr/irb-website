@@ -1,7 +1,12 @@
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import { IRBButton } from "@/components/layout/Cards"
-import { CHURCH_COUNSEL, CHURCH_EMAIL, CHURCH_HISTORY_TIMELINE } from "@/const"
+import {
+  CHURCH_COUNSEL,
+  CHURCH_EMAIL,
+  CHURCH_ADDRESS_FULL,
+  CHURCH_HISTORY_TIMELINE,
+} from "@/const"
 
 export default function SobrePage() {
   return (
@@ -85,9 +90,9 @@ export default function SobrePage() {
               </div>
               <div className="callout-scripture mt-6">
                 <p>
-                  "Pois para vós outros é a promessa, para vossos filhos e para
-                  todos os que ainda estão longe, isto é, para quantos o Senhor,
-                  nosso Deus, chamar."
+                  &ldquo;Pois para vós outros é a promessa, para vossos filhos e
+                  para todos os que ainda estão longe, isto é, para quantos o
+                  Senhor, nosso Deus, chamar.&rdquo;
                 </p>
                 <p
                   className="font-mono text-gold-600 mt-2"
@@ -100,7 +105,7 @@ export default function SobrePage() {
 
             <AnimatedContent>
               <div className="space-y-0">
-                {CHURCH_HISTORY_TIMELINE.map((item, i) => (
+                {CHURCH_HISTORY_TIMELINE.map((item) => (
                   <div
                     key={item.year}
                     className="flex items-start gap-6 py-6 border-b border-border"
@@ -222,7 +227,9 @@ export default function SobrePage() {
             <p className="font-sans text-muted-foreground mb-4">
               Interessado em conhecer a IRB?
             </p>
-            <IRBButton variant="primary">Entrar em Contato →</IRBButton>
+            <IRBButton variant="primary" href="/contato">
+              Entrar em Contato →
+            </IRBButton>
           </AnimatedContent>
         </Section>
 
@@ -250,7 +257,7 @@ export default function SobrePage() {
                   className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60"
                   style={{ fontSize: "var(--text-size-xs)" }}
                 >
-                  Brasília, DF — Brasil
+                  {CHURCH_ADDRESS_FULL}
                 </p>
               </div>
             </AnimatedContent>

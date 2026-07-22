@@ -2,7 +2,11 @@
 
 import { ExternalLink, Bell, ChevronRight, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/primitives/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/primitives/avatar"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/primitives/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,7 +62,9 @@ export default function AdminHeader({
         <nav className="flex items-center gap-1 text-sm">
           {breadcrumbs.map((crumb, index) => (
             <div key={index} className="flex items-center gap-1">
-              {index > 0 && <ChevronRight className="h-4 w-4 text-admin-nav-text/50" />}
+              {index > 0 && (
+                <ChevronRight className="h-4 w-4 text-admin-nav-text/50" />
+              )}
               <span
                 className={
                   index === breadcrumbs.length - 1
@@ -106,17 +112,28 @@ export default function AdminHeader({
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-card border-border" align="end" forceMount>
+            <DropdownMenuContent
+              className="w-56 bg-card border-border"
+              align="end"
+              forceMount
+            >
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">Administrador</p>
-                  <p className="text-xs leading-none text-muted-foreground">Igreja Cristã Reformada</p>
+                  <p className="text-sm font-medium leading-none">
+                    Administrador
+                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    Igreja Cristã Reformada
+                  </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Configurações</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive" onClick={handleLogout}>
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={handleLogout}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 Sair
               </DropdownMenuItem>

@@ -23,7 +23,8 @@ export async function getSystemConfig<K extends SettingsKeys>(
   const id = process.env.GLOBAL_CONFIG_ID
 
   try {
-    if (!id) throw new Error("GLOBAL_CONFIG_ID not defined in environment variables")
+    if (!id)
+      throw new Error("GLOBAL_CONFIG_ID not defined in environment variables")
 
     const select = fields?.reduce(
       (acc, field) => {
@@ -41,8 +42,11 @@ export async function getSystemConfig<K extends SettingsKeys>(
     if (!config) return null
 
     if (!fields || fields.length === 0) {
-      const { id: _, ...rest } = config as any
-      return rest as SettingsState
+      const rest = Object.fromEntries(
+        Object.entries(config).filter(([key]) => key !== "id"),
+      )
+      // Widened first: fromEntries yields an index signature, not the shape.
+      return rest as unknown as SettingsState
     }
 
     return config as Pick<SettingsState, K>
@@ -140,7 +144,10 @@ export async function getAllAuthors() {
 
 export async function getAllPublishedArticlesForArchive() {
   return await prisma.post.findMany({
-    where: { status: $Enums.PostStatus.PUBLISHED, type: $Enums.PostType.ARTICLE },
+    where: {
+      status: $Enums.PostStatus.PUBLISHED,
+      type: $Enums.PostType.ARTICLE,
+    },
     select: {
       title: true,
       slug: true,

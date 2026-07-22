@@ -29,7 +29,7 @@ export async function createTag(formData: FormData) {
     })
     revalidatePath("/admin/categorias")
     return { success: true }
-  } catch (e) {
+  } catch {
     return { error: "Erro ao salvar no banco de dados." }
   }
 }
@@ -41,7 +41,7 @@ export async function deleteTag(id: string) {
     await prisma.tag.delete({ where: { id } })
     revalidatePath("/admin/categorias")
     return { success: true }
-  } catch (e) {
+  } catch {
     return { error: "Erro ao excluir categoria." }
   }
 }

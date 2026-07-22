@@ -13,6 +13,7 @@ import {
 } from "@/components/layout/Cards"
 import {
   AFTERNOON_LITURGY_TIME,
+  CHURCH_MINISTRIES,
   MOCKUP_HOME_BLOG,
   MORNING_LITURGY_TIME,
   SCHEDULE_DATA,
@@ -159,8 +160,9 @@ export default function HomePage() {
             eyebrow="Países Baixos · 1561"
             title="Confissão Belga"
             description="Trinta e sete artigos que expõem a doutrina reformada contra as heresias da época."
-            href="/confissoes"
+            href="/confissao-belga"
             meta="37 Artigos"
+            image="/confessions/confession.jpeg"
           />
           <VerticalCard
             eyebrow="Heidelberg · 1563"
@@ -169,13 +171,15 @@ export default function HomePage() {
             href="/catecismo"
             meta="129 Perguntas"
             featured
+            image="/confessions/heidelberg.jpeg"
           />
           <VerticalCard
             eyebrow="Dort · 1619"
             title="Cânones de Dort"
             description="Os cinco pontos da graça soberana em resposta às Remonstrâncias."
-            href="/confissoes"
+            href="/canones-de-dort"
             meta="5 Pontos"
+            image="/confessions/dort.jpeg"
           />
         </div>
       </Section>
@@ -199,7 +203,7 @@ export default function HomePage() {
             "O que é a eleição soberana?",
             "Qual é o meu único consolo?",
             "Como devo adorar a Deus?",
-          ].map((q, i) => (
+          ].map((q) => (
             <AnimatedContent key={q}>
               <p
                 className="font-serif italic text-primary-foreground/55"
@@ -360,29 +364,14 @@ export default function HomePage() {
         </AnimatedContent>
 
         <div className="space-y-4 max-w-3xl">
-          {[
-            {
-              eyebrow: "Educação",
-              title: "Catequese",
-              meta: "Formação confessional",
-            },
-            {
-              eyebrow: "Assistência",
-              title: "Diaconia & Misericórdia",
-              meta: "Serviço ao próximo",
-            },
-            {
-              eyebrow: "Comunhão",
-              title: "Grupos de Estudo",
-              meta: "Estudo bíblico semanal",
-            },
-            {
-              eyebrow: "Famílias",
-              title: "Ministério Familiar",
-              meta: "Famílias na aliança",
-            },
-          ].map((m) => (
-            <HorizontalCard key={m.title} {...m} href="/ministerios" />
+          {CHURCH_MINISTRIES.filter((m) => m.listable).map((m) => (
+            <HorizontalCard
+              key={m.title}
+              eyebrow={m.tag}
+              title={m.title}
+              meta={m.summary}
+              href="/ministerios"
+            />
           ))}
         </div>
 

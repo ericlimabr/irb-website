@@ -3,6 +3,7 @@ import InnerNav from "@/components/layout/InnerNav"
 import Masthead from "@/components/layout/Masthead"
 import { Youtube, Instagram, MessageCircle, Home, BookOpen } from "lucide-react"
 import Link from "next/link"
+import { CHURCH_WHATSAPP } from "@/const"
 
 const links = [
   {
@@ -37,7 +38,7 @@ const links = [
   },
   {
     label: "WhatsApp",
-    href: "https://wa.me/556133334444",
+    href: `https://wa.me/${CHURCH_WHATSAPP}`,
     icon: MessageCircle,
     description: "Entrar em contato",
   },

@@ -29,8 +29,19 @@ import { Button } from "@/components/ui/primitives/button"
 import { Input } from "@/components/ui/primitives/input"
 import { Textarea } from "@/components/ui/primitives/textarea"
 import { Label } from "@/components/ui/primitives/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/primitives/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/primitives/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/primitives/select"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/primitives/card"
 import { Separator } from "@/components/ui/primitives/separator"
 import { Toggle } from "@/components/ui/primitives/toggle"
 import { Badge } from "@/components/ui/primitives/badge"
@@ -39,7 +50,12 @@ import { useToast } from "@/hooks/use-toast"
 import { createPost, updatePost } from "@/app/actions/posts"
 import { UserData } from "@/utils/getUser"
 import { FeaturedImageUploader } from "../features/admin/FeaturedImageUploader"
-import { PostTag, PostStatusValue, PostTypeValue } from "@/types/post"
+import {
+  PostTag,
+  PostStatusValue,
+  PostTypeValue,
+  PostWithTags,
+} from "@/types/post"
 
 const generateSlug = (title: string): string => {
   return title
@@ -56,7 +72,12 @@ interface ArticleEditorPageProps {
   id?: string
   availableTags: PostTag[]
   userData: UserData | null
-  initialData?: any
+  initialData?: PostWithTags | null
+}
+
+/** tiptap-markdown augments the editor storage; it ships no types for it. */
+interface MarkdownStorage {
+  markdown: { getMarkdown: () => string }
 }
 
 export default function ArticleEditorPageComponent({
@@ -128,7 +149,7 @@ export default function ArticleEditorPageComponent({
       setType(initialData.type || "ARTICLE")
       setStatus(initialData.status || "DRAFT")
       setCoverImage(initialData.coverImage || "")
-      setSelectedTagIds(initialData.tags?.map((t: any) => t.id) || [])
+      setSelectedTagIds(initialData.tags?.map((t) => t.id) || [])
       if (editor && initialData.content) {
         editor.commands.setContent(initialData.content)
         hasInjectedInitialContent.current = true
@@ -143,7 +164,11 @@ export default function ArticleEditorPageComponent({
   const { toast } = useToast()
 
   const handleToggleTag = (tagId: string) => {
-    setSelectedTagIds((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]))
+    setSelectedTagIds((prev) =>
+      prev.includes(tagId)
+        ? prev.filter((id) => id !== tagId)
+        : [...prev, tagId],
+    )
   }
 
   const handleSave = useCallback(
@@ -162,7 +187,9 @@ export default function ArticleEditorPageComponent({
       formData.append("type", type)
       formData.append("coverImage", coverImage)
 
-      const trueContent = (editor as any).storage.markdown.getMarkdown()
+      const trueContent = (
+        editor.storage as unknown as MarkdownStorage
+      ).markdown.getMarkdown()
       formData.append("content", trueContent)
       formData.append("tagIds", JSON.stringify(selectedTagIds))
       formData.append("authorName", userData.name)
@@ -172,7 +199,9 @@ export default function ArticleEditorPageComponent({
       formData.append("status", finalStatus)
 
       try {
-        const result = id ? await updatePost(id, formData) : await createPost(formData)
+        const result = id
+          ? await updatePost(id, formData)
+          : await createPost(formData)
 
         if (result.error) {
           toast({
@@ -186,7 +215,10 @@ export default function ArticleEditorPageComponent({
         } else {
           toast({
             title: id ? "Publicação atualizada" : "Publicação criada",
-            description: finalStatus === "PUBLISHED" ? "Publicada." : "Salva como rascunho.",
+            description:
+              finalStatus === "PUBLISHED"
+                ? "Publicada."
+                : "Salva como rascunho.",
           })
           if (!id) {
             router.push("/admin/publicacoes")
@@ -200,7 +232,20 @@ export default function ArticleEditorPageComponent({
         setIsSaving(false)
       }
     },
-    [id, title, slug, excerpt, type, status, selectedTagIds, coverImage, toast, router, editor, userData],
+    [
+      id,
+      title,
+      slug,
+      excerpt,
+      type,
+      status,
+      selectedTagIds,
+      coverImage,
+      toast,
+      router,
+      editor,
+      userData,
+    ],
   )
 
   const onSaveDraft = () => handleSave("DRAFT")
@@ -212,12 +257,21 @@ export default function ArticleEditorPageComponent({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => router.push("/admin/publicacoes")} className="gap-2">
+        <Button
+          variant="ghost"
+          onClick={() => router.push("/admin/publicacoes")}
+          className="gap-2"
+        >
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </Button>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={onSaveDraft} disabled={isSaving} className="gap-2">
+          <Button
+            variant="outline"
+            onClick={onSaveDraft}
+            disabled={isSaving}
+            className="gap-2"
+          >
             <Save className="h-4 w-4" />
             Salvar Rascunho
           </Button>
@@ -247,7 +301,9 @@ export default function ArticleEditorPageComponent({
               <span className="text-muted-foreground">/blog/</span>
               <div className="flex items-center gap-1 rounded border bg-muted/50 px-2 py-1">
                 {slugLocked ? (
-                  <span className="font-mono text-xs">{slug || "slug-da-publicacao"}</span>
+                  <span className="font-mono text-xs">
+                    {slug || "slug-da-publicacao"}
+                  </span>
                 ) : (
                   <input
                     type="text"
@@ -262,7 +318,11 @@ export default function ArticleEditorPageComponent({
                   onClick={() => setSlugLocked(!slugLocked)}
                   className="ml-1 rounded p-1 hover:bg-muted"
                 >
-                  {slugLocked ? <Lock className="h-3 w-3" /> : <Unlock className="h-3 w-3" />}
+                  {slugLocked ? (
+                    <Lock className="h-3 w-3" />
+                  ) : (
+                    <Unlock className="h-3 w-3" />
+                  )}
                 </button>
               </div>
             </div>
@@ -276,14 +336,18 @@ export default function ArticleEditorPageComponent({
               <Toggle
                 size="sm"
                 pressed={editor?.isActive("heading", { level: 2 })}
-                onPressedChange={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+                onPressedChange={() =>
+                  editor?.chain().focus().toggleHeading({ level: 2 }).run()
+                }
               >
                 <Heading2 className="h-4 w-4" />
               </Toggle>
               <Toggle
                 size="sm"
                 pressed={editor?.isActive("heading", { level: 3 })}
-                onPressedChange={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+                onPressedChange={() =>
+                  editor?.chain().focus().toggleHeading({ level: 3 }).run()
+                }
               >
                 <Heading3 className="h-4 w-4" />
               </Toggle>
@@ -291,14 +355,18 @@ export default function ArticleEditorPageComponent({
               <Toggle
                 size="sm"
                 pressed={editor?.isActive("bold")}
-                onPressedChange={() => editor?.chain().focus().toggleBold().run()}
+                onPressedChange={() =>
+                  editor?.chain().focus().toggleBold().run()
+                }
               >
                 <Bold className="h-4 w-4" />
               </Toggle>
               <Toggle
                 size="sm"
                 pressed={editor?.isActive("italic")}
-                onPressedChange={() => editor?.chain().focus().toggleItalic().run()}
+                onPressedChange={() =>
+                  editor?.chain().focus().toggleItalic().run()
+                }
               >
                 <Italic className="h-4 w-4" />
               </Toggle>
@@ -306,21 +374,27 @@ export default function ArticleEditorPageComponent({
               <Toggle
                 size="sm"
                 pressed={editor?.isActive("blockquote")}
-                onPressedChange={() => editor?.chain().focus().toggleBlockquote().run()}
+                onPressedChange={() =>
+                  editor?.chain().focus().toggleBlockquote().run()
+                }
               >
                 <Quote className="h-4 w-4" />
               </Toggle>
               <Toggle
                 size="sm"
                 pressed={editor?.isActive("bulletList")}
-                onPressedChange={() => editor?.chain().focus().toggleBulletList().run()}
+                onPressedChange={() =>
+                  editor?.chain().focus().toggleBulletList().run()
+                }
               >
                 <List className="h-4 w-4" />
               </Toggle>
               <Toggle
                 size="sm"
                 pressed={editor?.isActive("orderedList")}
-                onPressedChange={() => editor?.chain().focus().toggleOrderedList().run()}
+                onPressedChange={() =>
+                  editor?.chain().focus().toggleOrderedList().run()
+                }
               >
                 <ListOrdered className="h-4 w-4" />
               </Toggle>
@@ -336,7 +410,12 @@ export default function ArticleEditorPageComponent({
                 <Link className="h-4 w-4" />
               </Toggle>
               {editor?.isActive("link") && (
-                <Toggle size="sm" pressed={false} onPressedChange={handleRemoveLink} title="Remover link">
+                <Toggle
+                  size="sm"
+                  pressed={false}
+                  onPressedChange={handleRemoveLink}
+                  title="Remover link"
+                >
                   <Link2Off className="h-4 w-4" />
                 </Toggle>
               )}
@@ -356,11 +435,19 @@ export default function ArticleEditorPageComponent({
                   placeholder="https://exemplo.com"
                   className="flex-1 bg-transparent text-sm focus:outline-none"
                 />
-                <button type="button" onClick={handleSetLink} className="text-sm font-medium text-primary hover:underline">
+                <button
+                  type="button"
+                  onClick={handleSetLink}
+                  className="text-sm font-medium text-primary hover:underline"
+                >
                   Inserir
                 </button>
                 {editor?.isActive("link") && (
-                  <button type="button" onClick={handleRemoveLink} className="text-sm font-medium text-destructive hover:underline">
+                  <button
+                    type="button"
+                    onClick={handleRemoveLink}
+                    className="text-sm font-medium text-destructive hover:underline"
+                  >
                     Remover
                   </button>
                 )}
@@ -380,7 +467,9 @@ export default function ArticleEditorPageComponent({
         <div className="space-y-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base font-medium">Publicação</CardTitle>
+              <CardTitle className="text-base font-medium">
+                Publicação
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between text-sm">
@@ -398,7 +487,12 @@ export default function ArticleEditorPageComponent({
               </div>
               <Separator />
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm" onClick={onSaveDraft} disabled={isSaving}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onSaveDraft}
+                  disabled={isSaving}
+                >
                   <Save className="mr-2 h-3 w-3" /> Rascunho
                 </Button>
                 <Button size="sm" onClick={onPublish} disabled={isSaving}>
@@ -410,7 +504,9 @@ export default function ArticleEditorPageComponent({
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base font-medium">Categorias</CardTitle>
+              <CardTitle className="text-base font-medium">
+                Categorias
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -420,12 +516,18 @@ export default function ArticleEditorPageComponent({
                     availableTags.map((tag) => (
                       <Badge
                         key={tag.id}
-                        variant={selectedTagIds.includes(tag.id) ? "default" : "outline"}
+                        variant={
+                          selectedTagIds.includes(tag.id)
+                            ? "default"
+                            : "outline"
+                        }
                         className="cursor-pointer gap-1"
                         onClick={() => handleToggleTag(tag.id)}
                       >
                         {tag.name}
-                        {selectedTagIds.includes(tag.id) && <Check className="h-3 w-3" />}
+                        {selectedTagIds.includes(tag.id) && (
+                          <Check className="h-3 w-3" />
+                        )}
                       </Badge>
                     ))}
                 </div>
@@ -435,7 +537,10 @@ export default function ArticleEditorPageComponent({
                 <Label htmlFor="type" className="text-sm">
                   Tipo de Conteúdo
                 </Label>
-                <Select value={type} onValueChange={(v) => setType(v as PostTypeValue)}>
+                <Select
+                  value={type}
+                  onValueChange={(v) => setType(v as PostTypeValue)}
+                >
                   <SelectTrigger id="type">
                     <SelectValue />
                   </SelectTrigger>
@@ -455,7 +560,9 @@ export default function ArticleEditorPageComponent({
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base font-medium">Resumo (SEO)</CardTitle>
+              <CardTitle className="text-base font-medium">
+                Resumo (SEO)
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <Textarea

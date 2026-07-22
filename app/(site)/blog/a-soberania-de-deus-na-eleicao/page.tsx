@@ -1,9 +1,7 @@
 "use client"
 
-import { useParams } from "next/navigation"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import { VerticalCard } from "@/components/layout/Cards"
-import Link from "next/link"
 
 const articleData = {
   "a-soberania-de-deus-na-eleicao": {
@@ -134,8 +132,7 @@ const relatedPosts = [
 ]
 
 export default function BlogPostPage() {
-  const params = useParams()
-  const id = "a-soberania-de-deus-na-eleicao" //params.id
+  const id = "a-soberania-de-deus-na-eleicao"
   const article = articleData[id as keyof typeof articleData]
 
   //if (!article) {

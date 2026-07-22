@@ -3,11 +3,25 @@
 import { useState, useMemo } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Plus, Search, MoreHorizontal, Edit, ExternalLink, Trash2 } from "lucide-react"
+import {
+  Plus,
+  Search,
+  MoreHorizontal,
+  Edit,
+  ExternalLink,
+  Trash2,
+} from "lucide-react"
 import { Button } from "@/components/ui/primitives/button"
 import { Input } from "@/components/ui/primitives/input"
 import { Badge } from "@/components/ui/primitives/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/primitives/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/primitives/table"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +40,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/primitives/alert-dialog"
-import { postTypeLabels, postStatusLabels, PostsForListing, PostTypeValue, PostStatusValue } from "@/types/post"
+import {
+  postTypeLabels,
+  postStatusLabels,
+  PostsForListing,
+  PostTypeValue,
+  PostStatusValue,
+} from "@/types/post"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { deletePost } from "@/app/actions/posts"
@@ -36,18 +56,23 @@ interface ArticleListingPageComponentProps {
   articles: PostsForListing[]
 }
 
-export default function ArticleListingPageComponent({ articles }: ArticleListingPageComponentProps) {
+export default function ArticleListingPageComponent({
+  articles,
+}: ArticleListingPageComponentProps) {
   const router = useRouter()
   const { toast } = useToast()
 
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<"todos" | PostTypeValue>("todos")
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [articleToDelete, setArticleToDelete] = useState<PostsForListing | null>(null)
+  const [articleToDelete, setArticleToDelete] =
+    useState<PostsForListing | null>(null)
 
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
-      const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesSearch = article.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
       const matchesType = activeTab === "todos" || article.type === activeTab
       return matchesSearch && matchesType
     })
@@ -62,7 +87,11 @@ export default function ArticleListingPageComponent({ articles }: ArticleListing
     if (!articleToDelete) return
     const result = await deletePost(articleToDelete.id)
     if (result.error) {
-      toast({ variant: "destructive", title: "Erro ao excluir", description: String(result.error) })
+      toast({
+        variant: "destructive",
+        title: "Erro ao excluir",
+        description: String(result.error),
+      })
     } else {
       toast({ title: "Publicação excluída" })
     }
@@ -72,18 +101,25 @@ export default function ArticleListingPageComponent({ articles }: ArticleListing
 
   const getTypeBadgeVariant = (type: PostTypeValue) => {
     switch (type) {
-      case "ARTICLE": return "bg-blue-100 text-blue-700 border-blue-200"
-      case "VIDEO": return "bg-amber-100 text-amber-700 border-amber-200"
-      case "STUDY": return "bg-purple-100 text-purple-700 border-purple-200"
-      default: return ""
+      case "ARTICLE":
+        return "bg-blue-100 text-blue-700 border-blue-200"
+      case "VIDEO":
+        return "bg-amber-100 text-amber-700 border-amber-200"
+      case "STUDY":
+        return "bg-purple-100 text-purple-700 border-purple-200"
+      default:
+        return ""
     }
   }
 
   const getStatusBadgeVariant = (status: PostStatusValue) => {
     switch (status) {
-      case "PUBLISHED": return "bg-emerald-100 text-emerald-700 border-emerald-200"
-      case "DRAFT": return "bg-slate-100 text-slate-600 border-slate-200"
-      default: return ""
+      case "PUBLISHED":
+        return "bg-emerald-100 text-emerald-700 border-emerald-200"
+      case "DRAFT":
+        return "bg-slate-100 text-slate-600 border-slate-200"
+      default:
+        return ""
     }
   }
 
@@ -93,10 +129,17 @@ export default function ArticleListingPageComponent({ articles }: ArticleListing
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="font-serif text-2xl font-bold text-foreground">Gestão de Publicações</h1>
-            <p className="text-sm text-muted-foreground">Gerencie todos os conteúdos do portal</p>
+            <h1 className="font-serif text-2xl font-bold text-foreground">
+              Gestão de Publicações
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Gerencie todos os conteúdos do portal
+            </p>
           </div>
-          <Button onClick={() => router.push("/admin/publicacoes/novo")} className="gap-2 cursor-pointer">
+          <Button
+            onClick={() => router.push("/admin/publicacoes/novo")}
+            className="gap-2 cursor-pointer"
+          >
             <Plus className="h-4 w-4" />
             Nova Publicação
           </Button>
@@ -114,12 +157,31 @@ export default function ArticleListingPageComponent({ articles }: ArticleListing
             />
           </div>
 
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "todos" | PostTypeValue)}>
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as "todos" | PostTypeValue)}
+          >
             <TabsList>
-              <TabsTrigger value="todos" className="cursor-pointer">Todos</TabsTrigger>
-              <TabsTrigger value="ARTICLE" className="cursor-pointer">Publicações</TabsTrigger>
-              <TabsTrigger value="VIDEO" className="cursor-not-allowed" disabled>Sermões</TabsTrigger>
-              <TabsTrigger value="STUDY" className="cursor-not-allowed" disabled>Estudos</TabsTrigger>
+              <TabsTrigger value="todos" className="cursor-pointer">
+                Todos
+              </TabsTrigger>
+              <TabsTrigger value="ARTICLE" className="cursor-pointer">
+                Publicações
+              </TabsTrigger>
+              <TabsTrigger
+                value="VIDEO"
+                className="cursor-not-allowed"
+                disabled
+              >
+                Sermões
+              </TabsTrigger>
+              <TabsTrigger
+                value="STUDY"
+                className="cursor-not-allowed"
+                disabled
+              >
+                Estudos
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -139,13 +201,19 @@ export default function ArticleListingPageComponent({ articles }: ArticleListing
             <TableBody>
               {filteredArticles.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={5}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     Nenhuma publicação encontrada.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredArticles.map((article) => (
-                  <TableRow key={article.id} className="group cursor-pointer transition-colors hover:bg-muted/50">
+                  <TableRow
+                    key={article.id}
+                    className="group cursor-pointer transition-colors hover:bg-muted/50"
+                  >
                     <TableCell>
                       <Link
                         href={`/admin/publicacoes/${article.id}/editar`}
@@ -158,31 +226,55 @@ export default function ArticleListingPageComponent({ articles }: ArticleListing
                       </p>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <Badge variant="outline" className={getTypeBadgeVariant(article.type)}>
+                      <Badge
+                        variant="outline"
+                        className={getTypeBadgeVariant(article.type)}
+                      >
                         {postTypeLabels[article.type]}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={getStatusBadgeVariant(article.status)}>
+                      <Badge
+                        variant="outline"
+                        className={getStatusBadgeVariant(article.status)}
+                      >
                         {postStatusLabels[article.status]}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-muted-foreground">
-                      {format(article.publishedAt || article.updatedAt, "dd MMM yyyy", { locale: ptBR })}
+                      {format(
+                        article.publishedAt || article.updatedAt,
+                        "dd MMM yyyy",
+                        { locale: ptBR },
+                      )}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 opacity-0 group-hover:opacity-100"
+                          >
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem onClick={() => router.push(`/admin/publicacoes/${article.id}/editar`)}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(
+                                `/admin/publicacoes/${article.id}/editar`,
+                              )
+                            }
+                          >
                             <Edit className="mr-2 h-4 w-4" />
                             Editar
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => window.open(`/blog/${article.id}`, "_blank")}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              window.open(`/blog/${article.id}`, "_blank")
+                            }
+                          >
                             <ExternalLink className="mr-2 h-4 w-4" />
                             Ver no Site
                           </DropdownMenuItem>
@@ -216,7 +308,8 @@ export default function ArticleListingPageComponent({ articles }: ArticleListing
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir &quot;{articleToDelete?.title}&quot;? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir &quot;{articleToDelete?.title}
+              &quot;? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

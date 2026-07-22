@@ -10,7 +10,13 @@ interface StatCardProps {
   className?: string
 }
 
-export default function StatCard({ icon: Icon, value, label, trend, className }: StatCardProps) {
+export default function StatCard({
+  icon: Icon,
+  value,
+  label,
+  trend,
+  className,
+}: StatCardProps) {
   const isPositive = !trend || trend > 0
 
   return (
@@ -23,7 +29,9 @@ export default function StatCard({ icon: Icon, value, label, trend, className }:
           <span
             className={cn(
               "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
-              isPositive ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive",
+              isPositive
+                ? "bg-primary/10 text-primary"
+                : "bg-destructive/10 text-destructive",
             )}
           >
             {isPositive ? "+" : "-"}
@@ -32,7 +40,9 @@ export default function StatCard({ icon: Icon, value, label, trend, className }:
         )}
       </div>
       <div className="mt-4">
-        <p className="font-serif text-3xl font-bold text-foreground">{formatCompactNumber(value)}</p>
+        <p className="font-serif text-3xl font-bold text-foreground">
+          {formatCompactNumber(value)}
+        </p>
         <p className="mt-1 text-sm text-muted-foreground">{label}</p>
       </div>
     </div>

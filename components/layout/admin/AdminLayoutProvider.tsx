@@ -6,7 +6,11 @@ import { Toaster as Sonner } from "@/components/ui/primitives/sonner"
 import { TooltipProvider } from "@/components/ui/primitives/tooltip"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
-export default function AdminLayoutProvider({ children }: { children: React.ReactNode }) {
+export default function AdminLayoutProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const [queryClient] = useState(
     () =>
       new QueryClient({

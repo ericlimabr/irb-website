@@ -32,14 +32,19 @@ export async function submitContactForm(formData: FormData) {
   }
 
   if (await isRateLimited(email)) {
-    return { success: false, error: "Muitas tentativas. Tente novamente em 1 hora." }
+    return {
+      success: false,
+      error: "Muitas tentativas. Tente novamente em 1 hora.",
+    }
   }
 
   try {
-    await prisma.contactMessage.create({ data: { name, email, subject, message } })
+    await prisma.contactMessage.create({
+      data: { name, email, subject, message },
+    })
     await sendContactNotificationEmail({ name, email, subject, message })
     return { success: true }
-  } catch (error) {
+  } catch {
     return { success: false, error: "Erro ao processar sua mensagem." }
   }
 }
@@ -53,7 +58,9 @@ export async function countUnreadMessages(id?: string) {
 
 export async function getContactMessages() {
   if (!(await getUser())) return []
-  return await prisma.contactMessage.findMany({ orderBy: { createdAt: "desc" } })
+  return await prisma.contactMessage.findMany({
+    orderBy: { createdAt: "desc" },
+  })
 }
 
 export async function getMessageAndMarkAsRead(id: string) {

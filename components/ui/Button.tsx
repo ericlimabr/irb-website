@@ -15,7 +15,10 @@ export const isInternalLink = (href: string): boolean => {
   try {
     if (href.startsWith("/") || href.startsWith("#")) return true
     const url = new URL(href)
-    return url.hostname === "igrejacristareformada.com.br" || url.hostname === "localhost"
+    return (
+      url.hostname === "igrejacristareformada.com.br" ||
+      url.hostname === "localhost"
+    )
   } catch {
     return false
   }
@@ -37,7 +40,8 @@ export function Button({
   const variants = {
     primary:
       "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30 border-transparent",
-    outline: "border-primary text-primary hover:bg-primary hover:text-primary-foreground",
+    outline:
+      "border-primary text-primary hover:bg-primary hover:text-primary-foreground",
   }
 
   return (

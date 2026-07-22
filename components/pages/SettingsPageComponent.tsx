@@ -1,7 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Save, Globe, Share2, Navigation, ShieldAlert, User, Camera } from "lucide-react"
+import {
+  Save,
+  Globe,
+  Share2,
+  Navigation,
+  ShieldAlert,
+  User,
+  Camera,
+} from "lucide-react"
 import { sanitizeFilename } from "@/utils/files"
 import { createClient } from "@/utils/supabase/client"
 import { useToast } from "@/hooks/use-toast"
@@ -34,7 +42,11 @@ export interface SettingsState {
   contactEmail: string
 }
 
-export default function SettingsPageComponent({ initialSettings }: { initialSettings: any }) {
+export default function SettingsPageComponent({
+  initialSettings,
+}: {
+  initialSettings: SettingsState | null
+}) {
   const { toast } = useToast()
 
   const [settings, setSettings] = useState<SettingsState>(
@@ -95,8 +107,12 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
 
       setSettings((prev) => ({ ...prev, [field]: publicUrl }))
       toast({ title: "Imagem atualizada com sucesso" })
-    } catch (error: any) {
-      toast({ variant: "destructive", title: "Erro no upload", description: error.message })
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erro no upload",
+        description: error instanceof Error ? error.message : String(error),
+      })
     } finally {
       setIsUploading(null)
       setLoading(false)
@@ -104,7 +120,10 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
     }
   }
 
-  const handleInputChange = (field: keyof SettingsState, value: any) => {
+  const handleInputChange = (
+    field: keyof SettingsState,
+    value: SettingsState[keyof SettingsState],
+  ) => {
     setSettings((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -115,10 +134,15 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
         throw new Error("O e-mail de contato está em um formato inválido")
       }
       const response = await updateSettings(settings)
-      if (!response.success) throw new Error(response.error || "Falha no update das configurações")
+      if (!response.success)
+        throw new Error(response.error || "Falha no update das configurações")
       toast({ title: "Configurações atualizadas com sucesso" })
-    } catch (error: any) {
-      toast({ variant: "destructive", title: "Erro ao salvar configurações", description: error.message })
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erro ao salvar configurações",
+        description: error instanceof Error ? error.message : String(error),
+      })
     } finally {
       setLoading(false)
     }
@@ -127,7 +151,9 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
   return (
     <div className="max-w-4xl space-y-6">
       <div className="flex items-center justify-between border-b pb-4">
-        <h1 className="font-serif text-2xl font-bold">Configurações do Sistema</h1>
+        <h1 className="font-serif text-2xl font-bold">
+          Configurações do Sistema
+        </h1>
         <button
           onClick={handleSettingsUpdate}
           disabled={loading}
@@ -150,7 +176,9 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2 border-b-2 transition ${
-              activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-muted-foreground"
+              activeTab === tab.id
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground"
             }`}
           >
             <tab.icon className="h-4 w-4" />
@@ -164,13 +192,22 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b">
               <div className="space-y-3">
-                <label className="block text-sm font-bold text-foreground">Logo da Igreja</label>
+                <label className="block text-sm font-bold text-foreground">
+                  Logo da Igreja
+                </label>
                 <div className="flex items-center gap-4">
                   <div className="flex h-20 w-40 items-center justify-center rounded-lg border-2 border-dashed border bg-muted/50 overflow-hidden">
                     {settings?.logoUrl ? (
-                      <img src={settings.logoUrl} alt="Logo" className="h-full w-full object-contain p-2" />
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={settings.logoUrl}
+                        alt="Logo"
+                        className="h-full w-full object-contain p-2"
+                      />
                     ) : (
-                      <span className="text-[10px] text-muted-foreground uppercase font-bold">Sem Logo</span>
+                      <span className="text-[10px] text-muted-foreground uppercase font-bold">
+                        Sem Logo
+                      </span>
                     )}
                   </div>
                   <label className="cursor-pointer bg-white border px-3 py-1.5 rounded-md text-xs font-medium hover:bg-muted/50 transition">
@@ -186,10 +223,13 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
               </div>
 
               <div className="space-y-3">
-                <label className="block text-sm font-bold text-foreground">Avatar do Ministério</label>
+                <label className="block text-sm font-bold text-foreground">
+                  Avatar do Ministério
+                </label>
                 <div className="flex items-center gap-4">
                   <div className="relative h-20 w-20 shrink-0">
                     {settings?.authorAvatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={settings.authorAvatarUrl}
                         alt="Avatar"
@@ -205,14 +245,18 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
                     </button>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-xs text-muted-foreground">Recomendado: 400x400px</p>
+                    <p className="text-xs text-muted-foreground">
+                      Recomendado: 400x400px
+                    </p>
                     <label className="cursor-pointer text-xs font-bold text-primary hover:text-primary">
                       Fazer upload da imagem
                       <input
                         type="file"
                         className="hidden"
                         accept="image/*"
-                        onChange={(e) => handleSettingsUpload(e, "authorAvatarUrl")}
+                        onChange={(e) =>
+                          handleSettingsUpload(e, "authorAvatarUrl")
+                        }
                       />
                     </label>
                   </div>
@@ -222,31 +266,43 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Nome do Site</label>
+                <label className="block text-sm font-medium mb-1">
+                  Nome do Site
+                </label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2 focus:ring-2 focus:ring-primary outline-none transition"
                   defaultValue={settings?.siteName}
-                  onChange={(e) => handleInputChange("siteName", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("siteName", e.target.value)
+                  }
                   placeholder="Ex: Igreja Cristã Reformada"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Slogan / Tagline</label>
+                <label className="block text-sm font-medium mb-1">
+                  Slogan / Tagline
+                </label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2 focus:ring-2 focus:ring-primary outline-none transition"
                   defaultValue={settings?.siteTagline}
-                  onChange={(e) => handleInputChange("siteTagline", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("siteTagline", e.target.value)
+                  }
                   placeholder="Ex: Fé Reformada, Culto e Comunhão"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Descrição da Igreja</label>
+                <label className="block text-sm font-medium mb-1">
+                  Descrição da Igreja
+                </label>
                 <textarea
                   className="w-full border rounded-md p-2 h-32 focus:ring-2 focus:ring-primary outline-none transition"
                   defaultValue={settings?.authorBio}
-                  onChange={(e) => handleInputChange("authorBio", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("authorBio", e.target.value)
+                  }
                   placeholder="Escreva uma breve descrição da igreja para o rodapé e página sobre..."
                 />
               </div>
@@ -264,24 +320,48 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
                   className="w-full border rounded-md p-2"
                   placeholder="contato@igrejacristareformada.com.br"
                   value={settings.contactEmail || ""}
-                  onChange={(e) => handleInputChange("contactEmail", e.target.value)}
-                  onBlur={(e) => handleInputChange("contactEmail", sanitizeEmail(e.target.value))}
+                  onChange={(e) =>
+                    handleInputChange("contactEmail", e.target.value)
+                  }
+                  onBlur={(e) =>
+                    handleInputChange(
+                      "contactEmail",
+                      sanitizeEmail(e.target.value),
+                    )
+                  }
                 />
-                {settings.contactEmail && !isValidEmail(settings.contactEmail) && (
-                  <p className="text-xs text-red-500 mt-1">E-mail inválido. Verifique o formato.</p>
-                )}
+                {settings.contactEmail &&
+                  !isValidEmail(settings.contactEmail) && (
+                    <p className="text-xs text-red-500 mt-1">
+                      E-mail inválido. Verifique o formato.
+                    </p>
+                  )}
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">WhatsApp</label>
+                <label className="block text-sm font-medium mb-1">
+                  WhatsApp
+                </label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2"
                   placeholder="(00) 99999-9999"
                   value={settings.socialWhatsApp || ""}
-                  onChange={(e) => handleInputChange("socialWhatsApp", formatWhatsApp(e.target.value))}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "socialWhatsApp",
+                      formatWhatsApp(e.target.value),
+                    )
+                  }
                 />
               </div>
-              {(["socialInstagram", "socialFacebook", "socialYoutube", "socialX"] as const).map((field) => {
+              {(
+                [
+                  "socialInstagram",
+                  "socialFacebook",
+                  "socialYoutube",
+                  "socialX",
+                ] as const
+              ).map((field) => {
                 const labels: Record<string, string> = {
                   socialInstagram: "Instagram",
                   socialFacebook: "Facebook",
@@ -290,7 +370,9 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
                 }
                 return (
                   <div key={field}>
-                    <label className="block text-sm font-medium mb-1">{labels[field]}</label>
+                    <label className="block text-sm font-medium mb-1">
+                      {labels[field]}
+                    </label>
                     <input
                       type="text"
                       className="w-full border rounded-md p-2"
@@ -315,28 +397,39 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
                 <h3 className="text-blue-700 text-lg font-medium leading-tight mt-1">
                   {settings.metaTitle || settings.siteName}
                 </h3>
-                <p className="text-green-700 text-xs py-0.5">https://igrejacristareformada.com.br</p>
+                <p className="text-green-700 text-xs py-0.5">
+                  https://igrejacristareformada.com.br
+                </p>
                 <p className="text-foreground/80 text-xs line-clamp-2">
-                  {settings.metaDescription || "Adicione uma descrição para atrair visitantes no Google."}
+                  {settings.metaDescription ||
+                    "Adicione uma descrição para atrair visitantes no Google."}
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Título de SEO (Meta Title)</label>
+                <label className="block text-sm font-medium mb-1">
+                  Título de SEO (Meta Title)
+                </label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2"
                   value={settings.metaTitle || ""}
-                  onChange={(e) => handleInputChange("metaTitle", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("metaTitle", e.target.value)
+                  }
                   placeholder="Título que aparece na aba do navegador e no Google"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Descrição de SEO (Meta Description)</label>
+                <label className="block text-sm font-medium mb-1">
+                  Descrição de SEO (Meta Description)
+                </label>
                 <textarea
                   className="w-full border rounded-md p-2 h-24"
                   value={settings.metaDescription || ""}
-                  onChange={(e) => handleInputChange("metaDescription", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("metaDescription", e.target.value)
+                  }
                   placeholder="Resumo do portal para os buscadores..."
                 />
               </div>
@@ -348,17 +441,30 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
                 <div className="flex flex-col gap-4">
                   <div className="aspect-video w-full max-w-sm rounded-lg border-2 border-dashed border bg-muted/50 flex items-center justify-center overflow-hidden">
                     {settings.ogImageUrl ? (
-                      <img src={settings.ogImageUrl} alt="OG Preview" className="h-full w-full object-cover" />
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={settings.ogImageUrl}
+                        alt="OG Preview"
+                        className="h-full w-full object-cover"
+                      />
                     ) : (
                       <div className="text-center p-4">
                         <Share2 className="mx-auto h-8 w-8 text-muted-foreground" />
-                        <p className="text-[10px] text-muted-foreground mt-2 uppercase">1200 x 630px recomendado</p>
+                        <p className="text-[10px] text-muted-foreground mt-2 uppercase">
+                          1200 x 630px recomendado
+                        </p>
                       </div>
                     )}
                   </div>
                   <label className="w-fit cursor-pointer bg-white border px-4 py-2 rounded-md text-sm font-medium hover:bg-muted/50 transition">
-                    {isUploading === "ogImageUrl" ? "Enviando..." : "Escolher Imagem de Capa"}
-                    <input type="file" className="hidden" onChange={(e) => handleSettingsUpload(e, "ogImageUrl")} />
+                    {isUploading === "ogImageUrl"
+                      ? "Enviando..."
+                      : "Escolher Imagem de Capa"}
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={(e) => handleSettingsUpload(e, "ogImageUrl")}
+                    />
                   </label>
                 </div>
               </div>
@@ -373,28 +479,40 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
                 Analytics & Performance
               </h3>
               <div>
-                <label className="block text-sm font-medium mb-1">Google Analytics ID (G-XXXXX)</label>
+                <label className="block text-sm font-medium mb-1">
+                  Google Analytics ID (G-XXXXX)
+                </label>
                 <input
                   type="text"
                   className="w-full border rounded-md p-2 font-mono text-sm"
                   placeholder="G-XXXXXXXXXX"
                   defaultValue={settings?.googleAnalyticsId}
-                  onChange={(e) => handleInputChange("googleAnalyticsId", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("googleAnalyticsId", e.target.value)
+                  }
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Insira apenas o código de rastreamento para habilitar as métricas de acesso.
+                  Insira apenas o código de rastreamento para habilitar as
+                  métricas de acesso.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Publicações por Página</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Publicações por Página
+                  </label>
                   <input
                     type="number"
                     min="1"
                     max="50"
                     className="w-full border rounded-md p-2"
                     defaultValue={settings?.postsPerPage || 9}
-                    onChange={(e) => handleInputChange("postsPerPage", parseInt(e.target.value) || 9)}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "postsPerPage",
+                        parseInt(e.target.value) || 9,
+                      )
+                    }
                   />
                 </div>
               </div>
@@ -408,15 +526,23 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
               </h3>
               <div className="flex items-center justify-between p-4 bg-amber-50 border border-amber-100 rounded-lg">
                 <div className="space-y-0.5">
-                  <label className="text-sm font-bold text-amber-900">Modo de Manutenção</label>
+                  <label className="text-sm font-bold text-amber-900">
+                    Modo de Manutenção
+                  </label>
                   <p className="text-xs text-amber-700">
-                    Ao ativar, o público verá uma tela de espera enquanto você trabalha.
+                    Ao ativar, o público verá uma tela de espera enquanto você
+                    trabalha.
                   </p>
                 </div>
                 <div>
                   <button
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings?.maintenanceMode ? "bg-amber-600" : "bg-muted"}`}
-                    onClick={() => handleInputChange("maintenanceMode", !settings?.maintenanceMode)}
+                    onClick={() =>
+                      handleInputChange(
+                        "maintenanceMode",
+                        !settings?.maintenanceMode,
+                      )
+                    }
                   >
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings?.maintenanceMode ? "translate-x-6" : "translate-x-1"}`}
@@ -434,25 +560,37 @@ export default function SettingsPageComponent({ initialSettings }: { initialSett
             <div className="space-y-4">
               <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                 Scripts de Terceiros
-                <span className="text-xs mt-1 text-red-800"> ● Cuidado ao inserir códigos personalizados</span>
+                <span className="text-xs mt-1 text-red-800">
+                  {" "}
+                  ● Cuidado ao inserir códigos personalizados
+                </span>
               </h3>
               <div>
-                <label className="block text-sm font-medium mb-1">Injeção no &lt;head&gt;</label>
+                <label className="block text-sm font-medium mb-1">
+                  Injeção no &lt;head&gt;
+                </label>
                 <textarea
                   className="w-full border rounded-md p-2 h-32 font-mono text-xs bg-muted/50"
                   placeholder=""
-                  onChange={(e) => handleInputChange("customScriptsHead", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("customScriptsHead", e.target.value)
+                  }
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Injeção no &lt;body&gt;</label>
+                <label className="block text-sm font-medium mb-1">
+                  Injeção no &lt;body&gt;
+                </label>
                 <textarea
                   className="w-full border rounded-md p-2 h-32 font-mono text-xs bg-muted/50"
                   placeholder=""
-                  onChange={(e) => handleInputChange("customScriptsFooter", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("customScriptsFooter", e.target.value)
+                  }
                 />
                 <p className="text-xs mt-1 text-red-800">
-                  Cuidado: scripts mal formatados podem quebrar o carregamento do site.
+                  Cuidado: scripts mal formatados podem quebrar o carregamento
+                  do site.
                 </p>
               </div>
             </div>

@@ -45,7 +45,9 @@ export async function deleteFaq(id: string) {
 export async function reorderFaqs(ids: string[]) {
   if (!(await getUser())) return { success: false, error: "Não autorizado." }
   await Promise.all(
-    ids.map((id, index) => prisma.faq.update({ where: { id }, data: { order: index } })),
+    ids.map((id, index) =>
+      prisma.faq.update({ where: { id }, data: { order: index } }),
+    ),
   )
   revalidatePath("/admin/faq")
   return { success: true }

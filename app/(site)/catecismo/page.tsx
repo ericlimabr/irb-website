@@ -131,6 +131,8 @@ export default function CatecismoPage() {
     <div className="min-h-screen">
       <Masthead
         fullHeight={false}
+        backgroundImage="/confessions/heidelberg.jpeg"
+        watermark={false}
         eyebrow="Catecismo"
         title={
           <>

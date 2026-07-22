@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import { motion } from "framer-motion"
+import Image from "next/image"
 import Link from "next/link"
 
 /* ===== Vertical Card ===== */
@@ -11,6 +12,10 @@ interface VerticalCardProps {
   linkText?: string
   meta?: string
   featured?: boolean
+  /** 16:9 image for the media area. Falls back to the gradient when absent. */
+  image?: string
+  /** Left empty by default: the card title already names the content. */
+  imageAlt?: string
 }
 
 export const VerticalCard = ({
@@ -21,6 +26,8 @@ export const VerticalCard = ({
   linkText = "Saiba Mais →",
   meta,
   featured = false,
+  image,
+  imageAlt = "",
 }: VerticalCardProps) => {
   const base = featured
     ? "bg-navy-700 texture-hatch border border-primary-foreground/10"
@@ -35,15 +42,27 @@ export const VerticalCard = ({
       className={`${base} transition-shadow duration-700 hover:shadow-lg group flex flex-col`}
       style={{ boxShadow: featured ? "none" : "var(--shadow-sm)" }}
     >
-      {/* Media placeholder */}
+      {/* Media — the gradient stays as the backdrop, so it covers the image
+          while it loads and remains the fallback when none is supplied. */}
       <div
-        className="aspect-video w-full"
+        className="relative aspect-video w-full overflow-hidden"
         style={{
           background: featured
             ? "linear-gradient(135deg, var(--navy-800), var(--navy-600))"
             : "linear-gradient(135deg, var(--navy-50), var(--bg-surface-alt))",
         }}
-      />
+      >
+        {image && (
+          <Image
+            src={image}
+            alt={imageAlt}
+            fill
+            // Three columns from md up, single column below.
+            sizes="(min-width: 768px) 33vw, 100vw"
+            className="object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.03]"
+          />
+        )}
+      </div>
 
       <div className="p-6 flex flex-col flex-1">
         {eyebrow && (
@@ -279,6 +298,22 @@ export const IRBButton = ({
   onClick,
 }: ButtonProps) => {
   const styles = `inline-block font-mono uppercase tracking-[0.1em] px-6 py-3 transition-all duration-700 ${variantStyles[variant]} ${className}`
+
+  // Off-site targets (WhatsApp, the virtual library) open in a new tab and skip
+  // the router, which has nothing to prefetch for them.
+  if (href?.startsWith("http")) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles}
+        style={{ fontSize: "var(--text-size-xs)" }}
+      >
+        {children}
+      </a>
+    )
+  }
 
   if (href) {
     return (
