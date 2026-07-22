@@ -4,7 +4,12 @@ import { useState } from "react"
 import { X, Loader2, ImageIcon, Images } from "lucide-react"
 import { createClient } from "@/utils/supabase/client"
 import { Button } from "@/components/ui/primitives/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/primitives/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/primitives/card"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/utils/styling"
 import { sanitizeFilename } from "@/utils/files"
@@ -16,10 +21,16 @@ interface FeaturedImageUploaderProps {
   onRemove: () => void
 }
 
-export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedImageUploaderProps) {
+export function FeaturedImageUploader({
+  value,
+  onChange,
+  onRemove,
+}: FeaturedImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [showGallery, setShowGallery] = useState(false)
-  const [galleryImages, setGalleryImages] = useState<{ name: string; url: string }[]>([])
+  const [galleryImages, setGalleryImages] = useState<
+    { name: string; url: string }[]
+  >([])
   const [loadingGallery, setLoadingGallery] = useState(false)
   const { toast } = useToast()
   const supabase = createClient()
@@ -51,7 +62,9 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
       const fileName = sanitizeFilename(file.name)
       const filePath = `post-covers/${fileName}`
 
-      const { error: uploadError } = await supabase.storage.from("blog-images").upload(filePath, file)
+      const { error: uploadError } = await supabase.storage
+        .from("blog-images")
+        .upload(filePath, file)
       if (uploadError) throw uploadError
 
       const {
@@ -76,10 +89,12 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
     if (galleryImages.length > 0) return
 
     setLoadingGallery(true)
-    const { data, error } = await supabase.storage.from("blog-images").list("post-covers", {
-      limit: 100,
-      sortBy: { column: "updated_at", order: "desc" },
-    })
+    const { data, error } = await supabase.storage
+      .from("blog-images")
+      .list("post-covers", {
+        limit: 100,
+        sortBy: { column: "updated_at", order: "desc" },
+      })
 
     if (error) {
       toast({ variant: "destructive", title: "Erro ao carregar galeria" })
@@ -91,7 +106,9 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
       .filter((f) => f.name !== ".emptyFolderPlaceholder")
       .map((f) => ({
         name: f.name,
-        url: supabase.storage.from("blog-images").getPublicUrl(`post-covers/${f.name}`).data.publicUrl,
+        url: supabase.storage
+          .from("blog-images")
+          .getPublicUrl(`post-covers/${f.name}`).data.publicUrl,
       }))
 
     setGalleryImages(images)
@@ -101,12 +118,21 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-medium">Imagem de Destaque</CardTitle>
+        <CardTitle className="text-base font-medium">
+          Imagem de Destaque
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {value ? (
           <div className="relative group">
-            <img src={value} className="h-40 w-full rounded-lg object-cover border" alt="Pré-visualização" />
+            {/* Uploaded asset on an env-dependent Supabase host; next/image
+                would need remotePatterns and buys nothing for an admin preview. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={value}
+              className="h-40 w-full rounded-lg object-cover border"
+              alt="Pré-visualização"
+            />
             <Button
               variant="destructive"
               size="icon"
@@ -121,7 +147,9 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
           <div
             className={cn(
               "flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 transition-colors",
-              isUploading ? "bg-muted/50 cursor-not-allowed" : "hover:bg-muted/50 cursor-pointer",
+              isUploading
+                ? "bg-muted/50 cursor-not-allowed"
+                : "hover:bg-muted/50 cursor-pointer",
             )}
           >
             <label
@@ -130,7 +158,13 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
                 isUploading ? "cursor-not-allowed" : "cursor-pointer",
               )}
             >
-              <input type="file" className="hidden" accept="image/*" onChange={handleUpload} disabled={isUploading} />
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleUpload}
+                disabled={isUploading}
+              />
               <div className="rounded-full bg-muted p-2">
                 {isUploading ? (
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
@@ -139,8 +173,12 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
                 )}
               </div>
               <div className="text-center">
-                <p className="text-xs font-medium">{isUploading ? "Enviando..." : "Clique para selecionar"}</p>
-                <p className="text-[10px] text-muted-foreground mt-1">PNG, JPG ou WEBP (Máx. 5MB)</p>
+                <p className="text-xs font-medium">
+                  {isUploading ? "Enviando..." : "Clique para selecionar"}
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  PNG, JPG ou WEBP (Máx. 5MB)
+                </p>
               </div>
             </label>
           </div>
@@ -161,7 +199,9 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
         {showGallery && (
           <div className="rounded-lg border bg-muted/30 p-3 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">Galeria</span>
+              <span className="text-xs font-medium text-muted-foreground">
+                Galeria
+              </span>
               <button onClick={() => setShowGallery(false)}>
                 <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
               </button>
@@ -171,7 +211,9 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
                 <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
               </div>
             ) : galleryImages.length === 0 ? (
-              <p className="text-center text-xs text-muted-foreground py-4">Nenhuma imagem na galeria</p>
+              <p className="text-center text-xs text-muted-foreground py-4">
+                Nenhuma imagem na galeria
+              </p>
             ) : (
               <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto">
                 {galleryImages.map((img) => (
@@ -184,7 +226,12 @@ export function FeaturedImageUploader({ value, onChange, onRemove }: FeaturedIma
                     }}
                     className="aspect-square overflow-hidden rounded border-2 border-transparent hover:border-primary transition-colors"
                   >
-                    <img src={img.url} alt={img.name} className="h-full w-full object-cover" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img.url}
+                      alt={img.name}
+                      className="h-full w-full object-cover"
+                    />
                   </button>
                 ))}
               </div>

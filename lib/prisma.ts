@@ -5,7 +5,9 @@ const prismaClientSingleton = () => {
   const dbUrl = process.env.DATABASE_URL
 
   if (!dbUrl) {
-    throw new Error("CRITICAL ERROR: DATABASE_URL was not found in process.env!")
+    throw new Error(
+      "CRITICAL ERROR: DATABASE_URL was not found in process.env!",
+    )
   }
 
   return new PrismaClient({

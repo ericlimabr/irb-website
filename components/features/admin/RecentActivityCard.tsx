@@ -77,7 +77,9 @@ export default function RecentActivityCard() {
   return (
     <div className="stat-card animate-fade-in">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-serif text-lg font-semibold text-foreground">Atividade Recente</h3>
+        <h3 className="font-serif text-lg font-semibold text-foreground">
+          Atividade Recente
+        </h3>
         <button className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
           Ver tudo
         </button>
@@ -98,7 +100,9 @@ export default function RecentActivityCard() {
                 <Icon className="h-5 w-5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">{activity.title}</p>
+                <p className="text-sm font-medium text-foreground truncate">
+                  {activity.title}
+                </p>
                 <p className="text-xs text-muted-foreground">
                   {typeLabels[activity.type]} · {activity.time}
                 </p>

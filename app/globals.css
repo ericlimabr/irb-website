@@ -195,7 +195,20 @@
 @layer base {
   * {
     border-color: var(--border);
+  }
+
+  /* Square corners are an institutional rule, enforced globally. Opt an element
+     out with data-round when a shape is genuinely circular (avatars, floating
+     action buttons) — a utility class cannot override this on its own, since
+     CSS reverses layer order for !important declarations. */
+  *:not([data-round]) {
     border-radius: 0 !important;
+  }
+
+  /* Preflight sets no cursor on buttons, so they inherit the browser default
+     and read as inert. Opt every enabled button back into the pointer. */
+  button:not(:disabled) {
+    cursor: pointer;
   }
 
   body {

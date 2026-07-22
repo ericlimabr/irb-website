@@ -6,9 +6,18 @@ interface InnerNavProps {
   title: string
   links?: { label: string; href: string }[]
   className?: string
+  /** Where the back link points. Defaults to the home page. */
+  backHref?: string
+  backLabel?: string
 }
 
-export default function InnerNav({ title, links, className }: InnerNavProps) {
+export default function InnerNav({
+  title,
+  links,
+  className,
+  backHref = "/",
+  backLabel = "Início",
+}: InnerNavProps) {
   return (
     <div
       className={cn(
@@ -19,12 +28,12 @@ export default function InnerNav({ title, links, className }: InnerNavProps) {
       <div className="container mx-auto px-6 flex items-center justify-between h-10">
         {/* Left: Back */}
         <Link
-          href="/"
+          href={backHref}
           className="flex items-center gap-2 font-mono uppercase tracking-[0.1em] text-gold-400 hover:text-gold-500 transition-colors duration-500"
           style={{ fontSize: "9px" }}
         >
           <ArrowLeft size={12} />
-          Início
+          {backLabel}
         </Link>
 
         {/* Center: Anchor links */}

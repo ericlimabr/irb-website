@@ -106,6 +106,11 @@ export default function ConfissoesPage() {
             </AnimatedContent>
           ))}
         </div>
+        <AnimatedContent className="mt-8">
+          <IRBButton variant="secondary" href="/confissao-belga">
+            Explorar a Confissão →
+          </IRBButton>
+        </AnimatedContent>
       </Section>
 
       {/* Catecismo de Heidelberg */}
@@ -135,7 +140,7 @@ export default function ConfissoesPage() {
                   className="font-serif italic text-primary-foreground/65 mb-4"
                   style={{ fontSize: "var(--text-size-lg)" }}
                 >
-                  "{p.question}"
+                  &ldquo;{p.question}&rdquo;
                 </p>
                 <p
                   className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 mt-auto"
@@ -212,6 +217,11 @@ export default function ConfissoesPage() {
             </AnimatedContent>
           ))}
         </div>
+        <AnimatedContent className="mt-8">
+          <IRBButton variant="inverse" href="/canones-de-dort">
+            Explorar os Cânones →
+          </IRBButton>
+        </AnimatedContent>
       </Section>
     </div>
   )

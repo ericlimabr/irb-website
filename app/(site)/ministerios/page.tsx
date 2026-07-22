@@ -3,6 +3,9 @@
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import { TestimonialCard, IRBButton } from "@/components/layout/Cards"
+import Image from "next/image"
+import { CHURCH_MINISTRIES } from "@/const"
+import { whatsappLink } from "@/utils/whatsapp"
 
 export default function MinisteriosPage() {
   return (
@@ -23,32 +26,7 @@ export default function MinisteriosPage() {
       {/* Ministry blocks */}
       <Section bg="surface">
         <div className="space-y-20">
-          {[
-            {
-              tag: "Educação",
-              title: "Catequese",
-              desc: "Programa de instrução confessional para novos membros e jovens. Estudamos as Três Formas de Unidade, os fundamentos da doutrina reformada e a aplicação prática da fé.",
-              cta: "Participar da Catequese",
-            },
-            {
-              tag: "Estudo",
-              title: "Grupos de Estudo Bíblico",
-              desc: "Encontros semanais para estudo aprofundado das Escrituras em pequenos grupos. Método expositivo, livro a livro, com ênfase na teologia bíblica e aplicação à vida cristã.",
-              cta: "Entrar em um Grupo",
-            },
-            {
-              tag: "Assistência",
-              title: "Diaconia & Misericórdia",
-              desc: "Ministério de misericórdia dedicado ao cuidado prático da congregação e da comunidade — apoio a famílias necessitadas, visitas hospitalares e ações de compaixão.",
-              cta: "Contribuir",
-            },
-            {
-              tag: "Famílias",
-              title: "Ministério Familiar",
-              desc: "Apoio às famílias na tradição reformada — criação dos filhos na aliança, catequese familiar, aconselhamento matrimonial e comunhão entre famílias da congregação.",
-              cta: "Saber Mais",
-            },
-          ].map((m, i) => (
+          {CHURCH_MINISTRIES.filter((m) => m.listable).map((m, i) => (
             <AnimatedContent key={m.title}>
               <div
                 className={`grid md:grid-cols-2 gap-12 items-center ${i % 2 === 1 ? "md:flex-row-reverse" : ""}`}
@@ -64,14 +42,35 @@ export default function MinisteriosPage() {
                   <p className="font-sans text-muted-foreground leading-relaxed mb-6">
                     {m.desc}
                   </p>
-                  <IRBButton variant="secondary">{m.cta} →</IRBButton>
+                  <IRBButton
+                    variant="secondary"
+                    href={
+                      m.href ??
+                      whatsappLink(
+                        `Olá! Gostaria de saber mais sobre ${m.title}.`,
+                      )
+                    }
+                  >
+                    {m.cta} →
+                  </IRBButton>
                 </div>
                 <div
-                  className={`aspect-[4/3] ${i % 2 === 1 ? "md:order-1" : ""}`}
+                  className={`relative aspect-[4/3] overflow-hidden ${i % 2 === 1 ? "md:order-1" : ""}`}
                   style={{
                     background: `linear-gradient(135deg, var(--navy-700), var(--navy-600))`,
                   }}
-                />
+                >
+                  {m.image && (
+                    <Image
+                      src={m.image}
+                      alt=""
+                      fill
+                      // Half the container from md up, full width below.
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  )}
+                </div>
               </div>
             </AnimatedContent>
           ))}

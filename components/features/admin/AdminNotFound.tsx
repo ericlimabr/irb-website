@@ -17,14 +17,29 @@ export default function AdminNotFound({
   className,
 }: AdminNotFoundProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center min-h-[60vh] p-8 text-center", className)}>
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center min-h-[60vh] p-8 text-center",
+        className,
+      )}
+    >
       <div className="mb-6 rounded-full bg-zinc-100 p-6">
         <FileWarning className="h-12 w-12 text-zinc-400" />
       </div>
-      <h2 className="font-serif text-2xl md:text-3xl font-bold text-zinc-900 mb-4">{title}</h2>
-      <p className="max-w-md text-zinc-600 mb-8 leading-relaxed">{description}</p>
+      <h2 className="font-serif text-2xl md:text-3xl font-bold text-zinc-900 mb-4">
+        {title}
+      </h2>
+      <p className="max-w-md text-zinc-600 mb-8 leading-relaxed">
+        {description}
+      </p>
       <div className="flex flex-wrap items-center justify-center gap-4">
-        {children ? children : <Button href="/admin" icon={ArrowLeft}>Voltar ao Painel</Button>}
+        {children ? (
+          children
+        ) : (
+          <Button href="/admin" icon={ArrowLeft}>
+            Voltar ao Painel
+          </Button>
+        )}
       </div>
     </div>
   )

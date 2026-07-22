@@ -2,6 +2,7 @@
 
 import { useRef, ReactNode } from "react"
 import { motion } from "framer-motion"
+import Image from "next/image"
 import Logo from "@/components/ui/Logo"
 
 interface MastheadProps {
@@ -14,6 +15,14 @@ interface MastheadProps {
   logo?: boolean
   /** Ghosts the full crest across the background as a watermark. On by default. */
   watermark?: boolean
+  /**
+   * Photograph ghosted into the background. It sits over the navy gradient and
+   * under the grid, orb and crest, so every existing layer is preserved — the
+   * photo only tints what is already there.
+   */
+  backgroundImage?: string
+  /** How strongly the photograph reads through. Keep low: the title needs contrast. */
+  backgroundImageOpacity?: number
 }
 
 export default function Masthead({
@@ -24,6 +33,8 @@ export default function Masthead({
   fullHeight = true,
   logo = false,
   watermark = true,
+  backgroundImage,
+  backgroundImageOpacity = 0.28,
 }: MastheadProps) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -35,6 +46,28 @@ export default function Masthead({
         background: `linear-gradient(135deg, var(--navy-900), var(--navy-700) 40%, var(--navy-600))`,
       }}
     >
+      {/* Photograph — first layer above the gradient, so the navy tints it */}
+      {backgroundImage && (
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          <Image
+            src={backgroundImage}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+            style={{ opacity: backgroundImageOpacity }}
+          />
+          {/* Darkens the lower edge, where the subtitle and scroll hint sit. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to bottom, transparent 40%, color-mix(in srgb, var(--navy-900) 65%, transparent))`,
+            }}
+          />
+        </div>
+      )}
+
       {/* Grid lines overlay */}
       <div
         className="absolute inset-0 pointer-events-none"

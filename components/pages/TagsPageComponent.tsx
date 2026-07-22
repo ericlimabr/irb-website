@@ -1,12 +1,28 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
-import { Search, MoreHorizontal, Edit, Trash2, Hash, Lock, Unlock, Check } from "lucide-react"
+import { useState, useMemo } from "react"
+import {
+  Search,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Hash,
+  Lock,
+  Unlock,
+  Check,
+} from "lucide-react"
 import { Button } from "@/components/ui/primitives/button"
 import { Input } from "@/components/ui/primitives/input"
 import { Badge } from "@/components/ui/primitives/badge"
 import { Card, CardContent } from "@/components/ui/primitives/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/primitives/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/primitives/table"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,10 +45,15 @@ import { ptBR } from "date-fns/locale"
 import { cn } from "@/utils/styling"
 import { useToast } from "@/hooks/use-toast"
 import { createTag, deleteTag } from "@/app/actions/tags"
+import type { PostTag } from "@/types/post"
 
-const safeFormatDate = (dateValue: any) => {
+/** Tags arrive with the related post count from a Prisma _count include. */
+type TagWithCount = PostTag & { _count?: { posts: number } }
+
+const safeFormatDate = (dateValue: string | Date | null | undefined) => {
   if (!dateValue) return "—"
-  const date = typeof dateValue === "string" ? parseISO(dateValue) : new Date(dateValue)
+  const date =
+    typeof dateValue === "string" ? parseISO(dateValue) : new Date(dateValue)
   if (!isValid(date)) return "Data inválida"
   return format(date, "dd MMM yyyy", { locale: ptBR })
 }
@@ -49,7 +70,7 @@ const generateSlug = (text: string): string => {
 }
 
 interface TagsPageProps {
-  initialTags: any[]
+  initialTags: TagWithCount[]
 }
 
 export default function TagsPageComponent({ initialTags }: TagsPageProps) {
@@ -60,11 +81,7 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
   const [slugLocked, setSlugLocked] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [tagToDelete, setTagToDelete] = useState<any>(null)
-
-  useEffect(() => {
-    if (!slugLocked && newTagName) setNewTagSlug(generateSlug(newTagName))
-  }, [newTagName, slugLocked])
+  const [tagToDelete, setTagToDelete] = useState<TagWithCount | null>(null)
 
   const filteredTags = useMemo(() => {
     return initialTags.filter(
@@ -74,7 +91,7 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
     )
   }, [searchQuery, initialTags])
 
-  const handleDeleteRequest = (tag: any) => {
+  const handleDeleteRequest = (tag: TagWithCount) => {
     setTagToDelete(tag)
     setDeleteDialogOpen(true)
   }
@@ -90,7 +107,10 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
     const result = await createTag(formData)
 
     if (result?.success) {
-      toast({ title: "Categoria criada!", description: `A categoria "${newTagName}" foi salva.` })
+      toast({
+        title: "Categoria criada!",
+        description: `A categoria "${newTagName}" foi salva.`,
+      })
       setNewTagName("")
       setNewTagSlug("")
       setSlugLocked(false)
@@ -99,7 +119,11 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
         typeof result.error === "object"
           ? result.error.name?.[0] || result.error.slug?.[0]
           : result.error
-      toast({ variant: "destructive", title: "Erro ao salvar", description: msg || "Erro desconhecido." })
+      toast({
+        variant: "destructive",
+        title: "Erro ao salvar",
+        description: msg || "Erro desconhecido.",
+      })
     }
     setIsSaving(false)
   }
@@ -110,7 +134,11 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
     if (result?.success) {
       toast({ title: "Categoria excluída" })
     } else {
-      toast({ variant: "destructive", title: "Erro", description: "Falha ao excluir." })
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Falha ao excluir.",
+      })
     }
     setDeleteDialogOpen(false)
     setTagToDelete(null)
@@ -119,8 +147,12 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-serif text-2xl font-bold text-foreground">Gestão de Categorias</h1>
-        <p className="text-sm text-muted-foreground">Crie e organize as categorias teológicas do portal</p>
+        <h1 className="font-serif text-2xl font-bold text-foreground">
+          Gestão de Categorias
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Crie e organize as categorias teológicas do portal
+        </p>
       </div>
 
       <Card className="border-dashed border-2 border-muted-foreground/20 bg-muted/30">
@@ -133,7 +165,13 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
               <Input
                 placeholder="Ex: Teologia Reformada"
                 value={newTagName}
-                onChange={(e) => setNewTagName(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setNewTagName(value)
+                  // Derived here rather than in an effect, which would cascade
+                  // an extra render on every keystroke.
+                  if (!slugLocked) setNewTagSlug(generateSlug(value))
+                }}
                 className="bg-background"
               />
             </div>
@@ -142,7 +180,13 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
               <label className="text-xs font-medium uppercase text-muted-foreground tracking-wider flex items-center justify-between">
                 Slug
                 <button
-                  onClick={() => setSlugLocked(!slugLocked)}
+                  onClick={() => {
+                    const locked = !slugLocked
+                    setSlugLocked(locked)
+                    // Re-derive when handing control back to the generator.
+                    if (!locked && newTagName)
+                      setNewTagSlug(generateSlug(newTagName))
+                  }}
                   className="text-[10px] text-primary hover:underline font-normal"
                 >
                   {slugLocked ? "Liberar" : "Manual"}
@@ -169,7 +213,11 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
               </div>
             </div>
 
-            <Button className="gap-2 cursor-pointer h-10 px-6" disabled={!newTagName} onClick={handleSaveTag}>
+            <Button
+              className="gap-2 cursor-pointer h-10 px-6"
+              disabled={!newTagName}
+              onClick={handleSaveTag}
+            >
               <Check className="h-4 w-4" />
               {isSaving ? "Salvando..." : "Salvar"}
             </Button>
@@ -203,13 +251,19 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
           <TableBody>
             {filteredTags.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="h-24 text-center text-muted-foreground"
+                >
                   Nenhuma categoria encontrada.
                 </TableCell>
               </TableRow>
             ) : (
               filteredTags.map((tag) => (
-                <TableRow key={tag.id} className="group transition-colors hover:bg-muted/50">
+                <TableRow
+                  key={tag.id}
+                  className="group transition-colors hover:bg-muted/50"
+                >
                   <TableCell>
                     <div className="flex items-center gap-2 font-medium text-foreground">
                       <Hash className="h-4 w-4 text-muted-foreground" />
@@ -232,12 +286,18 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100"
+                        >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem onClick={() => console.log("Editar:", tag.id)}>
+                        <DropdownMenuItem
+                          onClick={() => console.log("Editar:", tag.id)}
+                        >
                           <Edit className="mr-2 h-4 w-4" /> Editar
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -262,8 +322,9 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir Categoria</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja remover a categoria &quot;{tagToDelete?.name}&quot;? Isso removerá a associação
-              desta categoria de todos os conteúdos.
+              Tem certeza que deseja remover a categoria &quot;
+              {tagToDelete?.name}&quot;? Isso removerá a associação desta
+              categoria de todos os conteúdos.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

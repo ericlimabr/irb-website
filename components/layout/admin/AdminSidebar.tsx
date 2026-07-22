@@ -6,7 +6,11 @@ import { cn } from "@/utils/styling"
 import Logo from "@/components/ui/Logo"
 import { adminMenuData } from "@/constants/adminMenuData"
 
-export default function AdminSidebar({ countUnreadMessages }: { countUnreadMessages?: number }) {
+export default function AdminSidebar({
+  countUnreadMessages,
+}: {
+  countUnreadMessages?: number
+}) {
   const pathname = usePathname()
 
   const isActive = (href: string) => {
@@ -26,8 +30,12 @@ export default function AdminSidebar({ countUnreadMessages }: { countUnreadMessa
               <Logo variant="mark" tone="gold" height={22} />
             </div>
             <div className="flex flex-col">
-              <span className="font-serif text-sm font-bold text-white">Painel IRB</span>
-              <span className="text-xs text-admin-nav-text">Igreja Cristã Reformada</span>
+              <span className="font-serif text-sm font-bold text-white">
+                Painel IRB
+              </span>
+              <span className="text-xs text-admin-nav-text">
+                Igreja Cristã Reformada
+              </span>
             </div>
           </Link>
         </div>
@@ -53,11 +61,13 @@ export default function AdminSidebar({ countUnreadMessages }: { countUnreadMessa
                 <item.icon className="h-5 w-5 shrink-0" />
                 <span>{item.label}</span>
               </div>
-              {item.label === "Mensagens" && countUnreadMessages && countUnreadMessages > 0 && (
-                <span className="inline-flex items-center rounded-full bg-red-600 px-2 py-1 text-xs font-medium text-white">
-                  {countUnreadMessages > 99 ? "99+" : countUnreadMessages}
-                </span>
-              )}
+              {item.label === "Mensagens" &&
+                countUnreadMessages &&
+                countUnreadMessages > 0 && (
+                  <span className="inline-flex items-center rounded-full bg-red-600 px-2 py-1 text-xs font-medium text-white">
+                    {countUnreadMessages > 99 ? "99+" : countUnreadMessages}
+                  </span>
+                )}
             </Link>
           ))}
 
@@ -86,10 +96,14 @@ export default function AdminSidebar({ countUnreadMessages }: { countUnreadMessa
         <div className="border-t border-admin-nav-border p-4">
           <div className="flex items-center gap-3 rounded-lg bg-admin-nav-border/40 px-3 py-2">
             <div className="h-8 w-8 rounded-full bg-admin-nav-active/20 flex items-center justify-center">
-              <span className="text-xs font-semibold text-admin-nav-active">IRB</span>
+              <span className="text-xs font-semibold text-admin-nav-active">
+                IRB
+              </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-medium text-white">Administrador</span>
+              <span className="text-sm font-medium text-white">
+                Administrador
+              </span>
               <span className="text-xs text-admin-nav-text">Sistema</span>
             </div>
           </div>

@@ -1,7 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Plus, Trash2, GripVertical, ChevronDown, ChevronUp, Eye, EyeOff } from "lucide-react"
+import {
+  Plus,
+  Trash2,
+  GripVertical,
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  EyeOff,
+} from "lucide-react"
 import { createFaq, updateFaq, deleteFaq, reorderFaqs } from "@/app/actions/faq"
 import { useToast } from "@/hooks/use-toast"
 
@@ -13,23 +21,37 @@ type Faq = {
   active: boolean
 }
 
-export default function FaqAdminPageComponent({ initialFaqs }: { initialFaqs: Faq[] }) {
+export default function FaqAdminPageComponent({
+  initialFaqs,
+}: {
+  initialFaqs: Faq[]
+}) {
   const { toast } = useToast()
   const [faqs, setFaqs] = useState<Faq[]>(initialFaqs)
   const [newQuestion, setNewQuestion] = useState("")
   const [newAnswer, setNewAnswer] = useState("")
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [editData, setEditData] = useState<{ question: string; answer: string }>({ question: "", answer: "" })
+  const [editData, setEditData] = useState<{
+    question: string
+    answer: string
+  }>({ question: "", answer: "" })
   const [loading, setLoading] = useState(false)
 
   const handleCreate = async () => {
     if (!newQuestion.trim() || !newAnswer.trim()) return
     setLoading(true)
-    const result = await createFaq({ question: newQuestion.trim(), answer: newAnswer.trim() })
+    const result = await createFaq({
+      question: newQuestion.trim(),
+      answer: newAnswer.trim(),
+    })
     setLoading(false)
 
     if (!result.success || !result.faq) {
-      toast({ variant: "destructive", title: "Erro", description: result.error })
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: result.error,
+      })
       return
     }
 
@@ -49,10 +71,16 @@ export default function FaqAdminPageComponent({ initialFaqs }: { initialFaqs: Fa
     const result = await updateFaq(id, editData)
     setLoading(false)
     if (!result.success) {
-      toast({ variant: "destructive", title: "Erro", description: result.error })
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: result.error,
+      })
       return
     }
-    setFaqs((prev) => prev.map((f) => (f.id === id ? { ...f, ...editData } : f)))
+    setFaqs((prev) =>
+      prev.map((f) => (f.id === id ? { ...f, ...editData } : f)),
+    )
     setEditingId(null)
     toast({ title: "FAQ atualizada." })
   }
@@ -60,14 +88,20 @@ export default function FaqAdminPageComponent({ initialFaqs }: { initialFaqs: Fa
   const handleToggleActive = async (faq: Faq) => {
     const result = await updateFaq(faq.id, { active: !faq.active })
     if (!result.success) return
-    setFaqs((prev) => prev.map((f) => (f.id === faq.id ? { ...f, active: !faq.active } : f)))
+    setFaqs((prev) =>
+      prev.map((f) => (f.id === faq.id ? { ...f, active: !faq.active } : f)),
+    )
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm("Remover esta FAQ?")) return
     const result = await deleteFaq(id)
     if (!result.success) {
-      toast({ variant: "destructive", title: "Erro", description: result.error })
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: result.error,
+      })
       return
     }
     setFaqs((prev) => prev.filter((f) => f.id !== id))
@@ -87,13 +121,19 @@ export default function FaqAdminPageComponent({ initialFaqs }: { initialFaqs: Fa
     <div className="max-w-3xl space-y-6">
       <div className="flex items-center justify-between border-b pb-4">
         <div>
-          <h1 className="font-serif text-2xl font-bold text-foreground">Perguntas Frequentes</h1>
-          <p className="text-sm text-muted-foreground mt-1">Gerencie as FAQs exibidas na página de contato.</p>
+          <h1 className="font-serif text-2xl font-bold text-foreground">
+            Perguntas Frequentes
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Gerencie as FAQs exibidas na página de contato.
+          </p>
         </div>
       </div>
 
       <div className="bg-card rounded-xl border p-6 space-y-4">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Nova Pergunta</h2>
+        <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+          Nova Pergunta
+        </h2>
         <div className="space-y-3">
           <input
             type="text"
@@ -121,23 +161,32 @@ export default function FaqAdminPageComponent({ initialFaqs }: { initialFaqs: Fa
       </div>
 
       {faqs.length === 0 ? (
-        <p className="text-center text-muted-foreground py-12">Nenhuma FAQ cadastrada ainda.</p>
+        <p className="text-center text-muted-foreground py-12">
+          Nenhuma FAQ cadastrada ainda.
+        </p>
       ) : (
         <div className="space-y-3">
           {faqs.map((faq, index) => (
-            <div key={faq.id} className={`bg-card rounded-xl border p-4 ${!faq.active ? "opacity-60" : ""}`}>
+            <div
+              key={faq.id}
+              className={`bg-card rounded-xl border p-4 ${!faq.active ? "opacity-60" : ""}`}
+            >
               {editingId === faq.id ? (
                 <div className="space-y-3">
                   <input
                     type="text"
                     value={editData.question}
-                    onChange={(e) => setEditData({ ...editData, question: e.target.value })}
+                    onChange={(e) =>
+                      setEditData({ ...editData, question: e.target.value })
+                    }
                     className="w-full border rounded-md p-2 text-foreground focus:ring-2 focus:ring-primary outline-none bg-background"
                   />
                   <textarea
                     rows={3}
                     value={editData.answer}
-                    onChange={(e) => setEditData({ ...editData, answer: e.target.value })}
+                    onChange={(e) =>
+                      setEditData({ ...editData, answer: e.target.value })
+                    }
                     className="w-full border rounded-md p-2 text-foreground focus:ring-2 focus:ring-primary outline-none resize-none bg-background"
                   />
                   <div className="flex gap-2">
@@ -159,9 +208,17 @@ export default function FaqAdminPageComponent({ initialFaqs }: { initialFaqs: Fa
               ) : (
                 <div className="flex items-start gap-3">
                   <GripVertical className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
-                  <div className="flex-1 min-w-0" onClick={() => handleStartEdit(faq)} role="button">
-                    <p className="font-medium text-foreground text-sm">{faq.question}</p>
-                    <p className="text-muted-foreground text-sm mt-1 line-clamp-2">{faq.answer}</p>
+                  <div
+                    className="flex-1 min-w-0"
+                    onClick={() => handleStartEdit(faq)}
+                    role="button"
+                  >
+                    <p className="font-medium text-foreground text-sm">
+                      {faq.question}
+                    </p>
+                    <p className="text-muted-foreground text-sm mt-1 line-clamp-2">
+                      {faq.answer}
+                    </p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button
@@ -183,7 +240,11 @@ export default function FaqAdminPageComponent({ initialFaqs }: { initialFaqs: Fa
                       className="p-1.5 hover:text-foreground text-muted-foreground"
                       title={faq.active ? "Ocultar" : "Exibir"}
                     >
-                      {faq.active ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                      {faq.active ? (
+                        <Eye className="h-4 w-4" />
+                      ) : (
+                        <EyeOff className="h-4 w-4" />
+                      )}
                     </button>
                     <button
                       onClick={() => handleDelete(faq.id)}

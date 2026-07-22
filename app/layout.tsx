@@ -35,6 +35,11 @@ const tangerine = Tangerine({
 })
 
 export const metadata: Metadata = {
+  // Without this, OG and Twitter image URLs resolve against localhost and no
+  // preview renders when a link is shared.
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://irb.org.br",
+  ),
   title: {
     default: "Igreja Reformada de Brasília",
     // Pages that set their own title get it suffixed with the church name.

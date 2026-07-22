@@ -62,7 +62,9 @@ export async function createPost(formData: FormData) {
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
-        return { error: "Este slug já está em uso. Escolha um título diferente." }
+        return {
+          error: "Este slug já está em uso. Escolha um título diferente.",
+        }
       }
     }
     return { error: "Erro interno ao salvar a publicação." }
@@ -104,7 +106,7 @@ export async function updatePost(id: string, formData: FormData) {
     await prisma.post.update({
       where: { id },
       data: {
-        ...(postData as any),
+        ...(postData as Prisma.PostUpdateInput),
         tags: { set: [], connect: tagIds?.map((id: string) => ({ id })) || [] },
         publishedAt:
           postData.status === "PUBLISHED"
@@ -117,7 +119,7 @@ export async function updatePost(id: string, formData: FormData) {
     revalidatePath(`/blog/${validated.data.slug}`)
 
     return { success: true }
-  } catch (error) {
+  } catch {
     return { error: "Erro interno ao atualizar a publicação." }
   }
 }
@@ -130,7 +132,7 @@ export async function deletePost(id: string) {
     revalidatePath("/admin/publicacoes")
     revalidatePath("/blog")
     return { success: true }
-  } catch (error) {
+  } catch {
     return { error: "Erro ao excluir a publicação." }
   }
 }

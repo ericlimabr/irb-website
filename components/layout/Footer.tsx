@@ -8,13 +8,26 @@ export default function Footer() {
     { label: "Sobre", href: "/sobre", listable: true },
     { label: "Confissões", href: "/confissoes", listable: true },
     { label: "Doutrina", href: "/doutrina", listable: true },
-    { label: "Mídia", href: "/media", listable: website_config_variables.media.active },
-    { label: "Agenda", href: "/agenda", listable: website_config_variables.agenda.active },
-    { label: "Blog", href: "/blog", listable: website_config_variables.blog.active },
+    { label: "Contato", href: "/contato", listable: true },
+    {
+      label: "Mídia",
+      href: "/media",
+      listable: website_config_variables.media.active,
+    },
+    {
+      label: "Agenda",
+      href: "/agenda",
+      listable: website_config_variables.agenda.active,
+    },
+    {
+      label: "Blog",
+      href: "/blog",
+      listable: website_config_variables.blog.active,
+    },
   ]
 
   return (
-    <footer className="bg-navy-700 border-t-4 border-gold-500">
+    <footer data-chrome-link className="bg-navy-700 border-t-4 border-gold-500">
       <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Left: Church name */}
         <div className="flex items-center gap-3">
