@@ -54,9 +54,17 @@ export const SCHEDULE_DATA = [
 ]
 
 /**
+ * Domínio da igreja — fonte única. Hostname puro (sem protocolo) para
+ * comparações de host; CHURCH_SITE_URL acrescenta o protocolo para links,
+ * metadados e OG. Alterar aqui atualiza e-mail, subdomínios e URLs canônicas.
+ */
+export const CHURCH_DOMAIN = "irbrasilia.org.br"
+export const CHURCH_SITE_URL = `https://${CHURCH_DOMAIN}`
+
+/**
  * Sobre
  */
-export const CHURCH_EMAIL = "contato@irb.org.br"
+export const CHURCH_EMAIL = `contato@${CHURCH_DOMAIN}`
 
 /**
  * Country + area code + number, digits only — the format wa.me expects.
@@ -112,8 +120,8 @@ export const CHURCH_HISTORY_TIMELINE = [
   },
   {
     year: "2022",
-    title: "Estabelecimento",
-    desc: "Deixamos de ser um congregação",
+    title: "Instituição",
+    desc: "Deixamos de ser uma congregação",
   },
   {
     year: "2026",
@@ -124,6 +132,7 @@ export const CHURCH_HISTORY_TIMELINE = [
 
 export const CHURCH_COUNSEL = [
   { name: "Pr. Marcel Tavares", role: "Pastor", initials: "MT" },
+  { name: "Pr. Iraldo Luna", role: "Pastor", initials: "IL" },
   { name: "André Lima", role: "Presbítero", initials: "AL" },
   { name: "Thiago Montenegro", role: "Presbítero", initials: "TM" },
   { name: "William Bessa", role: "Diácono", initials: "WB" },

@@ -86,7 +86,9 @@ export default function ContatoPage() {
                 Cultos
               </p>
               <ul className="font-sans text-text-secondary space-y-2 text-sm">
-                <li>Domingos · {MORNING_LITURGY_TIME} e {AFTERNOON_LITURGY_TIME}</li>
+                <li>
+                  Domingos · {MORNING_LITURGY_TIME} e {AFTERNOON_LITURGY_TIME}
+                </li>
                 <li>Escola Dominical · 10h20</li>
                 <li>Quintas · {WEEKLY_STUDY_TIME}</li>
               </ul>

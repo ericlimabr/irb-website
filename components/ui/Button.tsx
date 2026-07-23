@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { LucideIcon } from "lucide-react"
 import { cn } from "@/utils/styling"
+import { CHURCH_DOMAIN } from "@/const"
 
 interface ButtonProps {
   href: string
@@ -15,10 +16,7 @@ export const isInternalLink = (href: string): boolean => {
   try {
     if (href.startsWith("/") || href.startsWith("#")) return true
     const url = new URL(href)
-    return (
-      url.hostname === "igrejacristareformada.com.br" ||
-      url.hostname === "localhost"
-    )
+    return url.hostname === CHURCH_DOMAIN || url.hostname === "localhost"
   } catch {
     return false
   }
