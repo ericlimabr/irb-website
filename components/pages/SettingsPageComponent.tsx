@@ -17,6 +17,7 @@ import AbsoluteScreenLockLoader from "@/components/ui/AbsoluteScreenLockLoader"
 import { updateSettings } from "@/app/actions/settings"
 import { formatWhatsApp } from "@/utils/numbers"
 import { isValidEmail, sanitizeEmail } from "@/utils/strings"
+import { CHURCH_EMAIL, CHURCH_SITE_URL } from "@/const"
 
 export interface SettingsState {
   authorName: string
@@ -318,7 +319,7 @@ export default function SettingsPageComponent({
                 <input
                   type="text"
                   className="w-full border rounded-md p-2"
-                  placeholder="contato@igrejacristareformada.com.br"
+                  placeholder={CHURCH_EMAIL}
                   value={settings.contactEmail || ""}
                   onChange={(e) =>
                     handleInputChange("contactEmail", e.target.value)
@@ -398,7 +399,7 @@ export default function SettingsPageComponent({
                   {settings.metaTitle || settings.siteName}
                 </h3>
                 <p className="text-green-700 text-xs py-0.5">
-                  https://igrejacristareformada.com.br
+                  {CHURCH_SITE_URL}
                 </p>
                 <p className="text-foreground/80 text-xs line-clamp-2">
                   {settings.metaDescription ||

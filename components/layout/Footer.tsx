@@ -7,7 +7,7 @@ export default function Footer() {
     { label: "Início", href: "/", listable: true },
     { label: "Sobre", href: "/sobre", listable: true },
     { label: "Confissões", href: "/confissoes", listable: true },
-    { label: "Doutrina", href: "/doutrina", listable: true },
+    { label: "Doutrina", href: "/doutrina", listable: false },
     { label: "Contato", href: "/contato", listable: true },
     {
       label: "Mídia",
@@ -40,11 +40,7 @@ export default function Footer() {
         {/* Center: Nav links */}
         <div className="flex flex-wrap items-center justify-center gap-4">
           {footerLinks
-            .filter((item) =>
-              !website_config_variables.blog.active
-                ? item.label != "Blog"
-                : item,
-            )
+            .filter((item) => item.listable)
             .map((link) => (
               <Link
                 key={link.href}

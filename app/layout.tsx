@@ -6,6 +6,7 @@ import {
   Tangerine,
 } from "next/font/google"
 import "./globals.css"
+import { CHURCH_SITE_URL } from "@/const"
 
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
@@ -35,10 +36,16 @@ const tangerine = Tangerine({
 })
 
 export const metadata: Metadata = {
-  // Without this, OG and Twitter image URLs resolve against localhost and no
-  // preview renders when a link is shared.
+  // OG/Twitter image URLs are absolute, resolved against this base, so it must
+  // be a domain that actually serves the site or WhatsApp/etc. get a 404 and
+  // show no preview. Order: explicit override, then Vercel's live production
+  // domain (the *.vercel.app today, and our custom domain once it's connected),
+  // then the custom domain as a static default.
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://irb.org.br",
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : CHURCH_SITE_URL),
   ),
   title: {
     default: "Igreja Reformada de Brasília",
@@ -46,7 +53,7 @@ export const metadata: Metadata = {
     template: "%s · Igreja Reformada de Brasília",
   },
   description:
-    "Uma congregação fundada na Palavra, formada pela confissão histórica e comprometida com a adoração regulada em Brasília.",
+    "Uma congregação fundada na Palavra, formada pela confissão histórica e comprometida com a adoração bíblica em Brasília.",
   openGraph: {
     siteName: "Igreja Reformada de Brasília",
     locale: "pt_BR",

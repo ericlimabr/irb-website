@@ -117,16 +117,19 @@ export default function HomePage() {
                 eyebrow: "Fundação",
                 title: "Nossa História",
                 meta: "Desde 2015",
+                href: "/sobre",
               },
               {
                 eyebrow: "Confissão",
                 title: "O Que Cremos",
                 meta: "Três Formas",
+                href: "/confissoes",
               },
               {
                 eyebrow: "Comunhão",
                 title: "Tornar-se Membro",
                 meta: "Catequese",
+                href: "/sobre",
               },
             ].map((item) => (
               <HorizontalCard
@@ -134,7 +137,7 @@ export default function HomePage() {
                 eyebrow={item.eyebrow}
                 title={item.title}
                 meta={item.meta}
-                href="/sobre"
+                href={item.href}
               />
             ))}
           </div>
@@ -223,74 +226,78 @@ export default function HomePage() {
       </Section>
 
       {/* 1.6 Agenda */}
-      <Section bg="surface-alt" texture="linen">
-        <AnimatedContent>
-          <p className="section-tag mb-6">Agenda</p>
-          <h2
-            className="font-serif text-navy-700 mb-12"
-            style={{ fontSize: "var(--text-size-4xl)" }}
-          >
-            Agenda
-            <br />
-            <em className="text-gold-500">da Igreja</em>
-          </h2>
-        </AnimatedContent>
+      {website_config_variables.agenda.active && (
+        <Section bg="surface-alt" texture="linen">
+          <AnimatedContent>
+            <p className="section-tag mb-6">Agenda</p>
+            <h2
+              className="font-serif text-navy-700 mb-12"
+              style={{ fontSize: "var(--text-size-4xl)" }}
+            >
+              Agenda
+              <br />
+              <em className="text-gold-500">da Igreja</em>
+            </h2>
+          </AnimatedContent>
 
-        <div className="space-y-4 max-w-3xl">
-          {SCHEDULE_DATA.map((ev) => (
-            <HorizontalCard key={ev.title} {...ev} href="/agenda" />
-          ))}
-        </div>
+          <div className="space-y-4 max-w-3xl">
+            {SCHEDULE_DATA.map((ev) => (
+              <HorizontalCard key={ev.title} {...ev} href="/agenda" />
+            ))}
+          </div>
 
-        <AnimatedContent className="mt-8">
-          <IRBButton variant="secondary" href="/agenda">
-            Ver Agenda Completa →
-          </IRBButton>
-        </AnimatedContent>
-      </Section>
+          <AnimatedContent className="mt-8">
+            <IRBButton variant="secondary" href="/agenda">
+              Ver Agenda Completa →
+            </IRBButton>
+          </AnimatedContent>
+        </Section>
+      )}
 
       {/* 1.7 Sermões & Mídia */}
-      <Section bg="surface">
-        <AnimatedContent>
-          <div className="flex items-center justify-between mb-12 flex-wrap gap-4">
-            <div>
-              <p className="section-tag mb-6">Mídia</p>
-              <h2
-                className="font-serif text-navy-700"
-                style={{ fontSize: "var(--text-size-4xl)" }}
-              >
-                Sermões
-                <br />
-                <em className="text-gold-500">& Mídia</em>
-              </h2>
+      {website_config_variables.media.active && (
+        <Section bg="surface">
+          <AnimatedContent>
+            <div className="flex items-center justify-between mb-12 flex-wrap gap-4">
+              <div>
+                <p className="section-tag mb-6">Mídia</p>
+                <h2
+                  className="font-serif text-navy-700"
+                  style={{ fontSize: "var(--text-size-4xl)" }}
+                >
+                  Sermões
+                  <br />
+                  <em className="text-gold-500">& Mídia</em>
+                </h2>
+              </div>
+              <IRBButton variant="secondary" href="/media">
+                Ver Tudo →
+              </IRBButton>
             </div>
-            <IRBButton variant="secondary" href="/media">
-              Ver Tudo →
-            </IRBButton>
-          </div>
-        </AnimatedContent>
+          </AnimatedContent>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          <VerticalCard
-            eyebrow="Arquivo · Pregação"
-            title="Sermões"
-            description="Pregações expositivas da Palavra de Deus — arquivo completo de mensagens dominicais."
-            href="/media"
-          />
-          <VerticalCard
-            eyebrow="Estudo · Expositivo"
-            title="Séries de Pregação"
-            description="Séries temáticas e expositivas livro a livro das Escrituras."
-            href="/media"
-          />
-          <VerticalCard
-            eyebrow="Áudio · Reflexão"
-            title="Podcasts"
-            description="Reflexões teológicas e conversas sobre a fé reformada."
-            href="/media"
-          />
-        </div>
-      </Section>
+          <div className="grid md:grid-cols-3 gap-6">
+            <VerticalCard
+              eyebrow="Arquivo · Pregação"
+              title="Sermões"
+              description="Pregações expositivas da Palavra de Deus — arquivo completo de mensagens dominicais."
+              href="/media"
+            />
+            <VerticalCard
+              eyebrow="Estudo · Expositivo"
+              title="Séries de Pregação"
+              description="Séries temáticas e expositivas livro a livro das Escrituras."
+              href="/media"
+            />
+            <VerticalCard
+              eyebrow="Áudio · Reflexão"
+              title="Podcasts"
+              description="Reflexões teológicas e conversas sobre a fé reformada."
+              href="/media"
+            />
+          </div>
+        </Section>
+      )}
 
       {/* 1.8 Testimonials */}
       <Section bg="surface-alt" texture="linen">
@@ -437,10 +444,7 @@ export default function HomePage() {
               DF.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <IRBButton variant="inverse" href="/confissoes">
-                Nossa Confissão →
-              </IRBButton>
-              <IRBButton variant="accent" href="/sobre">
+              <IRBButton variant="accent" href="/contato">
                 Como Chegar →
               </IRBButton>
             </div>

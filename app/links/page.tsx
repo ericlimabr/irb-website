@@ -3,12 +3,12 @@ import InnerNav from "@/components/layout/InnerNav"
 import Masthead from "@/components/layout/Masthead"
 import { Youtube, Instagram, MessageCircle, Home, BookOpen } from "lucide-react"
 import Link from "next/link"
-import { CHURCH_WHATSAPP } from "@/const"
+import { CHURCH_WHATSAPP, CHURCH_DOMAIN } from "@/const"
 
 const links = [
   {
     label: "Biblioteca Virtual",
-    href: "https://biblioteca.irb.org.br",
+    href: `https://biblioteca.${CHURCH_DOMAIN}`,
     icon: BookOpen,
     description: "Acervo de obras reformadas",
   },

@@ -26,6 +26,25 @@ export default function NotFound() {
           }}
         />
 
+        {/* Crest watermark — decorative background layer, sits under the content */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2.4, ease: "easeOut" }}
+          aria-hidden
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        >
+          <div
+            className="aspect-[842/729] opacity-[0.07] w-[min(86vw,640px)]"
+            style={{
+              backgroundImage: "url(/logo/logo-gold.svg)",
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+          />
+        </motion.div>
+
         <div className="relative z-10 container mx-auto px-6 text-center">
           {/* Eyebrow */}
           <motion.p
@@ -50,7 +69,7 @@ export default function NotFound() {
               ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
               delay: 0.3,
             }}
-            className="font-serif font-light text-primary-foreground/10 leading-none mb-0 select-none"
+            className="font-serif font-light text-primary-foreground leading-none mb-0 select-none"
             style={{ fontSize: "clamp(8rem, 25vw, 22rem)" }}
             aria-hidden
           >

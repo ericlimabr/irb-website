@@ -21,7 +21,7 @@ export default function SobrePage() {
               <em className="text-gold-400">Igreja Reformada.</em>
             </>
           }
-          subtitle="Uma congregação fundada na Palavra, formada pela confissão histórica e comprometida com a adoração regulada em Brasília."
+          subtitle="Uma congregação fundada na Palavra, formada pela confissão histórica e comprometida com a adoração bíblica em Brasília."
         >
           <div className="flex items-center justify-center gap-6 mt-8">
             <span
@@ -144,32 +144,37 @@ export default function SobrePage() {
               <em className="text-gold-500">& Ministério</em>
             </h2>
           </AnimatedContent>
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
+          <div className="flex flex-wrap justify-center gap-8">
             {CHURCH_COUNSEL.map((leader) => (
-              <AnimatedContent key={leader.name}>
-                <div className="text-center">
-                  <div
-                    className="w-20 h-20 bg-navy-700 border-2 border-gold-500 mx-auto flex items-center justify-center mb-4"
-                    style={{ borderRadius: "50%" }}
-                  >
-                    <span className="font-mono text-primary-foreground font-bold">
-                      {leader.initials}
-                    </span>
+              <div
+                key={leader.name}
+                className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.334rem)]"
+              >
+                <AnimatedContent>
+                  <div className="text-center">
+                    <div
+                      className="w-20 h-20 bg-navy-700 border-2 border-gold-500 mx-auto flex items-center justify-center mb-4"
+                      style={{ borderRadius: "50%" }}
+                    >
+                      <span className="font-mono text-primary-foreground font-bold">
+                        {leader.initials}
+                      </span>
+                    </div>
+                    <h4
+                      className="font-serif text-navy-700 font-semibold"
+                      style={{ fontSize: "var(--text-size-lg)" }}
+                    >
+                      {leader.name}
+                    </h4>
+                    <p
+                      className="font-mono uppercase tracking-[0.1em] text-muted-foreground mt-1"
+                      style={{ fontSize: "var(--text-size-xs)" }}
+                    >
+                      {leader.role}
+                    </p>
                   </div>
-                  <h4
-                    className="font-serif text-navy-700 font-semibold"
-                    style={{ fontSize: "var(--text-size-lg)" }}
-                  >
-                    {leader.name}
-                  </h4>
-                  <p
-                    className="font-mono uppercase tracking-[0.1em] text-muted-foreground mt-1"
-                    style={{ fontSize: "var(--text-size-xs)" }}
-                  >
-                    {leader.role}
-                  </p>
-                </div>
-              </AnimatedContent>
+                </AnimatedContent>
+              </div>
             ))}
           </div>
         </Section>
