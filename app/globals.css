@@ -338,4 +338,20 @@
   .marquee-track {
     animation: marquee 30s linear infinite;
   }
+
+  /* Slim, gold scrollbar for the confession index rail */
+  .rail-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-500) transparent;
+  }
+  .rail-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+  .rail-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .rail-scroll::-webkit-scrollbar-thumb {
+    background: var(--gold-500);
+    border: 2px solid var(--surface, #fff);
+  }
 }
