@@ -87,10 +87,7 @@ export default function ConfissoesPage() {
           {BELGIC_CONFESSION_CHAPTERS.map((item) => (
             <AnimatedContent key={item.range}>
               <div className="border border-border p-6 bg-surface hover:shadow-lg transition-shadow duration-700">
-                <span
-                  className="mono-label-sm text-gold-500"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <span className="mono-label-sm text-gold-500">
                   {item.range}
                 </span>
                 <h4
@@ -142,10 +139,7 @@ export default function ConfissoesPage() {
                 >
                   &ldquo;{p.question}&rdquo;
                 </p>
-                <p
-                  className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 mt-auto"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 mt-auto text-2xs">
                   {p.range}
                 </p>
               </div>
@@ -189,10 +183,7 @@ export default function ConfissoesPage() {
                       {item.title}
                     </span>
                   </div>
-                  <span
-                    className="font-mono text-gold-400/60"
-                    style={{ fontSize: "var(--text-size-xs)" }}
-                  >
+                  <span className="font-mono text-gold-400/60 text-2xs">
                     {item.verse}
                   </span>
                 </div>

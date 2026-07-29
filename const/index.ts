@@ -410,5 +410,26 @@ export const CHURCH_MINISTRIES: ChurchMinistry[] = [
 ]
 
 /**
+ * Testimonials — real member citations. Rendered in random order by the
+ * Testimonials section (components/layout/Testimonials.tsx).
+ */
+export const TESTIMONIALS = [
+  {
+    quote: "Exposição fiel das Escrituras, culto centrado na Palavra de Deus!",
+    name: "Letícia Côrtes",
+  },
+  {
+    quote:
+      "Igreja fiel, confessional! Pela graça de Deus o culto prestado na IRB não passa daquilo que Ele mesmo ordenou nas Sagradas Escrituras. Sintam-se bem-vindos.",
+    name: "Bruno Lima",
+  },
+  {
+    quote:
+      "Uma igreja com foco na Palavra de Deus, formada por pecadores que confiam somente no Senhor Jesus Cristo como sua justiça perante Deus; e assim buscam viver para glorificar Aquele que os comprou. Uma igreja hospitaleira, fiel e simples. Ser membro é realmente levado à sério.",
+    name: "André Lima",
+  },
+]
+
+/**
  * Agenda
  */

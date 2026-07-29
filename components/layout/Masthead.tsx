@@ -39,9 +39,12 @@ export default function Masthead({
   const ref = useRef<HTMLDivElement>(null)
 
   return (
+    // Full-height heroes fill the screen. On mobile the browser's dynamic
+    // toolbar makes 100vh overflow (hiding the scroll hint), so use 100dvh
+    // minus the fixed 56px (h-14) top nav. Desktop (lg+) keeps a true 100vh.
     <section
       ref={ref}
-      className={`relative ${fullHeight ? "min-h-screen" : "min-h-[60vh]"} flex items-center justify-center overflow-hidden`}
+      className={`relative ${fullHeight ? "min-h-[calc(100dvh_-_3.5rem)] lg:min-h-screen" : "min-h-[60vh]"} flex items-center justify-center overflow-hidden`}
       style={{
         background: `linear-gradient(135deg, var(--navy-900), var(--navy-700) 40%, var(--navy-600))`,
       }}
@@ -183,10 +186,7 @@ export default function Masthead({
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
           <div className="w-px h-12 bg-gold-500/30 mx-auto mb-2" />
-          <p
-            className="font-mono uppercase tracking-[0.2em] text-primary-foreground/30"
-            style={{ fontSize: "8px" }}
-          >
+          <p className="font-mono uppercase tracking-[0.2em] text-primary-foreground/30 text-fs-8">
             Scroll
           </p>
         </motion.div>

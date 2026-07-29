@@ -45,8 +45,7 @@ export default function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 hover:text-gold-400 transition-colors duration-500"
-                style={{ fontSize: "9px" }}
+                className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 hover:text-gold-400 transition-colors duration-500 text-fs-9"
               >
                 {link.label}
               </Link>

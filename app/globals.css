@@ -69,7 +69,14 @@
   --sidebar-ring: hsl(37 46% 56%);
 
   /* Type scale */
-  --text-size-xs: 0.64rem;
+  /* Desktop-only minimum font size. 0 on mobile, so small text keeps its
+     original (smaller) size there; raised to the ~11.5px floor at the lg
+     breakpoint below. Any size that should honour the floor is written as
+     max(originalSize, var(--text-floor)). */
+  --text-floor: 0rem;
+  /* xs label/eyebrow/metadata tier: original 0.64rem on mobile, floored to
+     0.72rem (~11.5px) on desktop. */
+  --text-size-xs: max(0.64rem, var(--text-floor));
   --text-size-sm: 0.8rem;
   --text-size-base: 1rem;
   --text-size-lg: 1.25rem;
@@ -85,6 +92,15 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Enforce the 11.5px minimum font size on desktop only (lg, 1024px — the same
+   breakpoint the nav and hero use). Below this, --text-floor stays 0 and every
+   size keeps its original, smaller mobile value. */
+@media (min-width: 1024px) {
+  :root {
+    --text-floor: 0.72rem;
+  }
 }
 
 @theme inline {
@@ -211,6 +227,15 @@
     cursor: pointer;
   }
 
+  /* Keep every font size identical in mobile view. Preflight already sets the
+     -webkit- prefix (iOS Safari, Chrome Android); these add the standard and
+     -moz- forms so mobile Firefox and other engines never auto-inflate text
+     either — what the type scale specifies is exactly what renders. */
+  html {
+    text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+  }
+
   body {
     background-color: var(--background);
     font-family: "Raleway", sans-serif;
@@ -226,6 +251,29 @@
 }
 
 @layer components {
+  /* Shared xs size utility — replaces the inline `fontSize: var(--text-size-xs)`
+     that was repeated across labels, eyebrows, metadata and fine print. Single
+     source of truth for the smallest text tier. */
+  .text-2xs {
+    font-size: var(--text-size-xs);
+  }
+
+  /* Micro-label tiers that were originally smaller than the xs size. Each keeps
+     its original px on mobile and rises to the desktop floor (~11.5px) via
+     max(). Named by their original size. */
+  .text-fs-8 {
+    font-size: max(8px, var(--text-floor));
+  }
+  .text-fs-9 {
+    font-size: max(9px, var(--text-floor));
+  }
+  .text-fs-10 {
+    font-size: max(10px, var(--text-floor));
+  }
+  .text-fs-11 {
+    font-size: max(11px, var(--text-floor));
+  }
+
   /* Mono eyebrow label */
   .mono-label {
     font-family: "JetBrains Mono", monospace;

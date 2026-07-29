@@ -40,10 +40,7 @@ export default function ContatoPage() {
         <div className="grid md:grid-cols-3 gap-6">
           <AnimatedContent>
             <div className="border border-border-subtle border-l-[3px] border-l-gold-500 p-8 h-full">
-              <p
-                className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <p className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4 text-2xs">
                 E-mail
               </p>
               <a
@@ -57,10 +54,7 @@ export default function ContatoPage() {
 
           <AnimatedContent>
             <div className="border border-border-subtle border-l-[3px] border-l-gold-500 p-8 h-full">
-              <p
-                className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <p className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4 text-2xs">
                 WhatsApp
               </p>
               <a
@@ -79,10 +73,7 @@ export default function ContatoPage() {
 
           <AnimatedContent>
             <div className="border border-border-subtle border-l-[3px] border-l-gold-500 p-8 h-full">
-              <p
-                className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <p className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4 text-2xs">
                 Cultos
               </p>
               <ul className="font-sans text-text-secondary space-y-2 text-sm">
@@ -135,8 +126,7 @@ export default function ContatoPage() {
               href={mapsDirectionsUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block font-mono uppercase tracking-[0.1em] px-6 py-3 bg-transparent border border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-navy-700 transition-all duration-700"
-              style={{ fontSize: "var(--text-size-xs)" }}
+              className="inline-block font-mono uppercase tracking-[0.1em] px-6 py-3 bg-transparent border border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-navy-700 transition-all duration-700 text-2xs"
             >
               Traçar rota →
             </a>

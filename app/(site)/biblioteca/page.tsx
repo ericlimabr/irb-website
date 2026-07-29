@@ -38,12 +38,11 @@ export default function BibliotecaPage() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`font-mono uppercase tracking-[0.1em] px-4 py-2 border transition-all duration-500 ${
+              className={`text-2xs font-mono uppercase tracking-[0.1em] px-4 py-2 border transition-all duration-500 ${
                 activeCategory === cat
                   ? "bg-gold-500 text-navy-700 border-gold-500"
                   : "bg-transparent text-muted-foreground border-border hover:border-gold-500 hover:text-gold-500"
               }`}
-              style={{ fontSize: "var(--text-size-xs)" }}
             >
               {cat}
             </button>
@@ -56,10 +55,7 @@ export default function BibliotecaPage() {
         <Section bg="surface" className="!pt-0">
           <AnimatedContent>
             <div className="bg-navy-700 texture-hatch p-8 md:p-12 border border-primary-foreground/10">
-              <p
-                className="mono-label-sm text-gold-400 mb-3"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <p className="mono-label-sm text-gold-400 mb-3">
                 {featured.category}
               </p>
               <h3 className="font-serif text-primary-foreground text-3xl font-semibold mb-2">

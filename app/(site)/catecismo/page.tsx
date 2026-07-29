@@ -92,8 +92,7 @@ export default function CatecismoPage() {
           ].map((p) => (
             <span
               key={p.label}
-              className="font-mono uppercase tracking-[0.1em] text-gold-400/60"
-              style={{ fontSize: "9px" }}
+              className="font-mono uppercase tracking-[0.1em] text-gold-400/60 text-fs-9"
             >
               {p.label}
             </span>
@@ -154,10 +153,7 @@ export default function CatecismoPage() {
                   className="w-full text-left p-6 flex items-center justify-between"
                 >
                   <div>
-                    <span
-                      className="font-mono uppercase tracking-[0.1em] text-gold-500"
-                      style={{ fontSize: "var(--text-size-xs)" }}
-                    >
+                    <span className="font-mono uppercase tracking-[0.1em] text-gold-500 text-2xs">
                       Domingo {sunday.sunday}
                     </span>
                     <h4
@@ -208,10 +204,7 @@ export default function CatecismoPage() {
                                 ))}
                               </div>
                               {qa.refs && (
-                                <span
-                                  className="font-mono text-gold-600"
-                                  style={{ fontSize: "var(--text-size-xs)" }}
-                                >
+                                <span className="font-mono text-gold-600 text-2xs">
                                   {qa.refs}
                                 </span>
                               )}

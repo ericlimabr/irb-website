@@ -68,10 +68,7 @@ export default function AgendaPage() {
                 <p className="font-mono text-gold-500 text-2xl font-bold mt-2">
                   {s.meta}
                 </p>
-                <p
-                  className="font-mono uppercase tracking-[0.1em] text-muted-foreground mt-1 mb-3"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <p className="font-mono uppercase tracking-[0.1em] text-muted-foreground mt-1 mb-3 text-2xs">
                   {s.day}
                 </p>
                 <p className="font-sans text-muted-foreground text-sm leading-relaxed">

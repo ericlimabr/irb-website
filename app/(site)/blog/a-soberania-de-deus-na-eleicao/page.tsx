@@ -171,24 +171,15 @@ export default function BlogPostPage() {
         <div className="container mx-auto px-6 relative z-10 max-w-3xl">
           <AnimatedContent>
             <div className="flex items-center gap-3 mb-6">
-              <span
-                className="mono-label-sm text-gold-400"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <span className="mono-label-sm text-gold-400">
                 {article.category}
               </span>
               <span className="text-primary-foreground/30">·</span>
-              <span
-                className="font-mono text-primary-foreground/40"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <span className="font-mono text-primary-foreground/40 text-2xs">
                 {article.date}
               </span>
               <span className="text-primary-foreground/30">·</span>
-              <span
-                className="font-mono text-primary-foreground/40"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <span className="font-mono text-primary-foreground/40 text-2xs">
                 {article.readTime}
               </span>
             </div>
@@ -210,10 +201,7 @@ export default function BlogPostPage() {
                 <p className="font-sans text-primary-foreground text-sm font-semibold">
                   {article.author}
                 </p>
-                <p
-                  className="font-mono uppercase tracking-[0.1em] text-primary-foreground/50"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/50 text-2xs">
                   Autor
                 </p>
               </div>
@@ -275,10 +263,7 @@ export default function BlogPostPage() {
                     >
                       {block.content}
                     </p>
-                    <cite
-                      className="font-mono uppercase tracking-[0.1em] text-gold-600 not-italic"
-                      style={{ fontSize: "var(--text-size-xs)" }}
-                    >
+                    <cite className="font-mono uppercase tracking-[0.1em] text-gold-600 not-italic text-2xs">
                       {block.reference}
                     </cite>
                   </blockquote>
@@ -297,10 +282,7 @@ export default function BlogPostPage() {
                       «{block.content}»
                     </p>
                     {block.attribution && (
-                      <cite
-                        className="block font-mono uppercase tracking-[0.1em] text-gold-600 not-italic mt-4"
-                        style={{ fontSize: "var(--text-size-xs)" }}
-                      >
+                      <cite className="block font-mono uppercase tracking-[0.1em] text-gold-600 not-italic mt-4 text-2xs">
                         — {block.attribution}
                       </cite>
                     )}
@@ -335,10 +317,7 @@ export default function BlogPostPage() {
               >
                 {article.author}
               </p>
-              <p
-                className="font-mono uppercase tracking-[0.1em] text-gold-600 mb-3"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <p className="font-mono uppercase tracking-[0.1em] text-gold-600 mb-3 text-2xs">
                 Pastor · Igreja Reformada de Brasília
               </p>
               <p
@@ -359,10 +338,7 @@ export default function BlogPostPage() {
         <AnimatedContent>
           <div className="flex items-center gap-4 mb-8">
             <div className="w-8 h-px bg-gold-500" />
-            <span
-              className="font-mono uppercase tracking-[0.35em] text-gold-500"
-              style={{ fontSize: "var(--text-size-xs)" }}
-            >
+            <span className="font-mono uppercase tracking-[0.35em] text-gold-500 text-2xs">
               Artigos Relacionados
             </span>
           </div>

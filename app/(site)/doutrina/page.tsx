@@ -97,10 +97,7 @@ export default function DoutrinaPage() {
         <div className="max-w-3xl space-y-12">
           {qaData.map((group) => (
             <div key={group.theme}>
-              <h3
-                className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-6"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <h3 className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-6 text-2xs">
                 {group.theme}
               </h3>
               <div className="space-y-3">
@@ -137,10 +134,7 @@ export default function DoutrinaPage() {
                               <div className="callout-scripture text-sm mb-3">
                                 {qa.ref}
                               </div>
-                              <span
-                                className="inline-block font-mono uppercase tracking-[0.1em] text-gold-600 bg-gold-500/10 px-2 py-1"
-                                style={{ fontSize: "var(--text-size-xs)" }}
-                              >
+                              <span className="inline-block font-mono uppercase tracking-[0.1em] text-gold-600 bg-gold-500/10 px-2 py-1 text-2xs">
                                 {qa.conf}
                               </span>
                             </div>
@@ -203,10 +197,7 @@ export default function DoutrinaPage() {
                 >
                   {s.latin}
                 </h4>
-                <p
-                  className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 mb-4"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 mb-4 text-2xs">
                   {s.pt}
                 </p>
                 <p className="font-sans text-primary-foreground/55 text-sm leading-relaxed">

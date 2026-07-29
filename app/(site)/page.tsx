@@ -5,10 +5,10 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
+import Testimonials from "@/components/layout/Testimonials"
 import {
   VerticalCard,
   HorizontalCard,
-  TestimonialCard,
   IRBButton,
 } from "@/components/layout/Cards"
 import {
@@ -300,24 +300,7 @@ export default function HomePage() {
       )}
 
       {/* 1.8 Testimonials */}
-      <Section bg="surface-alt" texture="linen">
-        <AnimatedContent>
-          <p className="section-tag mb-12">Testemunhos</p>
-        </AnimatedContent>
-        <div className="grid md:grid-cols-2 gap-6">
-          <TestimonialCard
-            quote="Encontrei na IRB uma comunidade que honra a Palavra de Deus com reverência e profundidade. A pregação expositiva transformou minha compreensão das Escrituras."
-            name="Maria Fernanda"
-            role="Membro desde 2019"
-          />
-          <TestimonialCard
-            quote="A catequese me deu fundamentos sólidos para minha fé. As confissões reformadas me ensinaram a articular o que sempre cri mas nunca soube expressar."
-            name="Carlos Eduardo"
-            role="Membro desde 2020"
-            dark
-          />
-        </div>
-      </Section>
+      <Testimonials />
 
       {/* 1.9 Stats */}
       <Section bg="inverse" className="!py-20">
@@ -339,16 +322,10 @@ export default function HomePage() {
               >
                 0
               </p>
-              <p
-                className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 mb-1"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 mb-1 text-2xs">
                 {s.label}
               </p>
-              <p
-                className="font-mono text-primary-foreground/30"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <p className="font-mono text-primary-foreground/30 text-2xs">
                 {s.sub}
               </p>
             </AnimatedContent>
