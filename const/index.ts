@@ -180,8 +180,17 @@ export const DORT_CHAPTERS = [
   },
 ]
 
-export { DORT_ARTICLES } from "./confessions/dort"
-export type { DortArticle } from "./confessions/dort"
+export {
+  DORT_ARTICLES,
+  DORT_REJECTIONS,
+  DORT_CONCLUSION,
+} from "./confessions/dort"
+export type {
+  DortArticle,
+  DortError,
+  DortRejection,
+  DortConclusion,
+} from "./confessions/dort"
 
 export const TULIP_DATA = [
   {
