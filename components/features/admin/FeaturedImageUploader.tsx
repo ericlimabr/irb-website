@@ -176,7 +176,7 @@ export function FeaturedImageUploader({
                 <p className="text-xs font-medium">
                   {isUploading ? "Enviando..." : "Clique para selecionar"}
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-1">
+                <p className="text-fs-10 text-muted-foreground mt-1">
                   PNG, JPG ou WEBP (Máx. 5MB)
                 </p>
               </div>

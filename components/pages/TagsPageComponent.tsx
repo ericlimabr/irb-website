@@ -187,7 +187,7 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
                     if (!locked && newTagName)
                       setNewTagSlug(generateSlug(newTagName))
                   }}
-                  className="text-[10px] text-primary hover:underline font-normal"
+                  className="text-fs-10 text-primary hover:underline font-normal"
                 >
                   {slugLocked ? "Liberar" : "Manual"}
                 </button>
@@ -271,7 +271,7 @@ export default function TagsPageComponent({ initialTags }: TagsPageProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 text-[11px] font-mono text-muted-foreground">
+                    <code className="rounded bg-muted px-1.5 py-0.5 text-fs-11 font-mono text-muted-foreground">
                       /{tag.slug}
                     </code>
                   </TableCell>

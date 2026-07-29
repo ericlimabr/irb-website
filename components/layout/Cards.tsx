@@ -68,7 +68,6 @@ export const VerticalCard = ({
         {eyebrow && (
           <p
             className={`mono-label-sm mb-3 ${featured ? "text-gold-400" : "text-gold-500"}`}
-            style={{ fontSize: "var(--text-size-xs)" }}
           >
             {eyebrow}
           </p>
@@ -96,22 +95,18 @@ export const VerticalCard = ({
           className={`border-t pt-4 mt-auto flex items-center justify-between ${featured ? "border-primary-foreground/10" : "border-border"}`}
         >
           {meta && (
-            <span
-              className="font-mono uppercase tracking-[0.1em] text-muted-foreground"
-              style={{ fontSize: "var(--text-size-xs)" }}
-            >
+            <span className="font-mono uppercase tracking-[0.1em] text-muted-foreground text-2xs">
               {meta}
             </span>
           )}
           {href && (
             <Link
               href={href}
-              className={`font-mono uppercase tracking-[0.1em] transition-colors duration-500 ${
+              className={`text-2xs font-mono uppercase tracking-[0.1em] transition-colors duration-500 ${
                 featured
                   ? "text-gold-400 hover:text-gold-500"
                   : "text-gold-600 hover:text-gold-500"
               }`}
-              style={{ fontSize: "var(--text-size-xs)" }}
             >
               {linkText}
             </Link>
@@ -155,21 +150,13 @@ export const HorizontalCard = ({
         <span className="font-serif text-gold-500 text-2xl font-semibold leading-none">
           {dateDay}
         </span>
-        <span
-          className="font-mono uppercase tracking-[0.1em] text-muted-foreground mt-1"
-          style={{ fontSize: "var(--text-size-xs)" }}
-        >
+        <span className="font-mono uppercase tracking-[0.1em] text-muted-foreground mt-1 text-2xs">
           {dateMonth}
         </span>
       </div>
     )}
     <div className="flex-1 p-4 flex flex-col justify-center">
-      <p
-        className="mono-label-sm text-gold-500 mb-1"
-        style={{ fontSize: "var(--text-size-xs)" }}
-      >
-        {eyebrow}
-      </p>
+      <p className="mono-label-sm text-gold-500 mb-1">{eyebrow}</p>
       <h4
         className="font-serif text-navy-700 font-semibold"
         style={{ fontSize: "var(--text-size-lg)" }}
@@ -189,8 +176,7 @@ export const HorizontalCard = ({
       <div className="flex items-center px-4">
         <Link
           href={href}
-          className="font-mono uppercase tracking-[0.1em] text-gold-600 hover:text-gold-500 transition-colors duration-500 whitespace-nowrap"
-          style={{ fontSize: "var(--text-size-xs)" }}
+          className="font-mono uppercase tracking-[0.1em] text-gold-600 hover:text-gold-500 transition-colors duration-500 whitespace-nowrap text-2xs"
         >
           {linkText}
         </Link>
@@ -203,7 +189,7 @@ export const HorizontalCard = ({
 interface TestimonialProps {
   quote: string
   name: string
-  role: string
+  role?: string
   dark?: boolean
 }
 
@@ -259,12 +245,13 @@ export const TestimonialCard = ({
           >
             {name}
           </p>
-          <p
-            className={`font-mono uppercase tracking-[0.1em] ${dark ? "text-primary-foreground/50" : "text-muted-foreground"}`}
-            style={{ fontSize: "var(--text-size-xs)" }}
-          >
-            {role}
-          </p>
+          {role && (
+            <p
+              className={`text-2xs font-mono uppercase tracking-[0.1em] ${dark ? "text-primary-foreground/50" : "text-muted-foreground"}`}
+            >
+              {role}
+            </p>
+          )}
         </div>
       </footer>
     </blockquote>
@@ -297,7 +284,7 @@ export const IRBButton = ({
   className = "",
   onClick,
 }: ButtonProps) => {
-  const styles = `inline-block font-mono uppercase tracking-[0.1em] px-6 py-3 transition-all duration-700 ${variantStyles[variant]} ${className}`
+  const styles = `text-2xs inline-block font-mono uppercase tracking-[0.1em] px-6 py-3 transition-all duration-700 ${variantStyles[variant]} ${className}`
 
   // Off-site targets (WhatsApp, the virtual library) open in a new tab and skip
   // the router, which has nothing to prefetch for them.
@@ -308,7 +295,6 @@ export const IRBButton = ({
         target="_blank"
         rel="noopener noreferrer"
         className={styles}
-        style={{ fontSize: "var(--text-size-xs)" }}
       >
         {children}
       </a>
@@ -317,21 +303,13 @@ export const IRBButton = ({
 
   if (href) {
     return (
-      <Link
-        href={href}
-        className={styles}
-        style={{ fontSize: "var(--text-size-xs)" }}
-      >
+      <Link href={href} className={styles}>
         {children}
       </Link>
     )
   }
   return (
-    <button
-      onClick={onClick}
-      className={styles}
-      style={{ fontSize: "var(--text-size-xs)" }}
-    >
+    <button onClick={onClick} className={styles}>
       {children}
     </button>
   )

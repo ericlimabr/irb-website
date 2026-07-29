@@ -93,8 +93,7 @@ export default function ConfissaoBelgaPage() {
           {["1561 · Países Baixos", "Guido de Brès", "37 Artigos"].map((s) => (
             <span
               key={s}
-              className="font-mono uppercase tracking-[0.1em] text-gold-400/60"
-              style={{ fontSize: "9px" }}
+              className="font-mono uppercase tracking-[0.1em] text-gold-400/60 text-fs-9"
             >
               {s}
             </span>
@@ -115,10 +114,7 @@ export default function ConfissaoBelgaPage() {
                     active ? "border-gold-500 border-l-[3px]" : "border-border"
                   }`}
                 >
-                  <span
-                    className="mono-label-sm text-gold-500"
-                    style={{ fontSize: "var(--text-size-xs)" }}
-                  >
+                  <span className="mono-label-sm text-gold-500">
                     {group.range}
                   </span>
                   <h4
@@ -168,10 +164,7 @@ export default function ConfissaoBelgaPage() {
                         {article.number}
                       </span>
                       <div>
-                        <span
-                          className="font-mono uppercase tracking-[0.1em] text-gold-500"
-                          style={{ fontSize: "var(--text-size-xs)" }}
-                        >
+                        <span className="font-mono uppercase tracking-[0.1em] text-gold-500 text-2xs">
                           Artigo {article.number}
                         </span>
                         <h4
@@ -206,10 +199,7 @@ export default function ConfissaoBelgaPage() {
                             </p>
                           ))}
                           {article.refs && (
-                            <span
-                              className="font-mono text-gold-600 block pt-1"
-                              style={{ fontSize: "var(--text-size-xs)" }}
-                            >
+                            <span className="font-mono text-gold-600 block pt-1 text-2xs">
                               {article.refs}
                             </span>
                           )}

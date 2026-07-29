@@ -32,8 +32,7 @@ export default function GaleriaPage() {
           {[`${photos.length} Fotografias`, "Brasília, DF"].map((s) => (
             <span
               key={s}
-              className="font-mono uppercase tracking-[0.1em] text-gold-400/60"
-              style={{ fontSize: "9px" }}
+              className="font-mono uppercase tracking-[0.1em] text-gold-400/60 text-fs-9"
             >
               {s}
             </span>

@@ -30,10 +30,7 @@ export default function MediaPage() {
               <span className="font-mono text-gold-400 text-lg font-bold">
                 {s.n}
               </span>
-              <p
-                className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 mt-1"
-                style={{ fontSize: "8px" }}
-              >
+              <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 mt-1 text-fs-8">
                 {s.label}
               </p>
             </div>
@@ -46,10 +43,7 @@ export default function MediaPage() {
         <Section bg="surface">
           <AnimatedContent>
             <div className="bg-navy-700 texture-hatch p-8 md:p-12 border border-primary-foreground/10">
-              <p
-                className="mono-label-sm text-gold-400 mb-3"
-                style={{ fontSize: "var(--text-size-xs)" }}
-              >
+              <p className="mono-label-sm text-gold-400 mb-3">
                 {MOCKUP_HIGHLIGHTED_SERMON.breadcrumb}
               </p>
               <h3 className="font-serif text-primary-foreground text-3xl font-semibold mb-3">
@@ -59,10 +53,7 @@ export default function MediaPage() {
                 {MOCKUP_HIGHLIGHTED_SERMON.description}
               </p>
               <div className="flex items-center gap-4">
-                <span
-                  className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <span className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 text-2xs">
                   {MOCKUP_HIGHLIGHTED_SERMON.metadata}
                 </span>
               </div>

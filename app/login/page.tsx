@@ -8,7 +8,7 @@ const fieldStyles =
   "w-full bg-surface border border-border-subtle px-4 py-3 font-sans text-navy-700 focus:outline-none focus:border-gold-500 transition-colors duration-300"
 
 const labelStyles =
-  "block font-mono uppercase tracking-[0.1em] text-navy-700/50 mb-2"
+  "block font-mono uppercase tracking-[0.1em] text-navy-700/50 mb-2 text-2xs"
 
 export default function LoginPage() {
   return (
@@ -68,10 +68,7 @@ export default function LoginPage() {
           />
         </div>
 
-        <p
-          className="font-mono uppercase tracking-[0.2em] text-gold-500 text-center mb-3"
-          style={{ fontSize: "var(--text-size-xs)" }}
-        >
+        <p className="font-mono uppercase tracking-[0.2em] text-gold-500 text-center mb-3 text-2xs">
           Área Restrita
         </p>
         <h1
@@ -83,11 +80,7 @@ export default function LoginPage() {
 
         <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
           <div>
-            <label
-              htmlFor="email"
-              className={labelStyles}
-              style={{ fontSize: "var(--text-size-xs)" }}
-            >
+            <label htmlFor="email" className={labelStyles}>
               E-mail
             </label>
             <input
@@ -101,11 +94,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className={labelStyles}
-              style={{ fontSize: "var(--text-size-xs)" }}
-            >
+            <label htmlFor="password" className={labelStyles}>
               Senha
             </label>
             <input
@@ -120,8 +109,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full font-mono uppercase tracking-[0.1em] px-6 py-3 bg-navy-700 text-primary-foreground hover:bg-gold-500 hover:text-navy-700 transition-all duration-700"
-            style={{ fontSize: "var(--text-size-xs)" }}
+            className="w-full font-mono uppercase tracking-[0.1em] px-6 py-3 bg-navy-700 text-primary-foreground hover:bg-gold-500 hover:text-navy-700 transition-all duration-700 text-2xs"
           >
             Entrar →
           </button>
@@ -130,8 +118,7 @@ export default function LoginPage() {
         <div className="mt-8 text-center">
           <Link
             href="/"
-            className="font-mono uppercase tracking-[0.1em] text-navy-700/50 hover:text-gold-500 transition-colors duration-500"
-            style={{ fontSize: "var(--text-size-xs)" }}
+            className="font-mono uppercase tracking-[0.1em] text-navy-700/50 hover:text-gold-500 transition-colors duration-500 text-2xs"
           >
             ← Voltar ao site
           </Link>

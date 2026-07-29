@@ -94,10 +94,7 @@ export default function ArticleIndex({
       aria-label={title}
       className="rail-scroll hidden lg:block sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pr-1"
     >
-      <p
-        className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4"
-        style={{ fontSize: "var(--text-size-xs)" }}
-      >
+      <p className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4 text-2xs">
         {title}
       </p>
       <div className="space-y-5 border-l border-border">

@@ -126,24 +126,22 @@ export default function GalleryGrid({ photos }: GalleryGridProps) {
               </>
             )}
 
-            <div
-              className="relative w-[92vw] h-[80vh]"
+            {/* The image is sized to hug the photo (no object-contain
+                letterbox), so the whole area around it is the backdrop and a
+                click there closes. Only a click on the photo itself is kept
+                from bubbling up to the overlay's close handler. */}
+            <Image
+              src={photos[openIndex].src}
+              alt={ALT}
+              width={0}
+              height={0}
+              sizes="92vw"
               onClick={(e) => e.stopPropagation()}
-            >
-              <Image
-                src={photos[openIndex].src}
-                alt={ALT}
-                fill
-                sizes="92vw"
-                className="object-contain"
-                priority
-              />
-            </div>
+              className="w-auto h-auto max-w-[92vw] max-h-[80vh] object-contain"
+              priority
+            />
 
-            <p
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono uppercase tracking-[0.2em] text-primary-foreground/40"
-              style={{ fontSize: "var(--text-size-xs)" }}
-            >
+            <p className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono uppercase tracking-[0.2em] text-primary-foreground/40 text-2xs">
               {openIndex + 1} / {photos.length}
             </p>
           </motion.div>

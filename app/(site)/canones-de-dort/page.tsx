@@ -157,8 +157,7 @@ export default function CanonesDeDortPage() {
           ].map((s) => (
             <span
               key={s}
-              className="font-mono uppercase tracking-[0.1em] text-gold-400/60"
-              style={{ fontSize: "9px" }}
+              className="font-mono uppercase tracking-[0.1em] text-gold-400/60 text-fs-9"
             >
               {s}
             </span>
@@ -183,10 +182,7 @@ export default function CanonesDeDortPage() {
                     <span className="font-serif text-gold-400 text-4xl font-light">
                       {chapter.head}
                     </span>
-                    <span
-                      className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40"
-                      style={{ fontSize: "var(--text-size-xs)" }}
-                    >
+                    <span className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 text-2xs">
                       {chapter.tulip}
                     </span>
                   </div>
@@ -196,10 +192,7 @@ export default function CanonesDeDortPage() {
                   <p className="font-sans text-primary-foreground/65 text-sm mt-2">
                     {chapter.desc}
                   </p>
-                  <p
-                    className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 mt-4"
-                    style={{ fontSize: "var(--text-size-xs)" }}
-                  >
+                  <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 mt-4 text-2xs">
                     {chapter.articles} Artigos · Rejeição dos Erros
                   </p>
                 </button>
@@ -249,10 +242,7 @@ export default function CanonesDeDortPage() {
                               {article.number}
                             </span>
                             <div>
-                              <span
-                                className="font-mono uppercase tracking-[0.1em] text-gold-500"
-                                style={{ fontSize: "var(--text-size-xs)" }}
-                              >
+                              <span className="font-mono uppercase tracking-[0.1em] text-gold-500 text-2xs">
                                 Capítulo {article.head} · Artigo{" "}
                                 {article.number}
                               </span>
@@ -291,10 +281,7 @@ export default function CanonesDeDortPage() {
                                   </p>
                                 ))}
                                 {article.refs && (
-                                  <span
-                                    className="font-mono text-gold-600 block pt-1"
-                                    style={{ fontSize: "var(--text-size-xs)" }}
-                                  >
+                                  <span className="font-mono text-gold-600 block pt-1 text-2xs">
                                     {article.refs}
                                   </span>
                                 )}
@@ -311,10 +298,7 @@ export default function CanonesDeDortPage() {
                       id={rejAnchor(chapter.head)}
                       className="scroll-mt-24 pt-2"
                     >
-                      <span
-                        className="font-mono uppercase tracking-[0.1em] text-gold-500"
-                        style={{ fontSize: "var(--text-size-xs)" }}
-                      >
+                      <span className="font-mono uppercase tracking-[0.1em] text-gold-500 text-2xs">
                         Rejeição dos Erros · Capítulo {chapter.head}
                       </span>
                       <p className="font-serif italic text-navy-700 mt-2 mb-5 leading-relaxed">
@@ -338,10 +322,7 @@ export default function CanonesDeDortPage() {
                                 className="w-full text-left p-6 flex items-start justify-between gap-6"
                               >
                                 <div>
-                                  <span
-                                    className="font-mono uppercase tracking-[0.1em] text-gold-500"
-                                    style={{ fontSize: "var(--text-size-xs)" }}
-                                  >
+                                  <span className="font-mono uppercase tracking-[0.1em] text-gold-500 text-2xs">
                                     Erro {err.number}
                                   </span>
                                   <p className="font-serif text-navy-700 mt-1 leading-snug">
@@ -366,12 +347,7 @@ export default function CanonesDeDortPage() {
                                     className="overflow-hidden"
                                   >
                                     <div className="border-t border-border p-6">
-                                      <span
-                                        className="font-mono uppercase tracking-[0.1em] text-gold-500"
-                                        style={{
-                                          fontSize: "var(--text-size-xs)",
-                                        }}
-                                      >
+                                      <span className="font-mono uppercase tracking-[0.1em] text-gold-500 text-2xs">
                                         Refutação
                                       </span>
                                       <p className="font-sans text-muted-foreground leading-relaxed mt-2">
@@ -404,10 +380,7 @@ export default function CanonesDeDortPage() {
                 className="scroll-mt-24 border border-border border-l-[3px] border-l-gold-500 bg-surface-alt texture-linen"
               >
                 <div className="p-6 md:p-8 space-y-4">
-                  <span
-                    className="font-mono uppercase tracking-[0.1em] text-gold-500"
-                    style={{ fontSize: "var(--text-size-xs)" }}
-                  >
+                  <span className="font-mono uppercase tracking-[0.1em] text-gold-500 text-2xs">
                     Conclusão
                   </span>
                   {DORT_CONCLUSION.intro.map((p, i) => (

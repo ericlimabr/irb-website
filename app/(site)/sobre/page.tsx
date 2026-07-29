@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import { IRBButton } from "@/components/layout/Cards"
@@ -24,34 +25,19 @@ export default function SobrePage() {
           subtitle="Uma congregação fundada na Palavra, formada pela confissão histórica e comprometida com a adoração bíblica em Brasília."
         >
           <div className="flex items-center justify-center gap-6 mt-8">
-            <span
-              className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40"
-              style={{ fontSize: "9px" }}
-            >
+            <span className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 text-fs-9">
               IRB
             </span>
-            <span
-              className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40"
-              style={{ fontSize: "9px" }}
-            >
+            <span className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 text-fs-9">
               ·
             </span>
-            <span
-              className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40"
-              style={{ fontSize: "9px" }}
-            >
+            <span className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 text-fs-9">
               Brasília, DF
             </span>
-            <span
-              className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40"
-              style={{ fontSize: "9px" }}
-            >
+            <span className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 text-fs-9">
               ·
             </span>
-            <span
-              className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40"
-              style={{ fontSize: "9px" }}
-            >
+            <span className="font-mono uppercase tracking-[0.1em] text-primary-foreground/40 text-fs-9">
               Est. 2015
             </span>
           </div>
@@ -94,10 +80,7 @@ export default function SobrePage() {
                   para todos os que ainda estão longe, isto é, para quantos o
                   Senhor, nosso Deus, chamar.&rdquo;
                 </p>
-                <p
-                  className="font-mono text-gold-600 mt-2"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <p className="font-mono text-gold-600 mt-2 text-2xs">
                   Atos 2:38 · ARA
                 </p>
               </div>
@@ -144,38 +127,63 @@ export default function SobrePage() {
               <em className="text-gold-500">& Ministério</em>
             </h2>
           </AnimatedContent>
-          <div className="flex flex-wrap justify-center gap-8">
-            {CHURCH_COUNSEL.map((leader) => (
-              <div
-                key={leader.name}
-                className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.334rem)]"
-              >
-                <AnimatedContent>
-                  <div className="text-center">
-                    <div
-                      className="w-20 h-20 bg-navy-700 border-2 border-gold-500 mx-auto flex items-center justify-center mb-4"
-                      style={{ borderRadius: "50%" }}
-                    >
-                      <span className="font-mono text-primary-foreground font-bold">
-                        {leader.initials}
-                      </span>
+          {/* Desktop: roster on the left, framed council photo on the right.
+              Below lg this is a plain block, so the roster stacks above the
+              photo. */}
+          <div className="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+            <div className="flex flex-wrap justify-center gap-8">
+              {CHURCH_COUNSEL.map((leader) => (
+                <div key={leader.name} className="w-full md:w-[calc(50%-1rem)]">
+                  <AnimatedContent>
+                    <div className="text-center">
+                      <div
+                        className="w-20 h-20 bg-navy-700 border-2 border-gold-500 mx-auto flex items-center justify-center mb-4"
+                        style={{ borderRadius: "50%" }}
+                      >
+                        <span className="font-mono text-primary-foreground font-bold">
+                          {leader.initials}
+                        </span>
+                      </div>
+                      <h4
+                        className="font-serif text-navy-700 font-semibold"
+                        style={{ fontSize: "var(--text-size-lg)" }}
+                      >
+                        {leader.name}
+                      </h4>
+                      <p className="font-mono uppercase tracking-[0.1em] text-muted-foreground mt-1 text-2xs">
+                        {leader.role}
+                      </p>
                     </div>
-                    <h4
-                      className="font-serif text-navy-700 font-semibold"
-                      style={{ fontSize: "var(--text-size-lg)" }}
-                    >
-                      {leader.name}
-                    </h4>
-                    <p
-                      className="font-mono uppercase tracking-[0.1em] text-muted-foreground mt-1"
-                      style={{ fontSize: "var(--text-size-xs)" }}
-                    >
-                      {leader.role}
-                    </p>
-                  </div>
-                </AnimatedContent>
-              </div>
-            ))}
+                  </AnimatedContent>
+                </div>
+              ))}
+            </div>
+
+            {/* Council portrait, framed as a design-system card: white matte,
+                gold top rule, square corners, navy mono eyebrow. The source is
+                a portrait shot with empty wall above and floor below, so
+                aspect-[9/10] + object-center crops to the members head-to-toe. */}
+            <AnimatedContent>
+              <figure
+                className="mx-auto mt-16 w-full max-w-2xl border border-border border-t-[3px] border-t-gold-500 bg-surface p-3 lg:mt-0"
+                style={{ boxShadow: "var(--shadow-md)" }}
+              >
+                {/* Thin gold keyline between the white matte and the photo —
+                    a quiet framing detail, no heavy colour block. */}
+                <div className="relative aspect-[9/10] overflow-hidden border border-gold-500/40">
+                  <Image
+                    src="/galery/1/IMG-20260315-WA0006.jpg"
+                    alt="Conselho da Igreja Reformada de Brasília"
+                    fill
+                    sizes="(min-width: 1024px) 36rem, (min-width: 768px) 42rem, 100vw"
+                    className="object-cover object-center"
+                  />
+                </div>
+                <figcaption className="mono-label mt-4 text-center text-navy-700">
+                  Conselho da Igreja
+                </figcaption>
+              </figure>
+            </AnimatedContent>
           </div>
         </Section>
 
@@ -252,16 +260,10 @@ export default function SobrePage() {
                 <em className="text-gold-400">Contato</em>
               </h2>
               <div className="space-y-4 text-center">
-                <p
-                  className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 text-2xs">
                   {CHURCH_EMAIL}
                 </p>
-                <p
-                  className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 text-2xs">
                   {CHURCH_ADDRESS_FULL}
                 </p>
               </div>

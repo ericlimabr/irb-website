@@ -206,7 +206,7 @@ export default function SettingsPageComponent({
                         className="h-full w-full object-contain p-2"
                       />
                     ) : (
-                      <span className="text-[10px] text-muted-foreground uppercase font-bold">
+                      <span className="text-fs-10 text-muted-foreground uppercase font-bold">
                         Sem Logo
                       </span>
                     )}
@@ -392,7 +392,7 @@ export default function SettingsPageComponent({
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="space-y-4">
               <div className="p-4 bg-muted/50 rounded-lg border mb-6">
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                <span className="text-fs-10 font-bold text-muted-foreground uppercase tracking-widest">
                   Google Preview
                 </span>
                 <h3 className="text-blue-700 text-lg font-medium leading-tight mt-1">
@@ -451,7 +451,7 @@ export default function SettingsPageComponent({
                     ) : (
                       <div className="text-center p-4">
                         <Share2 className="mx-auto h-8 w-8 text-muted-foreground" />
-                        <p className="text-[10px] text-muted-foreground mt-2 uppercase">
+                        <p className="text-fs-10 text-muted-foreground mt-2 uppercase">
                           1200 x 630px recomendado
                         </p>
                       </div>

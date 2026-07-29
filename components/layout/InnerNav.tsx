@@ -29,8 +29,7 @@ export default function InnerNav({
         {/* Left: Back */}
         <Link
           href={backHref}
-          className="flex items-center gap-2 font-mono uppercase tracking-[0.1em] text-gold-400 hover:text-gold-500 transition-colors duration-500"
-          style={{ fontSize: "9px" }}
+          className="flex items-center gap-2 font-mono uppercase tracking-[0.1em] text-gold-400 hover:text-gold-500 transition-colors duration-500 text-fs-9"
         >
           <ArrowLeft size={12} />
           {backLabel}
@@ -43,8 +42,7 @@ export default function InnerNav({
               <a
                 key={link.href}
                 href={link.href}
-                className="font-mono uppercase tracking-[0.1em] text-primary-foreground/65 hover:text-gold-400 transition-colors duration-500"
-                style={{ fontSize: "9px" }}
+                className="font-mono uppercase tracking-[0.1em] text-primary-foreground/65 hover:text-gold-400 transition-colors duration-500 text-fs-9"
               >
                 {link.label}
               </a>

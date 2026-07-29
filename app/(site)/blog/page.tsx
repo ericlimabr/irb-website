@@ -39,17 +39,11 @@ export default function BlogPage() {
           <AnimatedContent>
             <div className="bg-navy-700 texture-hatch p-8 md:p-12 border border-primary-foreground/10">
               <div className="flex items-center gap-3 mb-4">
-                <span
-                  className="mono-label-sm text-gold-400"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <span className="mono-label-sm text-gold-400">
                   {featured.category}
                 </span>
                 <span className="text-primary-foreground/30">·</span>
-                <span
-                  className="font-mono text-primary-foreground/40"
-                  style={{ fontSize: "var(--text-size-xs)" }}
-                >
+                <span className="font-mono text-primary-foreground/40 text-2xs">
                   {featured.date}
                 </span>
               </div>
@@ -82,12 +76,11 @@ export default function BlogPage() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`font-mono uppercase tracking-[0.1em] px-4 py-2 border transition-all duration-500 ${
+              className={`text-2xs font-mono uppercase tracking-[0.1em] px-4 py-2 border transition-all duration-500 ${
                 activeCategory === cat
                   ? "bg-gold-500 text-navy-700 border-gold-500"
                   : "bg-transparent text-muted-foreground border-border hover:border-gold-500 hover:text-gold-500"
               }`}
-              style={{ fontSize: "var(--text-size-xs)" }}
             >
               {cat}
             </button>

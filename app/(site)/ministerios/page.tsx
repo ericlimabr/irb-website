@@ -2,7 +2,8 @@
 
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
-import { TestimonialCard, IRBButton } from "@/components/layout/Cards"
+import Testimonials from "@/components/layout/Testimonials"
+import { IRBButton } from "@/components/layout/Cards"
 import Image from "next/image"
 import { CHURCH_MINISTRIES } from "@/const"
 import { whatsappLink } from "@/utils/whatsapp"
@@ -78,24 +79,7 @@ export default function MinisteriosPage() {
       </Section>
 
       {/* Testemunhos */}
-      <Section bg="surface-alt" texture="linen">
-        <AnimatedContent>
-          <p className="section-tag mb-12">Testemunhos</p>
-        </AnimatedContent>
-        <div className="grid md:grid-cols-2 gap-6">
-          <TestimonialCard
-            quote="A catequese foi transformadora para minha família. Aprendemos juntos os fundamentos da fé reformada e crescemos em comunhão com a igreja."
-            name="Ana Beatriz"
-            role="Membro desde 2021"
-          />
-          <TestimonialCard
-            quote="O grupo de estudo bíblico me ajudou a entender as Escrituras de forma que eu nunca havia experimentado. A profundidade da exposição é extraordinária."
-            name="Pedro Henrique"
-            role="Membro desde 2020"
-            dark
-          />
-        </div>
-      </Section>
+      <Testimonials />
     </div>
   )
 }
