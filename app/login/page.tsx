@@ -1,8 +1,10 @@
 "use client"
 
+import { useActionState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import Logo from "@/components/ui/Logo"
+import { signIn } from "@/app/actions/auth"
 
 const fieldStyles =
   "w-full bg-surface border border-border-subtle px-4 py-3 font-sans text-navy-700 focus:outline-none focus:border-gold-500 transition-colors duration-300"
@@ -11,6 +13,8 @@ const labelStyles =
   "block font-mono uppercase tracking-[0.1em] text-navy-700/50 mb-2 text-2xs"
 
 export default function LoginPage() {
+  const [state, formAction, pending] = useActionState(signIn, null)
+
   return (
     <main
       className="relative min-h-screen flex items-center justify-center overflow-hidden texture-grid px-6 py-16"
@@ -78,7 +82,7 @@ export default function LoginPage() {
           Acesso <em className="text-gold-500">Administrativo</em>
         </h1>
 
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+        <form action={formAction} className="space-y-6">
           <div>
             <label htmlFor="email" className={labelStyles}>
               E-mail
@@ -107,11 +111,21 @@ export default function LoginPage() {
             />
           </div>
 
+          {state?.error && (
+            <p
+              className="font-mono uppercase tracking-[0.1em] text-destructive text-center text-2xs"
+              role="alert"
+            >
+              {state.error}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="w-full font-mono uppercase tracking-[0.1em] px-6 py-3 bg-navy-700 text-primary-foreground hover:bg-gold-500 hover:text-navy-700 transition-all duration-700 text-2xs"
+            disabled={pending}
+            className="w-full font-mono uppercase tracking-[0.1em] px-6 py-3 bg-navy-700 text-primary-foreground hover:bg-gold-500 hover:text-navy-700 disabled:opacity-60 transition-all duration-700 text-2xs"
           >
-            Entrar →
+            {pending ? "Entrando..." : "Entrar →"}
           </button>
         </form>
 

@@ -7,6 +7,15 @@ export interface UserData {
 }
 
 export async function getUser(): Promise<UserData | null> {
+  // Auth not configured yet (no Supabase env): treat as signed-out instead of
+  // throwing, so pages/actions that gate on getUser degrade gracefully.
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return null
+  }
+
   const supabase = await createClient()
   const {
     data: { user },

@@ -118,10 +118,11 @@ model ContactMessage {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
 
-  name    String
-  email   String
-  subject String
-  message String @db.Text
+  name     String
+  email    String
+  whatsapp String
+  subject  String
+  message  String @db.Text
 
   read    Boolean @default(false)
   replied Boolean @default(false)

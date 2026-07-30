@@ -29,12 +29,16 @@ export default function AdminHeader({
   const router = useRouter()
   const { toast } = useToast()
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  )
-
   const handleLogout = async () => {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!url || !key) {
+      // Auth isn't configured yet — nothing to sign out of. Bounce to /login.
+      router.push("/login")
+      return
+    }
+
+    const supabase = createBrowserClient(url, key)
     const { error } = await supabase.auth.signOut()
 
     if (error) {

@@ -161,6 +161,13 @@
   --color-surface: var(--bg-surface);
   --color-surface-alt: var(--bg-surface-alt);
 
+  /* Admin panel chrome — dark navy sidebar/header with a gold accent. */
+  --color-admin-nav-bg: hsl(210 55% 12%);
+  --color-admin-nav-bg-dense: hsl(210 60% 8%);
+  --color-admin-nav-border: hsl(210 40% 22%);
+  --color-admin-nav-active: var(--gold-500);
+  --color-admin-nav-text: hsl(210 20% 66%);
+
   --color-sidebar: var(--sidebar-background);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -272,6 +279,43 @@
   }
   .text-fs-11 {
     font-size: max(11px, var(--text-floor));
+  }
+
+  /* Admin sidebar nav links + dashboard stat cards. (Corners are squared by
+     the global institutional rule, as everywhere else.) */
+  .admin-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-admin-nav-text);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .admin-nav-link:hover {
+    background-color: color-mix(
+      in srgb,
+      var(--color-admin-nav-border) 60%,
+      transparent
+    );
+    color: #fff;
+  }
+  .admin-nav-link-active {
+    background-color: color-mix(
+      in srgb,
+      var(--color-admin-nav-active) 16%,
+      transparent
+    );
+    color: #fff;
+  }
+  .stat-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
   }
 
   /* Mono eyebrow label */

@@ -103,6 +103,22 @@ export default function ContactForm() {
       </div>
 
       <div>
+        <label htmlFor="whatsapp" className={labelStyles}>
+          WhatsApp
+        </label>
+        <input
+          id="whatsapp"
+          name="whatsapp"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          required
+          placeholder="(61) 99999-9999"
+          className={fieldStyles}
+        />
+      </div>
+
+      <div>
         <label htmlFor="subject" className={labelStyles}>
           Assunto
         </label>
