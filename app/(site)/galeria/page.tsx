@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 }
 
 export default function GaleriaPage() {
-  const photos = readGalleryAlbum("1")
+  // Album 2 holds the newest additions and leads the grid; album 1 follows.
+  const photos = [...readGalleryAlbum("2"), ...readGalleryAlbum("1")]
 
   return (
     <div className="min-h-screen">

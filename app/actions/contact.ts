@@ -24,11 +24,18 @@ export async function submitContactForm(formData: FormData) {
 
   const name = formData.get("name") as string
   const email = sanitizeEmail(formData.get("email") as string)
+  const whatsapp = ((formData.get("whatsapp") as string) ?? "").trim()
   const subject = formData.get("subject") as string
   const message = formData.get("message") as string
 
-  if (!name || !email || !message) {
+  if (!name || !email || !whatsapp || !message) {
     return { success: false, error: "Campos obrigatórios ausentes." }
+  }
+
+  // WhatsApp is required: expect a real number (at least 10 digits — DDD +
+  // line), ignoring formatting like +55, spaces, parentheses and dashes.
+  if ((whatsapp.match(/\d/g) ?? []).length < 10) {
+    return { success: false, error: "Informe um número de WhatsApp válido." }
   }
 
   if (await isRateLimited(email)) {
@@ -40,9 +47,15 @@ export async function submitContactForm(formData: FormData) {
 
   try {
     await prisma.contactMessage.create({
-      data: { name, email, subject, message },
+      data: { name, email, whatsapp, subject, message },
     })
-    await sendContactNotificationEmail({ name, email, subject, message })
+    await sendContactNotificationEmail({
+      name,
+      email,
+      whatsapp,
+      subject,
+      message,
+    })
     return { success: true }
   } catch {
     return { success: false, error: "Erro ao processar sua mensagem." }
