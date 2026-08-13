@@ -12,11 +12,12 @@ import {
 } from "@/const"
 import { whatsappLink } from "@/utils/whatsapp"
 import { mapsEmbedUrl, mapsDirectionsUrl } from "@/utils/maps"
+import { website_config_variables } from "@/config"
 
 export const metadata: Metadata = {
   title: "Contato",
   description:
-    "Fale com a Igreja Reformada de Brasília — e-mail, WhatsApp e horários de culto.",
+    "Fale com a Igreja Reformada de Brasília — WhatsApp e horários de culto.",
 }
 
 export default function ContatoPage() {
@@ -37,20 +38,28 @@ export default function ContatoPage() {
 
       {/* Vias de contato — sempre disponíveis, sem depender do formulário */}
       <Section bg="surface">
-        <div className="grid md:grid-cols-3 gap-6">
-          <AnimatedContent>
-            <div className="border border-border-subtle border-l-[3px] border-l-gold-500 p-8 h-full">
-              <p className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4 text-2xs">
-                E-mail
-              </p>
-              <a
-                href={`mailto:${CHURCH_EMAIL}`}
-                className="font-serif text-navy-700 text-xl hover:text-gold-500 transition-colors duration-500 break-all"
-              >
-                {CHURCH_EMAIL}
-              </a>
-            </div>
-          </AnimatedContent>
+        <div
+          className={`grid gap-6 ${
+            website_config_variables.email.active
+              ? "md:grid-cols-3"
+              : "md:grid-cols-2"
+          }`}
+        >
+          {website_config_variables.email.active && (
+            <AnimatedContent>
+              <div className="border border-border-subtle border-l-[3px] border-l-gold-500 p-8 h-full">
+                <p className="font-mono uppercase tracking-[0.1em] text-gold-500 mb-4 text-2xs">
+                  E-mail
+                </p>
+                <a
+                  href={`mailto:${CHURCH_EMAIL}`}
+                  className="font-serif text-navy-700 text-xl hover:text-gold-500 transition-colors duration-500 break-all"
+                >
+                  {CHURCH_EMAIL}
+                </a>
+              </div>
+            </AnimatedContent>
+          )}
 
           <AnimatedContent>
             <div className="border border-border-subtle border-l-[3px] border-l-gold-500 p-8 h-full">
