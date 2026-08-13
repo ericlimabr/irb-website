@@ -58,7 +58,7 @@ export const SCHEDULE_DATA = [
  * comparações de host; CHURCH_SITE_URL acrescenta o protocolo para links,
  * metadados e OG. Alterar aqui atualiza e-mail, subdomínios e URLs canônicas.
  */
-export const CHURCH_DOMAIN = "irbrasilia.org.br"
+export const CHURCH_DOMAIN = "irbrasilia.org"
 export const CHURCH_SITE_URL = `https://${CHURCH_DOMAIN}`
 
 /**
@@ -78,11 +78,11 @@ export const CHURCH_WHATSAPP_GREETING =
  * Endereço — fonte única. Alterar aqui atualiza /contato, /sobre e o mapa.
  */
 export const CHURCH_ADDRESS = {
-  street: "SMSE Conj. 13 Lote 03 Casa 01",
-  district: "Samambaia",
+  street: "St. Hoteleiro Projeção I s/nº",
+  district: "Taguatinga",
   city: "Brasília",
   state: "DF",
-  zip: "72310-213",
+  zip: "72015-025",
 }
 
 /** One line, for reading on the page. Not for geocoding — see below. */
@@ -99,9 +99,10 @@ export const CHURCH_NAME = "Igreja Reformada de Brasília"
 export const CHURCH_ADDRESS_QUERY = `${CHURCH_NAME}, ${CHURCH_ADDRESS.street}, ${CHURCH_ADDRESS.district}, ${CHURCH_ADDRESS.city} - ${CHURCH_ADDRESS.state}, ${CHURCH_ADDRESS.zip}`
 
 /**
- * Ponto exato do templo, "lat,lng". Endereços do DF (SMSE, conjunto, lote)
- * são mal interpretados pelo geocodificador do Google, então as coordenadas
- * têm precedência sobre o texto do endereço no mapa e na rota.
+ * Ponto exato do templo, "lat,lng". Endereços de setor do DF (Setor
+ * Hoteleiro, projeção, s/nº) são mal interpretados pelo geocodificador do
+ * Google, então as coordenadas têm precedência sobre o texto do endereço
+ * no mapa e na rota.
  * Para obter: Google Maps → botão direito no local → copiar coordenadas.
  * Vazio = volta a usar CHURCH_ADDRESS_QUERY.
  */

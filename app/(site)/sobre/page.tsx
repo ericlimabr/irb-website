@@ -8,6 +8,7 @@ import {
   CHURCH_ADDRESS_FULL,
   CHURCH_HISTORY_TIMELINE,
 } from "@/const"
+import { website_config_variables } from "@/config"
 
 export default function SobrePage() {
   return (
@@ -260,9 +261,11 @@ export default function SobrePage() {
                 <em className="text-gold-400">Contato</em>
               </h2>
               <div className="space-y-4 text-center">
-                <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 text-2xs">
-                  {CHURCH_EMAIL}
-                </p>
+                {website_config_variables.email.active && (
+                  <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 text-2xs">
+                    {CHURCH_EMAIL}
+                  </p>
+                )}
                 <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 text-2xs">
                   {CHURCH_ADDRESS_FULL}
                 </p>
