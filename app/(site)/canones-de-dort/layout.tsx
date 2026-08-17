@@ -1,17 +1,24 @@
 import type { Metadata } from "next"
-import { ReactNode } from "react"
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd"
 
-// The page itself is a client component, so its metadata lives here.
 export const metadata: Metadata = {
   title: "Cânones de Dort",
   description:
-    "Os Cânones de Dort (1619) — a resposta do Sínodo às Remonstrâncias, em quatro capítulos sobre a graça soberana de Deus.",
+    "Os Cânones de Dort (1619) e os cinco pontos da graça soberana, definidos pelo Sínodo de Dordrecht em resposta à Remonstrância arminiana.",
+  alternates: { canonical: "/canones-de-dort" },
 }
 
-export default function CanonesDeDortLayout({
-  children,
-}: {
-  children: ReactNode
-}) {
-  return children
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Início", path: "/" },
+          { name: "Confissões", path: "/confissoes" },
+          { name: "Cânones de Dort", path: "/canones-de-dort" },
+        ]}
+      />
+      {children}
+    </>
+  )
 }

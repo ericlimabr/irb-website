@@ -7,6 +7,7 @@ import Section, { AnimatedContent } from "@/components/layout/Section"
 import SearchInput from "@/components/ui/SearchInput"
 import ArticleIndex from "@/components/ui/ArticleIndex"
 import ScrollToTop from "@/components/ui/ScrollToTop"
+import RelatedConfessions from "@/components/features/confessions/RelatedConfessions"
 import { BELGIC_CONFESSION_ARTICLES, BELGIC_CONFESSION_CHAPTERS } from "@/const"
 
 const anchorId = (n: number) => `belgic-art-${n}`
@@ -220,6 +221,8 @@ export default function ConfissaoBelgaPage() {
           <ArticleIndex groups={indexGroups} onSelect={handleSelect} />
         </div>
       </Section>
+
+      <RelatedConfessions current="belga" />
 
       <ScrollToTop />
     </div>

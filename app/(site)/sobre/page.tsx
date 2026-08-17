@@ -1,4 +1,6 @@
+import type { Metadata } from "next"
 import Image from "next/image"
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd"
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import { IRBButton } from "@/components/layout/Cards"
@@ -10,10 +12,23 @@ import {
 } from "@/const"
 import { website_config_variables } from "@/config"
 
+export const metadata: Metadata = {
+  title: "Sobre a Igreja",
+  description:
+    "Conheça a Igreja Reformada de Brasília — uma congregação reformada continental e confessional, fundada na Palavra e nas Três Formas de Unidade, em Taguatinga.",
+  alternates: { canonical: "/sobre" },
+}
+
 export default function SobrePage() {
   return (
     <>
       <div className="min-h-screen">
+        <BreadcrumbJsonLd
+          items={[
+            { name: "Início", path: "/" },
+            { name: "Sobre", path: "/sobre" },
+          ]}
+        />
         <Masthead
           fullHeight={false}
           eyebrow="Sobre a Igreja"

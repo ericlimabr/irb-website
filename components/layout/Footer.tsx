@@ -10,6 +10,11 @@ export default function Footer() {
     { label: "Doutrina", href: "/doutrina", listable: false },
     { label: "Contato", href: "/contato", listable: true },
     {
+      label: "Perguntas Frequentes",
+      href: "/perguntas-frequentes",
+      listable: true,
+    },
+    {
       label: "Mídia",
       href: "/media",
       listable: website_config_variables.media.active,

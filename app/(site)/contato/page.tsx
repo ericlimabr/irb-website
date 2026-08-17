@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd"
 import Masthead from "@/components/layout/Masthead"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import ContactForm from "@/components/features/contact/ContactForm"
@@ -18,11 +19,18 @@ export const metadata: Metadata = {
   title: "Contato",
   description:
     "Fale com a Igreja Reformada de Brasília — WhatsApp e horários de culto.",
+  alternates: { canonical: "/contato" },
 }
 
 export default function ContatoPage() {
   return (
     <div className="min-h-screen">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Início", path: "/" },
+          { name: "Contato", path: "/contato" },
+        ]}
+      />
       <Masthead
         fullHeight={false}
         eyebrow="Contato"

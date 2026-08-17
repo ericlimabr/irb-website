@@ -7,6 +7,7 @@ import Section, { AnimatedContent } from "@/components/layout/Section"
 import SearchInput from "@/components/ui/SearchInput"
 import ArticleIndex from "@/components/ui/ArticleIndex"
 import ScrollToTop from "@/components/ui/ScrollToTop"
+import RelatedConfessions from "@/components/features/confessions/RelatedConfessions"
 import {
   DORT_ARTICLES,
   DORT_CHAPTERS,
@@ -416,6 +417,8 @@ export default function CanonesDeDortPage() {
           <ArticleIndex groups={indexGroups} onSelect={handleSelect} />
         </div>
       </Section>
+
+      <RelatedConfessions current="dort" />
 
       <ScrollToTop />
     </div>
