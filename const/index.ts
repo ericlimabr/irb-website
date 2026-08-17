@@ -104,10 +104,19 @@ export const CHURCH_ADDRESS_QUERY = `${CHURCH_NAME}, ${CHURCH_ADDRESS.street}, $
  * Hoteleiro, projeção, s/nº) são mal interpretados pelo geocodificador do
  * Google, então as coordenadas têm precedência sobre o texto do endereço
  * no mapa e na rota.
- * Para obter: Google Maps → botão direito no local → copiar coordenadas.
- * Vazio = volta a usar CHURCH_ADDRESS_QUERY.
+ * Para obter: Google Maps → botão direito NO LOCAL → copiar coordenadas.
+ *
+ * ⚠️ DEIXE VAZIO. Vazio NÃO é fallback — é o design correto e superior. Vazio usa
+ * CHURCH_ADDRESS_QUERY, que LIDERA PELO NOME da igreja, então o Maps resolve para
+ * o LOCAL CADASTRADO e se AUTO-CORRIGE: assim que a igreja for cadastrada / o Maps
+ * atualizar, o pino cai sozinho no lugar certo, pra sempre, sem mexer no código.
+ * Uma coordenada fixa CONGELA o pino e nunca melhora.
+ *
+ * NUNCA usar o "@-15.83,-48.05,17z" da URL do Maps: isso é o CENTRO/ZOOM do
+ * viewport, NÃO o pino do local — jogou o marcador para fora da igreja (quebrou o
+ * mapa do /contato 3x).
  */
-export const CHURCH_COORDS = "-15.8343599,-48.053391"
+export const CHURCH_COORDS = ""
 
 /**
  * Perguntas Frequentes — alimenta a página /perguntas-frequentes e o FAQPage

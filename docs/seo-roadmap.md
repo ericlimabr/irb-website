@@ -36,9 +36,9 @@ busca) — este aqui é a lista de *entregáveis*.
 
 | Schema | Onde | Ganho |
 |---|---|---|
-| **`FAQPage`** | Páginas com perguntas (o projeto **já tem modelo `faqs`**) | **Duplo**: rich result no Google **e** o formato que as IAs mais citam (ver Frente 3). Maior custo-benefício. |
-| **`WebSite`** | Layout raiz | Identidade do site; base para sitelinks. |
-| **`Person`** | Pastor (em `/sobre`) | E-E-A-T: quem ensina, credenciais. Sinal de autoridade. |
+| **`FAQPage`** ✅ | Páginas com perguntas (o projeto **já tem modelo `faqs`**) | **Duplo**: rich result no Google **e** o formato que as IAs mais citam (ver Frente 3). Maior custo-benefício. |
+| **`WebSite`** ✅ | Layout raiz | Identidade do site; base para sitelinks. Publisher aponta para o `@id` da igreja. |
+| **`Person`** ✅ | Liderança (`CHURCH_COUNSEL`), como `employee` da igreja | E-E-A-T: quem ensina e governa. |
 | **`Article` / `BlogPosting`** | Páginas de confissão e posts do blog | Elegibilidade a rich results de artigo; datas e autor. |
 | **`Event`** | Eventos datados da `/agenda` (conferências) | Rich result de evento. Culto recorrente continua via `openingHours`, não `Event`. |
 
@@ -116,9 +116,9 @@ Ordem sugerida para execução:
 2. ✅ **Auditoria de metadata por página** — fundação rápida e barata. *(Frente 1)*
 3. ✅ **`llms.txt` + política explícita de crawlers de IA** — a frente "IA". *(concluído)*
 4. ✅ **Compressão das imagens** — Core Web Vitals real e mensurável. *(Frente 1)*
-5. 🟡 **`BreadcrumbList` + `Person` + internal linking** — `BreadcrumbList` e internal linking ✅ (Frente 1); **`Person` (pastor) ainda pendente**.
-6. **Posts long-tail + recuperação do post antigo** — motor de conteúdo (contínuo).
-7. **`Article`/`Event` + `WebSite`** — conforme as flags `/blog` e `/agenda` ativarem.
+5. ✅ **`BreadcrumbList` + `Person` + internal linking** — todos concluídos (`Person` = liderança via `CHURCH_COUNSEL`).
+6. **Posts long-tail + recuperação do post antigo** — motor de conteúdo (contínuo). **← próximo sugerido**
+7. 🟡 **`Article`/`Event` + `WebSite`** — `WebSite` ✅; `Article`/`Event` conforme as flags `/blog` e `/agenda` ativarem.
 8. **Wikidata + verbete de entidade** — fora do código, alto valor de longo prazo.
 
 ---
@@ -168,9 +168,17 @@ Ordem sugerida para execução:
   cohere-ai); `/admin` e `/login` seguem bloqueados. Scrapers de treino agressivos
   (Bytespider, Meta-ExternalAgent) deixados de fora por ora.
 
+### ✅ Item 5/7 — Person + WebSite schema
+- `ChurchJsonLd.tsx`: `employee[]` a partir de `CHURCH_COUNSEL` (pastores, presbíteros,
+  diácono) como `Person` com `jobTitle`. Refatorado para usar `utils/siteUrl`.
+- `components/seo/WebSiteJsonLd.tsx` (ligado no layout): nó `WebSite` com `publisher`
+  referenciando o `@id` da igreja. Fecha o item 5; adianta o `WebSite` do item 7.
+
 ### Pendente próximo
-- **`Person` (pastor)** para fechar o item 5 — precisa do nome do pastor.
-- **Frente 4 (conteúdo)** — posts long-tail + recuperar o post antigo. Motor real.
+- **Frente 4 (conteúdo)** — posts long-tail + recuperar o post antigo do Wayback.
+  É o motor real de longo prazo; schema/técnica só habilitam.
+- **`Article`/`Event`** — quando as flags `/blog` e `/agenda` forem ativadas.
+- **Wikidata** (fora do código) e **Frente 5 (medição)** quando o stack for ligado.
 
 ---
 
