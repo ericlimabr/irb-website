@@ -46,6 +46,9 @@ busca) — este aqui é a lista de *entregáveis*.
 
 ## Frente 3 — ⭐ SEO para IAs (AEO / GEO)
 
+> **Status parcial:** `llms.txt` e política de crawlers de IA ✅ concluídos. Conteúdo
+> citável, entidade e Wikidata seguem pendentes.
+
 Objetivo: ser **citado** por ChatGPT, Perplexity, Google AI Overviews e Gemini —
 não só ranquear no azul tradicional. O que dá para produzir agora:
 
@@ -111,7 +114,7 @@ Ordem sugerida para execução:
 
 1. ✅ **`FAQPage` schema + conteúdo de FAQ** — Frentes 2+3+4 num item; melhor jogada pró-IA. *(concluído)*
 2. ✅ **Auditoria de metadata por página** — fundação rápida e barata. *(Frente 1)*
-3. **`llms.txt` + política explícita de crawlers de IA** — a frente "IA", barata. **← próximo sugerido**
+3. ✅ **`llms.txt` + política explícita de crawlers de IA** — a frente "IA". *(concluído)*
 4. ✅ **Compressão das imagens** — Core Web Vitals real e mensurável. *(Frente 1)*
 5. 🟡 **`BreadcrumbList` + `Person` + internal linking** — `BreadcrumbList` e internal linking ✅ (Frente 1); **`Person` (pastor) ainda pendente**.
 6. **Posts long-tail + recuperação do post antigo** — motor de conteúdo (contínuo).
@@ -156,9 +159,18 @@ Ordem sugerida para execução:
 - **Alt / headings**: auditados, adequados (1 `<h1>` por página via Masthead). Sem mudança.
 - **404**: já existente e adequado.
 
+### ✅ Item 3 do backlog — llms.txt + crawlers de IA
+- `app/llms.txt/route.ts` → serve `/llms.txt` (mapa curado em markdown: fatos-chave
+  + páginas + FAQ), gerado dos consts, `force-static`.
+- `app/robots.ts` → regra dedicada **liberando** bots de citação/busca por IA
+  (GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-Web, anthropic-ai,
+  PerplexityBot, Perplexity-User, Google-Extended, CCBot, Applebot-Extended,
+  cohere-ai); `/admin` e `/login` seguem bloqueados. Scrapers de treino agressivos
+  (Bytespider, Meta-ExternalAgent) deixados de fora por ora.
+
 ### Pendente próximo
-- **`llms.txt` + política de crawlers de IA** (item 3) — a frente pró-IA, barata.
-- **`Person` (pastor)** para fechar o item 5.
+- **`Person` (pastor)** para fechar o item 5 — precisa do nome do pastor.
+- **Frente 4 (conteúdo)** — posts long-tail + recuperar o post antigo. Motor real.
 
 ---
 
