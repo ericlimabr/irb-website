@@ -1,13 +1,24 @@
 import type { Metadata } from "next"
-import { ReactNode } from "react"
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd"
 
-// The page itself is a client component, so its metadata lives here.
 export const metadata: Metadata = {
   title: "Catecismo de Heidelberg",
   description:
-    "O Catecismo de Heidelberg (1563) — o único consolo na vida e na morte, em 52 Domingos e 129 perguntas e respostas.",
+    "O Catecismo de Heidelberg (1563): o único consolo na vida e na morte, em 129 perguntas e respostas ao longo de 52 Domingos.",
+  alternates: { canonical: "/catecismo" },
 }
 
-export default function CatecismoLayout({ children }: { children: ReactNode }) {
-  return children
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Início", path: "/" },
+          { name: "Confissões", path: "/confissoes" },
+          { name: "Catecismo de Heidelberg", path: "/catecismo" },
+        ]}
+      />
+      {children}
+    </>
+  )
 }

@@ -7,6 +7,7 @@ import Section, { AnimatedContent } from "@/components/layout/Section"
 import SearchInput from "@/components/ui/SearchInput"
 import ArticleIndex from "@/components/ui/ArticleIndex"
 import ScrollToTop from "@/components/ui/ScrollToTop"
+import RelatedConfessions from "@/components/features/confessions/RelatedConfessions"
 import { HEIDELBERG_CATECHISM_DATA } from "@/const"
 
 const partLabels: Record<number, { title: string; color: string }> = {
@@ -221,6 +222,8 @@ export default function CatecismoPage() {
           <ArticleIndex groups={indexGroups} onSelect={handleSelect} />
         </div>
       </Section>
+
+      <RelatedConfessions current="heidelberg" />
 
       <ScrollToTop />
     </div>

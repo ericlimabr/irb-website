@@ -4,11 +4,13 @@ import Section from "@/components/layout/Section"
 import GalleryGrid from "@/components/features/gallery/GalleryGrid"
 import ScrollToTop from "@/components/ui/ScrollToTop"
 import { readGalleryAlbum } from "@/utils/gallery"
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd"
 
 export const metadata: Metadata = {
   title: "Galeria",
   description:
     "Registros fotográficos da vida da Igreja Reformada de Brasília — cultos, estudos e comunhão.",
+  alternates: { canonical: "/galeria" },
 }
 
 export default function GaleriaPage() {
@@ -17,6 +19,12 @@ export default function GaleriaPage() {
 
   return (
     <div className="min-h-screen">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Início", path: "/" },
+          { name: "Galeria", path: "/galeria" },
+        ]}
+      />
       <Masthead
         fullHeight={false}
         eyebrow="Galeria"

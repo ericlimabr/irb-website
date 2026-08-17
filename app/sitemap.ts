@@ -1,13 +1,6 @@
 import type { MetadataRoute } from "next"
-import { CHURCH_SITE_URL } from "@/const"
+import { SITE_URL } from "@/utils/siteUrl"
 import { website_config_variables } from "@/config"
-
-// Mesma resolução de base do metadataBase em app/layout.tsx.
-const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : CHURCH_SITE_URL)
 
 type Route = {
   path: string
@@ -24,6 +17,7 @@ const staticRoutes: Route[] = [
   { path: "/catecismo", priority: 0.8, changeFrequency: "yearly" },
   { path: "/canones-de-dort", priority: 0.8, changeFrequency: "yearly" },
   { path: "/doutrina", priority: 0.7, changeFrequency: "yearly" },
+  { path: "/perguntas-frequentes", priority: 0.7, changeFrequency: "monthly" },
   { path: "/ministerios", priority: 0.6, changeFrequency: "yearly" },
   { path: "/galeria", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contato", priority: 0.6, changeFrequency: "yearly" },
@@ -67,7 +61,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   return routes.map(({ path, priority, changeFrequency }) => ({
-    url: `${baseUrl}${path}`,
+    url: `${SITE_URL}${path}`,
     lastModified,
     changeFrequency,
     priority,

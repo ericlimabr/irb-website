@@ -1,13 +1,5 @@
 import type { MetadataRoute } from "next"
-import { CHURCH_SITE_URL } from "@/const"
-
-// Mesma resolução de base do metadataBase em app/layout.tsx: override explícito,
-// depois o domínio de produção da Vercel, por fim o domínio da igreja.
-const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : CHURCH_SITE_URL)
+import { SITE_URL } from "@/utils/siteUrl"
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -17,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       // Área administrativa e login não devem ser indexados.
       disallow: ["/admin", "/login"],
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   }
 }

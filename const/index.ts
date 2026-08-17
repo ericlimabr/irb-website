@@ -109,6 +109,63 @@ export const CHURCH_ADDRESS_QUERY = `${CHURCH_NAME}, ${CHURCH_ADDRESS.street}, $
  */
 export const CHURCH_COORDS = "-15.8343599,-48.053391"
 
+/**
+ * Perguntas Frequentes — alimenta a página /perguntas-frequentes e o FAQPage
+ * schema (components/seo/FaqJsonLd.tsx). Respostas em "definição primeiro":
+ * começam pela resposta direta, formato que ranqueia bem e que as IAs citam.
+ * Endereço e horários vêm dos consts acima, para não divergir do resto do site.
+ */
+export const FAQ_ITEMS: { question: string; answer: string }[] = [
+  {
+    question: "O que é uma Igreja Reformada?",
+    answer:
+      "Uma igreja reformada é uma igreja cristã protestante enraizada na Reforma do século XVI e definida por confissões de fé históricas. Ela sustenta a autoridade suprema das Escrituras, a soberania de Deus na salvação e a justificação somente pela fé — convicções resumidas nos cinco solas da Reforma: somente a Escritura, somente a graça, somente a fé, somente Cristo e glória somente a Deus. A Igreja Reformada de Brasília se identifica com essa herança.",
+  },
+  {
+    question: "Qual a diferença entre igreja reformada e igreja presbiteriana?",
+    answer:
+      "Ambas são reformadas e compartilham as mesmas convicções centrais; a diferença está nas confissões que adotam e na origem. As igrejas presbiterianas, de origem britânica, adotam os Símbolos de Fé de Westminster. As igrejas reformadas continentais, de origem europeia, adotam as Três Formas de Unidade: a Confissão Belga, o Catecismo de Heidelberg e os Cânones de Dort. A Igreja Reformada de Brasília segue esta tradição reformada continental.",
+  },
+  {
+    question: "O que são as Três Formas de Unidade?",
+    answer:
+      "São os três documentos confessionais das igrejas reformadas continentais: a Confissão Belga (1561), com 37 artigos que expõem a fé; o Catecismo de Heidelberg (1563), com 129 perguntas e respostas sobre o único consolo do cristão; e os Cânones de Dort (1619), que resumem a doutrina da graça soberana. Juntos, definem o que a igreja crê e ensina.",
+  },
+  {
+    question: "A igreja é calvinista? O que são os cinco pontos (Cânones de Dort)?",
+    answer:
+      "Sim, no sentido histórico e confessional. Os cinco pontos do calvinismo, ou cinco pontos da graça, foram formulados no Sínodo de Dort (1618–1619) e ensinam que a salvação é obra de Deus do princípio ao fim: depravação total, eleição incondicional, expiação definida, graça eficaz e perseverança dos santos. Eles exaltam a soberania de Deus e a suficiência da sua graça.",
+  },
+  {
+    question: "Como são os cultos e quais os horários?",
+    answer: `Reunimo-nos aos domingos para o Culto Matutino às ${MORNING_LITURGY_TIME} e o Culto Vespertino às ${AFTERNOON_LITURGY_TIME}, com Escola Dominical às 10h20. Às quintas há Estudo Bíblico às ${WEEKLY_STUDY_TIME}. Os cultos têm pregação expositiva da Palavra, canto de salmos e hinos, oração e a administração dos sacramentos.`,
+  },
+  {
+    question: "Onde fica a igreja e como chegar?",
+    answer: `A Igreja Reformada de Brasília fica em ${CHURCH_ADDRESS_FULL}. Na página de contato há um mapa e a rota; se preferir, fale conosco pelo WhatsApp para orientações de como chegar.`,
+  },
+  {
+    question: "Preciso ser membro para visitar? Como faço minha primeira visita?",
+    answer:
+      "Não é preciso ser membro nem avisar com antecedência: visitantes são bem-vindos em todos os cultos. Basta comparecer. Se quiser, mande uma mensagem pelo WhatsApp antes — teremos prazer em recebê-lo e orientar sobre horário e localização.",
+  },
+  {
+    question: "Vocês cantam salmos? Como é a adoração?",
+    answer:
+      "Sim. A adoração é bíblica e reverente: canto de salmos e hinos, leitura e pregação expositiva das Escrituras, oração e a administração dos sacramentos. O propósito do culto é adorar a Deus conforme a sua Palavra.",
+  },
+  {
+    question: "O que é pregação expositiva?",
+    answer:
+      "Pregação expositiva é o método em que o pregador explica o próprio texto bíblico dentro do seu contexto, deixando a passagem determinar o conteúdo da mensagem, em vez de partir de um tema escolhido de fora. É a forma central de pregação nos nossos cultos.",
+  },
+  {
+    question: "Como entro em contato com a igreja?",
+    answer:
+      "Você pode falar conosco pelo WhatsApp ou pelo formulário na página de contato. Respondemos assim que possível e teremos prazer em ajudar com dúvidas sobre a fé, visitas ou horários de culto.",
+  },
+]
+
 export const CHURCH_HISTORY_TIMELINE = [
   {
     year: "2015",
