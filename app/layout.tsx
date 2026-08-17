@@ -7,6 +7,7 @@ import {
 } from "next/font/google"
 import "./globals.css"
 import { CHURCH_SITE_URL } from "@/const"
+import ChurchJsonLd from "@/components/seo/ChurchJsonLd"
 
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
@@ -71,6 +72,7 @@ export default function RootLayout({
       <body
         className={`${cormorantGaramond.variable} ${raleway.variable} ${jetBrainsMono.variable} ${tangerine.variable} antialiased`}
       >
+        <ChurchJsonLd />
         {children}
       </body>
     </html>

@@ -107,7 +107,7 @@ export const CHURCH_ADDRESS_QUERY = `${CHURCH_NAME}, ${CHURCH_ADDRESS.street}, $
  * Para obter: Google Maps → botão direito no local → copiar coordenadas.
  * Vazio = volta a usar CHURCH_ADDRESS_QUERY.
  */
-export const CHURCH_COORDS = ""
+export const CHURCH_COORDS = "-15.8343599,-48.053391"
 
 export const CHURCH_HISTORY_TIMELINE = [
   {
