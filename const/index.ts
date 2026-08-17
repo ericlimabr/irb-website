@@ -93,7 +93,8 @@ export const CHURCH_NAME = "Igreja Reformada de Brasília"
 /**
  * O que o mapa procura. Lidera pelo nome: assim que a igreja estiver
  * cadastrada no Google Maps, a busca devolve o próprio local (com marcador
- * nomeado) em vez de um palpite do geocodificador sobre SMSE/conjunto/lote.
+ * nomeado) em vez de um palpite do geocodificador sobre Setor
+ * Hoteleiro/projeção/s/nº.
  * O endereço fica como reforço, em vírgulas e sem travessão.
  */
 export const CHURCH_ADDRESS_QUERY = `${CHURCH_NAME}, ${CHURCH_ADDRESS.street}, ${CHURCH_ADDRESS.district}, ${CHURCH_ADDRESS.city} - ${CHURCH_ADDRESS.state}, ${CHURCH_ADDRESS.zip}`

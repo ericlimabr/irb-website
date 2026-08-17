@@ -28,7 +28,7 @@ export async function submitContactForm(formData: FormData) {
   const subject = formData.get("subject") as string
   const message = formData.get("message") as string
 
-  if (!name || !email || !whatsapp || !message) {
+  if (!name || !email || !whatsapp || !subject || !message) {
     return { success: false, error: "Campos obrigatórios ausentes." }
   }
 
