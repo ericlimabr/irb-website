@@ -8,6 +8,7 @@ import {
 import "./globals.css"
 import { CHURCH_SITE_URL } from "@/const"
 import ChurchJsonLd from "@/components/seo/ChurchJsonLd"
+import WebSiteJsonLd from "@/components/seo/WebSiteJsonLd"
 
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
@@ -73,6 +74,7 @@ export default function RootLayout({
         className={`${cormorantGaramond.variable} ${raleway.variable} ${jetBrainsMono.variable} ${tangerine.variable} antialiased`}
       >
         <ChurchJsonLd />
+        <WebSiteJsonLd />
         {children}
       </body>
     </html>

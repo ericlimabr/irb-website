@@ -1,18 +1,19 @@
 import {
   CHURCH_NAME,
-  CHURCH_SITE_URL,
   CHURCH_ADDRESS,
   CHURCH_COORDS,
   CHURCH_WHATSAPP,
+  CHURCH_COUNSEL,
+  // CHURCH_COORDS removido do schema: a coordenada precisa ser o pino real do
+  // templo (não o centro do viewport de uma URL do Maps). Ver ⚠️ geo abaixo.
   MORNING_LITURGY_TIME,
   AFTERNOON_LITURGY_TIME,
   WEEKLY_STUDY_TIME,
 } from "@/const"
+import { SITE_URL } from "@/utils/siteUrl"
 
 // "09h00" -> "09:00" (formato de hora que o schema.org espera).
 const hhmm = (t: string) => t.replace("h", ":")
-
-const [latitude, longitude] = CHURCH_COORDS.split(",")
 
 /**
  * Dados estruturados schema.org do tipo Church (subtipo de LocalBusiness).
@@ -23,12 +24,12 @@ const [latitude, longitude] = CHURCH_COORDS.split(",")
 const churchJsonLd = {
   "@context": "https://schema.org",
   "@type": "Church",
-  "@id": `${CHURCH_SITE_URL}/#church`,
+  "@id": `${SITE_URL}/#church`,
 
   name: CHURCH_NAME,
-  url: CHURCH_SITE_URL,
-  logo: `${CHURCH_SITE_URL}/logo/logo-navy.svg`,
-  image: `${CHURCH_SITE_URL}/galery/1/20260312_185811.jpg`,
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo/logo-navy.svg`,
+  image: `${SITE_URL}/galery/1/20260312_185811.jpg`,
   description:
     "Uma congregação fundada na Palavra, formada pela confissão histórica e comprometida com a adoração bíblica em Brasília.",
   slogan: "Soli Deo Gloria",
@@ -54,11 +55,9 @@ const churchJsonLd = {
     addressCountry: "BR",
   },
 
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude,
-    longitude,
-  },
+  // ⚠️ geo: coordenadas exatas do templo pendentes. Pegar o PINO real no Google
+  // Maps (botão direito no local → copiar coordenadas), não o centro do viewport
+  // da URL, ou obter via Google Business Profile.
 
   contactPoint: {
     "@type": "ContactPoint",
@@ -93,6 +92,14 @@ const churchJsonLd = {
       name: "Estudo Bíblico",
     },
   ],
+
+  // Liderança da igreja (conselho): sinal de E-E-A-T — quem ensina e governa.
+  // Vem de CHURCH_COUNSEL (fonte única), o mesmo dado exibido em /sobre.
+  employee: CHURCH_COUNSEL.map((person) => ({
+    "@type": "Person",
+    name: person.name,
+    jobTitle: person.role,
+  })),
 
   sameAs: [
     "https://www.youtube.com/@IgrejaReformadadeBras%C3%ADliaIRB",
