@@ -33,14 +33,17 @@ tags pela UI da GTM sem redeploy.
 
 | Integração | Status | Observação |
 |---|---|---|
-| **GTM container** | ✅ Instalado (código) | Produção apenas; script + `<noscript>` |
+| **GTM container** | ✅ Instalado (código) | Só produção real; gate `VERCEL_ENV === "production"` (não dispara em previews `*.vercel.app`) |
 | **GA4** | ✅ Tag publicada | Config tag, trigger *Initialization - All Pages* |
 | **Microsoft Clarity** | ✅ Tag publicada | Custom HTML, trigger *All Pages* |
-| **Google Ads — Conversion Linker** | ✅ Tag publicada | Baseline de atribuição |
+| **Google Ads — Conversion Linker** | ✅ Tag publicada | Baseline de atribuição; auto-link só `irbrasilia.org` |
 | **Google Ads — Remarketing** | ✅ Tag publicada | `AW-18399148896`; audiência começando a popular |
 | **Google Ads — Conversion Tracking** | ⏸️ Adiado | Sem conversion action / label ainda |
+| **GA4 ↔ Google Ads (vínculo)** | ✅ Vinculado | Publicidade personalizada + auto-tagging ativos |
+| **Eventos de CTA** | ✅ Ao vivo e validados | `whatsapp_click`, `directions_click`, `youtube_click` (GTM Click-URL) + `contact_form_submit` (dataLayer no `ContactForm`). Confirmados no GA4 Tempo real. |
 | **Google Search Console** | ✅ Integrado | — |
 | **Google Business Profile** | ✅ Integrado | "Igreja Reformada de Brasília", Setor Hoteleiro |
+| **Qualidade do contêiner GTM** | ✅ Excelente | Domínios revisados; 2º admin adicionado (GTM/GA4/Ads) |
 
 ---
 
@@ -48,7 +51,8 @@ tags pela UI da GTM sem redeploy.
 
 | Item | Prioridade | Nota |
 |---|---|---|
-| **Eventos de CTA** (WhatsApp, form de contato, "como chegar", play de vídeo) → GA4 + conversion actions do Ads | 🔴 Alta | Desbloqueia goals no GA4, Conversion Label no Ads e remarketing melhor |
+| **Marcar eventos-chave no GA4** | 🔴 Próximo (com prazo) | `whatsapp_click`, `directions_click`, `contact_form_submit`. Só aparecem para estrelar no relatório **agregado** ~24–48h após começarem a ser recebidos (Realtime já confirmou). `youtube_click` fica comum. |
+| **Importar eventos-chave como conversão no Ads** | 🟠 Depois do acima | Ads → Metas → Conversões → Importar → GA4. Gera o Conversion Label e liga ao `AW-18399148896`. Exige os eventos-chave já marcados. |
 | **Consent Mode v2 + banner de cookies (LGPD)** | 🟠 Média | Antes de escalar tráfego real |
 | **Meta Pixel** | ⚪ Opcional | Só se houver Facebook/Instagram |
 | **Painel de analytics no `/admin`** (GA4 Data API) | ⚪ Planejado | Ver `admin-analytics-integration.md` |
