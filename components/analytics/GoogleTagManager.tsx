@@ -6,7 +6,11 @@ import Script from "next/script"
  * O container ID é público (vai no HTML). Fica com o ID real como padrão para
  * funcionar direto no deploy; sobrescrevível por `NEXT_PUBLIC_GTM_ID`.
  *
- * Carrega SOMENTE em produção — tráfego de dev/preview não polui os dados.
+ * Carrega SOMENTE na produção real — nunca em dev nem nos previews da Vercel.
+ * Como o preview da Vercel roda com build de produção, `NODE_ENV` sozinho não
+ * distingue produção de preview; por isso, na Vercel, gateamos por `VERCEL_ENV`
+ * (só `"production"` = domínio real). Fora da Vercel, caímos no `NODE_ENV`.
+ * Isso impede o GTM de disparar em URLs `*.vercel.app` e poluir GA4/Ads.
  * Snippet oficial da GTM em duas partes: o `<script>` (via `next/script`,
  * `afterInteractive`) e o `<noscript>` de fallback para JS desabilitado.
  *
@@ -16,7 +20,13 @@ import Script from "next/script"
  */
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-PH2RDK44"
 
-const enabled = () => process.env.NODE_ENV === "production" && !!GTM_ID
+// Na Vercel, só o ambiente de produção (domínio real) dispara; previews não.
+// Fora da Vercel (self-host), usa o NODE_ENV como fallback.
+const isProduction = process.env.VERCEL_ENV
+  ? process.env.VERCEL_ENV === "production"
+  : process.env.NODE_ENV === "production"
+
+const enabled = () => isProduction && !!GTM_ID
 
 export function GoogleTagManagerScript() {
   if (!enabled()) return null
