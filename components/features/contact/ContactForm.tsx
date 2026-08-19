@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react"
 import { submitContactForm } from "@/app/actions/contact"
+import { trackEvent } from "@/utils/analytics"
 
 type Status =
   | { kind: "idle" }
@@ -26,6 +27,8 @@ export default function ContactForm() {
       if (result.success) {
         formRef.current?.reset()
         setStatus({ kind: "sent" })
+        // Conversão: só no sucesso real. A GTM escuta este Custom Event.
+        trackEvent({ event: "contact_form_submit" })
         return
       }
 
