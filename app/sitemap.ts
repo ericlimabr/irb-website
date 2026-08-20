@@ -21,6 +21,7 @@ const staticRoutes: Route[] = [
   { path: "/ministerios", priority: 0.6, changeFrequency: "yearly" },
   { path: "/galeria", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contato", priority: 0.6, changeFrequency: "yearly" },
+  { path: "/politica-de-privacidade", priority: 0.3, changeFrequency: "yearly" },
 ]
 
 // Só entram no sitemap quando a feature flag correspondente está ativa, para

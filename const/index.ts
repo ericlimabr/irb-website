@@ -501,3 +501,162 @@ export const TESTIMONIALS = [
 /**
  * Agenda
  */
+
+/**
+ * Política de Privacidade (LGPD — Lei 13.709/2018).
+ *
+ * Fonte única do texto legal renderizado em /politica-de-privacidade. Reflete o
+ * que o site REALMENTE coleta hoje: GA4 e Microsoft Clarity (via GTM) e o
+ * formulário de contato. Ao ligar/desligar uma ferramenta, atualize aqui.
+ *
+ * ⚠️ CNPJ: a igreja tem personalidade jurídica? Se sim, informe o CNPJ na seção
+ * "Controlador" (troque o texto entre colchetes). Se não houver CNPJ formal, o
+ * nome + endereço + e-mail já identificam o controlador de forma suficiente.
+ */
+export type PolicySection = {
+  title: string
+  paragraphs?: string[]
+  list?: { term?: string; text: string }[]
+}
+
+export const PRIVACY_POLICY: {
+  updatedAt: string
+  intro: string
+  sections: PolicySection[]
+} = {
+  updatedAt: "20 de agosto de 2026",
+  intro:
+    `Esta Política explica como a ${CHURCH_NAME} trata os dados pessoais de quem ` +
+    `visita este site, em conformidade com a Lei Geral de Proteção de Dados ` +
+    `(LGPD — Lei nº 13.709/2018). Nosso compromisso é coletar o mínimo, com ` +
+    `transparência, e nunca ativar qualquer rastreamento sem o seu consentimento.`,
+  sections: [
+    {
+      title: "1. Quem é o controlador dos dados",
+      paragraphs: [
+        `O controlador é a ${CHURCH_NAME}, com sede em ${CHURCH_ADDRESS_FULL}. ` +
+          `[Se a igreja possui CNPJ, informe-o aqui.]`,
+        `Para qualquer questão sobre seus dados ou para exercer seus direitos ` +
+          `(seção 8), fale conosco pelo e-mail ${CHURCH_EMAIL}. Este é o nosso ` +
+          `canal de atendimento ao titular de dados.`,
+      ],
+    },
+    {
+      title: "2. Quais dados coletamos",
+      paragraphs: [
+        "Coletamos duas categorias de dados:",
+      ],
+      list: [
+        {
+          term: "Dados que você nos fornece",
+          text:
+            "quando envia o formulário de contato: nome, e-mail, WhatsApp, " +
+            "assunto e a mensagem. Você decide o que escrever.",
+        },
+        {
+          term: "Dados coletados automaticamente (só com o seu consentimento)",
+          text:
+            "por ferramentas de análise: páginas visitadas, tempo de permanência, " +
+            "tipo de dispositivo e navegador, origem do acesso e identificadores de " +
+            "cookies. O endereço IP é usado de forma anonimizada pelas ferramentas.",
+        },
+        {
+          term: "Gravação de sessão (Microsoft Clarity)",
+          text:
+            "registro anônimo da interação — movimento do cursor, cliques e rolagem — " +
+            "e mapas de calor, para entendermos a usabilidade do site. O Clarity " +
+            "mascara por padrão o conteúdo que você digita em campos.",
+        },
+      ],
+    },
+    {
+      title: "3. Para que usamos esses dados",
+      list: [
+        { text: "Responder às mensagens enviadas pelo formulário de contato." },
+        {
+          text:
+            "Entender como o site é utilizado e melhorar a navegação, o conteúdo e " +
+            "o desempenho.",
+        },
+        {
+          text:
+            "Medir o alcance das nossas páginas e, eventualmente, divulgar a igreja " +
+            "a quem procura por congregações reformadas.",
+        },
+      ],
+    },
+    {
+      title: "4. Com que base legal tratamos seus dados",
+      paragraphs: [
+        `Formulário de contato: tratamos os dados para atender à sua própria ` +
+          `solicitação (art. 7º, incisos V e IX da LGPD).`,
+        `Análise de uso, gravação de sessão e marketing: tratamos com base no seu ` +
+          `consentimento (art. 7º, inciso I), coletado por meio do banner de cookies. ` +
+          `Você pode recusar sem qualquer prejuízo ao uso do site, e pode revogar o ` +
+          `consentimento a qualquer momento (seção 8).`,
+      ],
+    },
+    {
+      title: "5. Cookies e como controlar",
+      paragraphs: [
+        `Ao acessar o site, um banner permite ACEITAR ou RECUSAR os cookies de ` +
+          `análise e marketing. Enquanto você não decide, eles permanecem ` +
+          `desativados. Cookies estritamente necessários ao funcionamento do site ` +
+          `são sempre usados, pois não rastreiam você.`,
+        `Você também pode, a qualquer momento, apagar os cookies e limpar a sua ` +
+          `escolha pelas configurações do seu navegador — na próxima visita o banner ` +
+          `aparecerá de novo.`,
+      ],
+    },
+    {
+      title: "6. Com quem compartilhamos",
+      paragraphs: [
+        `As mensagens enviadas pelo formulário de contato ficam armazenadas em uma ` +
+          `área administrativa restrita deste site, acessível apenas a responsáveis ` +
+          `autorizados da ${CHURCH_NAME}.`,
+        `Não vendemos os seus dados. Utilizamos serviços que atuam como operadores, ` +
+          `tratando dados em nosso nome:`,
+      ],
+      list: [
+        { term: "Google (Analytics e Ads)", text: "medição de audiência e campanhas." },
+        { term: "Microsoft (Clarity)", text: "análise de usabilidade e gravação de sessão." },
+      ],
+    },
+    {
+      title: "7. Transferência internacional e retenção",
+      paragraphs: [
+        `Esses operadores podem processar dados em servidores fora do Brasil. A ` +
+          `transferência ocorre com as salvaguardas previstas na LGPD (arts. 33 e 34).`,
+        `Mensagens do formulário são mantidas pelo tempo necessário ao atendimento. ` +
+          `Dados de análise seguem os prazos de retenção das próprias ferramentas ` +
+          `(no Google Analytics, tipicamente até 14 meses; no Clarity, por período curto).`,
+      ],
+    },
+    {
+      title: "8. Seus direitos como titular",
+      paragraphs: [
+        `A LGPD (art. 18) garante a você, a qualquer momento, os direitos de: ` +
+          `confirmar a existência de tratamento; acessar seus dados; corrigir dados ` +
+          `incompletos ou desatualizados; solicitar anonimização, bloqueio ou ` +
+          `eliminação; solicitar portabilidade; obter informação sobre ` +
+          `compartilhamento; e revogar o consentimento.`,
+        `Para exercer qualquer um desses direitos, escreva para ${CHURCH_EMAIL}.`,
+      ],
+    },
+    {
+      title: "9. Segurança",
+      paragraphs: [
+        `Adotamos medidas técnicas e organizacionais razoáveis para proteger os ` +
+          `dados contra acesso não autorizado, perda ou alteração indevida.`,
+      ],
+    },
+    {
+      title: "10. Alterações desta Política",
+      paragraphs: [
+        `Podemos atualizar esta Política para refletir mudanças no site ou na ` +
+          `legislação. A data da última atualização está indicada no início do ` +
+          `documento. Recomendamos revisá-la periodicamente.`,
+      ],
+    },
+  ],
+}

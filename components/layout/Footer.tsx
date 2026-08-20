@@ -29,6 +29,11 @@ export default function Footer() {
       href: "/blog",
       listable: website_config_variables.blog.active,
     },
+    {
+      label: "Privacidade",
+      href: "/politica-de-privacidade",
+      listable: true,
+    },
   ]
 
   return (
