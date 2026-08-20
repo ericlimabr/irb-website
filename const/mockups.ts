@@ -193,7 +193,7 @@ export const MOCKUP_BLOG_POSTS = [
     title: "O que é uma igreja reformada?",
     excerpt:
       "A história das Igrejas Reformadas no Brasil, da Grande Reforma do séc. XVI aos dias de hoje.",
-    author: "Weliton de Eça",
+    author: "Rev. Kenneth Wieske",
     date: "19 Set 2019",
     readTime: "5 min",
     href: "/blog/o-que-e-uma-igreja-reformada",

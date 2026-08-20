@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     url: "/blog/o-que-e-uma-igreja-reformada",
     type: "article",
     publishedTime: "2019-09-19T00:00:00.000Z",
-    authors: ["Weliton de Eça"],
+    authors: ["Rev. Kenneth Wieske"],
     images: [
       {
         url: "/blog/o-que-e-uma-igreja-reformada-cover.webp",
