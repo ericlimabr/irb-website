@@ -419,6 +419,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/biblioteca": "Biblioteca",
   "/blog": "Blog",
   "/blog/a-soberania-de-deus-na-eleicao": "A Soberania de Deus na Eleição",
+  "/blog/o-que-e-uma-igreja-reformada": "O que é uma igreja reformada?",
 }
 
 /**
