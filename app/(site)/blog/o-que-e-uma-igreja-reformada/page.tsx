@@ -1,19 +1,23 @@
 "use client"
 
+import { ExternalLink } from "lucide-react"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import { VerticalCard } from "@/components/layout/Cards"
 
 /**
  * Post recuperado do site antigo (Wix) via Wayback Machine.
- * Autor: Weliton de Eça · original: 19 de setembro de 2019.
+ * Autor: Rev. Kenneth Wieske (missionário das Igrejas Reformadas do Canadá no
+ * Brasil). Publicado por Weliton de Eça em 19/09/2019 no site antigo.
  * Ver docs/recovered/o-que-e-uma-igreja-reformada.md (proveniência).
  * A URL antiga /post/o-que-é-uma-igreja-reformada tem 301 aqui (next.config.ts).
  */
 const article = {
   category: "História da Igreja",
   title: "O que é uma igreja reformada?",
-  author: "Weliton de Eça",
-  initials: "WE",
+  author: "Rev. Kenneth Wieske",
+  initials: "KW",
+  publisher: "Weliton de Eça",
+  publisherInitials: "WE",
   date: "19 setembro 2019",
   readTime: "5 min de leitura",
   body: [
@@ -252,6 +256,21 @@ export default function BlogPostPage() {
                   Autor
                 </p>
               </div>
+              <div className="flex items-center gap-3 pl-4 border-l border-primary-foreground/15">
+                <div className="w-10 h-10 bg-navy-700 border-2 border-gold-500 flex items-center justify-center">
+                  <span className="font-mono text-primary-foreground text-xs font-bold">
+                    {article.publisherInitials}
+                  </span>
+                </div>
+                <div>
+                  <p className="font-sans text-primary-foreground/80 text-sm">
+                    {article.publisher}
+                  </p>
+                  <p className="font-mono uppercase tracking-[0.1em] text-primary-foreground/50 text-2xs">
+                    Publicado por
+                  </p>
+                </div>
+              </div>
             </div>
           </AnimatedContent>
         </div>
@@ -327,14 +346,44 @@ export default function BlogPostPage() {
                 {article.author}
               </p>
               <p className="font-mono uppercase tracking-[0.1em] text-gold-600 mb-3 text-2xs">
-                Igreja Reformada de Brasília
+                Missionário no Brasil · Igrejas Reformadas do Canadá
               </p>
               <p
                 className="font-sans text-muted-foreground leading-relaxed"
                 style={{ fontSize: "var(--text-size-sm)" }}
               >
-                Texto publicado originalmente em 19 de setembro de 2019 no site
-                da Igreja Reformada de Brasília.
+                Pastor das Igrejas Reformadas do Canadá, serviu por quase duas
+                décadas como missionário no Nordeste do Brasil e ajudou a formar
+                as Igrejas Reformadas do Brasil (IRB).
+              </p>
+              <a
+                href="https://todaescritura.org/kenneth-wieske-2/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-3 font-mono uppercase tracking-[0.1em] text-gold-600 hover:text-gold-500 transition-colors duration-500 text-2xs"
+              >
+                Outros textos do autor
+                <ExternalLink size={12} aria-hidden />
+              </a>
+            </div>
+          </div>
+
+          {/* Publicado por — crédito de quem disponibilizou o texto */}
+          <div className="mt-4 flex items-center gap-4 bg-surface-alt border border-border p-6">
+            <div className="w-12 h-12 bg-navy-700 border-2 border-gold-500 flex items-center justify-center shrink-0">
+              <span className="font-mono text-primary-foreground text-sm font-bold">
+                {article.publisherInitials}
+              </span>
+            </div>
+            <div>
+              <p
+                className="font-serif text-navy-700 font-semibold"
+                style={{ fontSize: "var(--text-size-base)" }}
+              >
+                {article.publisher}
+              </p>
+              <p className="font-mono uppercase tracking-[0.1em] text-gold-600 text-2xs">
+                Publicou este texto no site da igreja · 19 de setembro de 2019
               </p>
             </div>
           </div>

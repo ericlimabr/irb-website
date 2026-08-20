@@ -1,8 +1,11 @@
 # O que é uma igreja reformada?
 
 > **Conteúdo recuperado do site antigo (Wix).**
-> - **Autor:** Weliton de Eça
-> - **Publicado originalmente:** 19 de set. de 2019 (~5 min de leitura)
+> - **Autor:** Rev. Kenneth Wieske (missionário das Igrejas Reformadas do Canadá
+>   no Brasil; página de autor: `todaescritura.org/kenneth-wieske-2`). O nome que
+>   assinava a publicação no Wix era Weliton de Eça, mas ele apenas **publicou**;
+>   a autoria do texto é do Pr. Kenneth Wieske (confirmado pelo próprio Weliton).
+> - **Publicado por:** Weliton de Eça, em 19 de set. de 2019 (~5 min de leitura)
 > - **URL antiga:** `https://www.irbrasilia.org/post/o-que-é-uma-igreja-reformada`
 > - **Fonte da recuperação:** Wayback Machine, captura de 06/05/2024
 >   (`web.archive.org/web/20240506134608/…`)
