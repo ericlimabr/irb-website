@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import QRCode from "qrcode"
 import Analytics from "@/components/analytics/Analytics"
 import Logo from "@/components/ui/Logo"
-import ShareButton from "@/components/features/links/ShareButton"
+import ShareButton from "@/components/ui/ShareButton"
 import {
   Youtube,
   Instagram,
