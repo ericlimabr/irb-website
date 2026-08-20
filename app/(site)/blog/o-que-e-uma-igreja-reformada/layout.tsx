@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import BlogPostingJsonLd from "@/components/seo/BlogPostingJsonLd"
 
 /**
  * Este post — diferente do resto do /blog (mock, ainda escondido) — é conteúdo
@@ -32,5 +33,19 @@ export const metadata: Metadata = {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      <BlogPostingJsonLd
+        headline="O que é uma igreja reformada?"
+        description="A história das Igrejas Reformadas no Brasil, da Grande Reforma Protestante do séc. XVI aos dias de hoje, e o que confessamos como Igreja Reformada de Brasília."
+        path="/blog/o-que-e-uma-igreja-reformada"
+        image="/blog/o-que-e-uma-igreja-reformada-cover.webp"
+        articleSection="História da Igreja"
+        datePublished="2019-09-19"
+        authorName="Rev. Kenneth Wieske"
+        authorUrl="https://todaescritura.org/kenneth-wieske-2/"
+      />
+      {children}
+    </>
+  )
 }

@@ -3,6 +3,26 @@
 import { ExternalLink } from "lucide-react"
 import Section, { AnimatedContent } from "@/components/layout/Section"
 import { VerticalCard } from "@/components/layout/Cards"
+import ShareButton from "@/components/ui/ShareButton"
+import { CHURCH_SITE_URL } from "@/const"
+
+const ARTICLE_URL = `${CHURCH_SITE_URL}/blog/o-que-e-uma-igreja-reformada`
+
+/**
+ * Blocos de conteúdo suportados pelo corpo do artigo (renderer abaixo). Este
+ * post é o TEMPLATE para novos posts — ver docs/blog-posts.md.
+ *  - lead: parágrafo de abertura (serif, maior)
+ *  - heading: subtítulo de seção
+ *  - paragraph: parágrafo corrido
+ *  - scripture: citação bíblica (usa `reference`)
+ *  - pullquote: destaque (usa `attribution` opcional)
+ */
+type ArticleBlock = {
+  type: "lead" | "heading" | "paragraph" | "scripture" | "pullquote"
+  content: string
+  reference?: string
+  attribution?: string
+}
 
 /**
  * Post recuperado do site antigo (Wix) via Wayback Machine.
@@ -233,6 +253,12 @@ export default function BlogPostPage() {
               <span className="font-mono text-primary-foreground/40 text-2xs">
                 {article.readTime}
               </span>
+              <ShareButton
+                url={ARTICLE_URL}
+                title="O que é uma igreja reformada?"
+                text="A história das Igrejas Reformadas no Brasil, da Reforma aos dias de hoje."
+                className="ml-auto inline-flex items-center gap-2 font-mono uppercase tracking-[0.1em] text-gold-400 hover:text-gold-500 transition-colors duration-500 text-2xs"
+              />
             </div>
 
             <h1
@@ -282,7 +308,7 @@ export default function BlogPostPage() {
       {/* Article Body */}
       <Section bg="surface">
         <article className="max-w-3xl mx-auto">
-          {article.body.map((block, i) => {
+          {(article.body as ArticleBlock[]).map((block, i) => {
             switch (block.type) {
               case "lead":
                 return (
@@ -315,6 +341,46 @@ export default function BlogPostPage() {
                   >
                     {block.content}
                   </p>
+                )
+
+              case "scripture":
+                return (
+                  <blockquote
+                    key={i}
+                    className="border-l-[3px] border-gold-500 pl-6 py-4 my-8 bg-surface-alt"
+                  >
+                    <p
+                      className="font-serif italic text-navy-700 leading-relaxed mb-2"
+                      style={{ fontSize: "var(--text-size-lg)" }}
+                    >
+                      {block.content}
+                    </p>
+                    {block.reference && (
+                      <cite className="font-mono uppercase tracking-[0.1em] text-gold-600 not-italic text-2xs">
+                        {block.reference}
+                      </cite>
+                    )}
+                  </blockquote>
+                )
+
+              case "pullquote":
+                return (
+                  <blockquote
+                    key={i}
+                    className="border-l-4 border-gold-500 pl-8 py-6 my-12"
+                  >
+                    <p
+                      className="font-serif italic text-navy-700 leading-relaxed"
+                      style={{ fontSize: "var(--text-size-xl)" }}
+                    >
+                      «{block.content}»
+                    </p>
+                    {block.attribution && (
+                      <cite className="block font-mono uppercase tracking-[0.1em] text-gold-600 not-italic mt-4 text-2xs">
+                        {block.attribution}
+                      </cite>
+                    )}
+                  </blockquote>
                 )
 
               default:
@@ -386,6 +452,19 @@ export default function BlogPostPage() {
                 Publicou este texto no site da igreja · 19 de setembro de 2019
               </p>
             </div>
+          </div>
+
+          {/* Compartilhar */}
+          <div className="mt-10 pt-8 border-t border-border flex flex-wrap items-center justify-between gap-4">
+            <span className="font-mono uppercase tracking-[0.1em] text-muted-foreground text-2xs">
+              Compartilhe este artigo
+            </span>
+            <ShareButton
+              url={ARTICLE_URL}
+              title="O que é uma igreja reformada?"
+              text="A história das Igrejas Reformadas no Brasil, da Reforma aos dias de hoje."
+              className="inline-flex items-center gap-2 font-mono uppercase tracking-[0.1em] text-gold-600 hover:text-gold-500 transition-colors duration-500 text-2xs"
+            />
           </div>
         </article>
       </Section>
