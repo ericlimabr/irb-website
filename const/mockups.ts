@@ -187,6 +187,17 @@ export const MOCKUP_BLOG_POSTS = [
     readTime: "6 min",
     href: "/blog",
   },
+  // Post real recuperado do site antigo (Wix) — o único com href próprio.
+  {
+    category: "História da Igreja",
+    title: "O que é uma igreja reformada?",
+    excerpt:
+      "A história das Igrejas Reformadas no Brasil, da Grande Reforma do séc. XVI aos dias de hoje.",
+    author: "Weliton de Eça",
+    date: "19 Set 2019",
+    readTime: "5 min",
+    href: "/blog/o-que-e-uma-igreja-reformada",
+  },
 ]
 
 /**

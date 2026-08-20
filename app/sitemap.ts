@@ -22,6 +22,13 @@ const staticRoutes: Route[] = [
   { path: "/galeria", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contato", priority: 0.6, changeFrequency: "yearly" },
   { path: "/politica-de-privacidade", priority: 0.3, changeFrequency: "yearly" },
+  // Post recuperado do site antigo, indexável mesmo com o /blog desligado
+  // (alvo do 301 da URL antiga do Wix). Ver next.config.ts.
+  {
+    path: "/blog/o-que-e-uma-igreja-reformada",
+    priority: 0.6,
+    changeFrequency: "yearly",
+  },
 ]
 
 // Só entram no sitemap quando a feature flag correspondente está ativa, para
