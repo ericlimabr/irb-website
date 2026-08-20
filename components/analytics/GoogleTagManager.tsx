@@ -26,10 +26,15 @@ const isProduction = process.env.VERCEL_ENV
   ? process.env.VERCEL_ENV === "production"
   : process.env.NODE_ENV === "production"
 
-const enabled = () => isProduction && !!GTM_ID
+/**
+ * Verdadeiro só quando a medição deve rodar (produção real com GTM configurado).
+ * Fonte única do gate — reusado pelo Consent Mode v2 (`ConsentDefault`) e pelo
+ * banner de cookies (`CookieConsent`), para que os três liguem/desliguem juntos.
+ */
+export const analyticsEnabled = () => isProduction && !!GTM_ID
 
 export function GoogleTagManagerScript() {
-  if (!enabled()) return null
+  if (!analyticsEnabled()) return null
 
   return (
     <Script id="gtm-init" strategy="afterInteractive">
@@ -43,7 +48,7 @@ export function GoogleTagManagerScript() {
 }
 
 export function GoogleTagManagerNoScript() {
-  if (!enabled()) return null
+  if (!analyticsEnabled()) return null
 
   return (
     <noscript>
