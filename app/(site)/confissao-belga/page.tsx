@@ -88,7 +88,7 @@ export default function ConfissaoBelgaPage() {
             <em className="text-gold-400">Belga.</em>
           </>
         }
-        subtitle="Trinta e sete artigos que expõem a doutrina reformada — escritos por Guido de Brès e apresentados às autoridades em 1561."
+        subtitle="Trinta e sete artigos que expõem a doutrina reformada, escritos por Guido de Brès e apresentados às autoridades em 1561."
       >
         <div className="flex flex-wrap items-center justify-center gap-6 mt-8">
           {["1561 · Países Baixos", "Guido de Brès", "37 Artigos"].map((s) => (
@@ -103,6 +103,20 @@ export default function ConfissaoBelgaPage() {
       </Masthead>
 
       <Section bg="surface">
+        {/* Abertura definicional: primeiro texto corrido após o H1, o trecho
+            que buscadores e IAs extraem (padrão "definição primeiro", Frente 3). */}
+        <AnimatedContent>
+          <p
+            className="font-serif text-navy-700 leading-relaxed max-w-3xl mx-auto mb-12"
+            style={{ fontSize: "var(--text-size-lg)" }}
+          >
+            A Confissão Belga é a mais antiga das Três Formas de Unidade: trinta
+            e sete artigos que expõem a fé reformada, escritos por Guido de Brès
+            em 1561 e apresentados às autoridades dos Países Baixos como
+            testemunho público da doutrina cristã.
+          </p>
+        </AnimatedContent>
+
         {/* Thematic groups — double as the article filter */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {BELGIC_CONFESSION_CHAPTERS.map((group) => {

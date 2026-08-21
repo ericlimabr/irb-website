@@ -26,11 +26,25 @@ export default function ConfissoesPage() {
             <em className="text-gold-400">de Unidade.</em>
           </>
         }
-        subtitle="Os padrões confessionais que unem a igreja reformada através dos séculos — a Confissão Belga, o Catecismo de Heidelberg e os Cânones de Dort."
+        subtitle="Os padrões confessionais que unem a igreja reformada através dos séculos: a Confissão Belga, o Catecismo de Heidelberg e os Cânones de Dort."
       />
 
       {/* Linha do Tempo */}
       <Section bg="surface-alt" texture="linen">
+        {/* Abertura definicional: primeiro texto corrido após o H1, o trecho
+            que buscadores e IAs extraem (padrão "definição primeiro", Frente 3). */}
+        <AnimatedContent>
+          <p
+            className="font-serif text-navy-700 leading-relaxed max-w-3xl mx-auto mb-12"
+            style={{ fontSize: "var(--text-size-lg)" }}
+          >
+            As Três Formas de Unidade são os três documentos confessionais que
+            unem as igrejas reformadas de tradição continental: a Confissão Belga
+            (1561), o Catecismo de Heidelberg (1563) e os Cânones de Dort (1619).
+            Juntas, resumem o que a igreja crê, ensina e confessa a partir das
+            Escrituras.
+          </p>
+        </AnimatedContent>
         <AnimatedContent>
           <p className="section-tag mb-6">Cronologia</p>
           <h2

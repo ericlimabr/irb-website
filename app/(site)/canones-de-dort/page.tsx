@@ -167,6 +167,20 @@ export default function CanonesDeDortPage() {
       </Masthead>
 
       <Section bg="surface">
+        {/* Abertura definicional: primeiro texto corrido após o H1, o trecho
+            que buscadores e IAs extraem (padrão "definição primeiro", Frente 3). */}
+        <AnimatedContent>
+          <p
+            className="font-serif text-navy-700 leading-relaxed max-w-3xl mx-auto mb-12"
+            style={{ fontSize: "var(--text-size-lg)" }}
+          >
+            Os Cânones de Dort são a decisão do Sínodo de Dordrecht (1618-1619)
+            em resposta ao arminianismo, e a fonte dos chamados cinco pontos do
+            calvinismo. Em cinco capítulos de doutrina, afirmam a graça soberana
+            de Deus na salvação, do princípio ao fim.
+          </p>
+        </AnimatedContent>
+
         {/* Heads of doctrine — double as the article filter */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {DORT_CHAPTERS.map((chapter) => {

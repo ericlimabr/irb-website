@@ -61,6 +61,21 @@ export default function SobrePage() {
 
         {/* Nossa História */}
         <Section bg="surface-alt" texture="linen">
+          {/* Abertura definicional: primeiro texto corrido após o H1, o trecho
+              que buscadores e IAs extraem (padrão "definição primeiro", Frente 3). */}
+          <AnimatedContent>
+            <p
+              className="font-serif text-navy-700 leading-relaxed max-w-3xl mx-auto mb-16"
+              style={{ fontSize: "var(--text-size-lg)" }}
+            >
+              Uma igreja reformada é uma igreja que confessa a fé cristã histórica
+              resumida nas Três Formas de Unidade e busca adorar a Deus segundo a
+              sua Palavra. A Igreja Reformada de Brasília é uma congregação
+              reformada continental e confessional, em Taguatinga, no Distrito
+              Federal.
+            </p>
+          </AnimatedContent>
+
           <div className="grid md:grid-cols-2 gap-16">
             <AnimatedContent>
               <p className="section-tag mb-6">Nossa História</p>

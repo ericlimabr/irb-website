@@ -46,8 +46,9 @@ busca) — este aqui é a lista de *entregáveis*.
 
 ## Frente 3 — ⭐ SEO para IAs (AEO / GEO)
 
-> **Status parcial:** `llms.txt` e política de crawlers de IA ✅ concluídos. Conteúdo
-> citável, entidade e Wikidata seguem pendentes.
+> **Status:** `llms.txt`, política de crawlers de IA, conteúdo citável (aberturas
+> "definição primeiro" nas páginas-chave) e entity linking das confissões ✅. Resta
+> apenas o **Wikidata** da igreja (fora do código).
 
 Objetivo: ser **citado** por ChatGPT, Perplexity, Google AI Overviews e Gemini —
 não só ranquear no azul tradicional. O que dá para produzir agora:
@@ -182,6 +183,22 @@ Ordem sugerida para execução:
 - Ligado em `catecismo`, `confissao-belga` e `canones-de-dort` (layouts). Autores:
   Ursino/Oleviano, Guido de Brès, Sínodo de Dordrecht (Organization). Datas da obra
   (1563/1561/1619) vão em `about.datePublished`, não na página.
+
+### ✅ Frente 3 — Aberturas "definição primeiro" (AEO)
+- Parágrafo de abertura definicional (serif, `--text-size-lg`, começando pelo termo)
+  no topo da primeira seção de `/catecismo`, `/confissoes`, `/confissao-belga`,
+  `/canones-de-dort` e `/sobre`. É o primeiro texto corrido após o `<h1>`, o trecho
+  que buscadores e IAs extraem para responder "o que é". Padrão descrito em
+  `docs/guia-posts-long-tail.html`. De passagem, travessões nos subtítulos de herói
+  (`/catecismo`, `/confissoes`, `/confissao-belga`) trocados por `·`/vírgula/`:`.
+
+### ✅ Frente 1/SEO — Redirects 301 das URLs antigas do Wix
+- `next.config.ts`: além do post recuperado (`/post/o-que-é-…` → `/blog/…`), mais 5
+  URLs do Wix ainda indexadas (levantadas via `site:irbrasilia.org`): `/pregacoes`
+  → `/catecismo`; `/post/salmos-salmo-1-…`, `/post/jesus-é-o-único-caminho-…`,
+  `/post/…shabbat…`, `/post/refutando-o-relativismo-…` → `/doutrina` (equivalente
+  temático; são reposts de terceiros). `permanent: true` (308 = 301). Parâmetro com
+  regex nas posições acentuadas. **Sweep definitivo ainda depende do Search Console.**
 
 ### Pendente próximo
 - **Frente 4 (conteúdo)** — os 5 posts long-tail (briefing pronto em
