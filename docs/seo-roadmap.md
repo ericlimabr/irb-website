@@ -39,7 +39,7 @@ busca) — este aqui é a lista de *entregáveis*.
 | **`FAQPage`** ✅ | Páginas com perguntas (o projeto **já tem modelo `faqs`**) | **Duplo**: rich result no Google **e** o formato que as IAs mais citam (ver Frente 3). Maior custo-benefício. |
 | **`WebSite`** ✅ | Layout raiz | Identidade do site; base para sitelinks. Publisher aponta para o `@id` da igreja. |
 | **`Person`** ✅ | Liderança (`CHURCH_COUNSEL`), como `employee` da igreja | E-E-A-T: quem ensina e governa. |
-| **`Article` / `BlogPosting`** | Páginas de confissão e posts do blog | Elegibilidade a rich results de artigo; datas e autor. |
+| **`Article` / `BlogPosting`** ✅ | Confissões (`Article`) e posts do blog (`BlogPosting`) | Elegibilidade a rich results de artigo; datas e autor. Confissões com `about` + `sameAs` (Wikipedia) para entity linking. |
 | **`Event`** | Eventos datados da `/agenda` (conferências) | Rich result de evento. Culto recorrente continua via `openingHours`, não `Event`. |
 
 ---
@@ -118,7 +118,7 @@ Ordem sugerida para execução:
 4. ✅ **Compressão das imagens** — Core Web Vitals real e mensurável. *(Frente 1)*
 5. ✅ **`BreadcrumbList` + `Person` + internal linking** — todos concluídos (`Person` = liderança via `CHURCH_COUNSEL`).
 6. **Posts long-tail + recuperação do post antigo** — motor de conteúdo (contínuo). **← próximo sugerido**
-7. 🟡 **`Article`/`Event` + `WebSite`** — `WebSite` ✅; `Article`/`Event` conforme as flags `/blog` e `/agenda` ativarem.
+7. 🟡 **`Article`/`Event` + `WebSite`** — `WebSite` ✅; `Article` ✅ (blog + 3 confissões); `Event` pendente, conforme a flag `/agenda` ativar.
 8. **Wikidata + verbete de entidade** — fora do código, alto valor de longo prazo.
 
 ---
@@ -174,10 +174,19 @@ Ordem sugerida para execução:
 - `components/seo/WebSiteJsonLd.tsx` (ligado no layout): nó `WebSite` com `publisher`
   referenciando o `@id` da igreja. Fecha o item 5; adianta o `WebSite` do item 7.
 
+### ✅ Frente 2 — Article nas confissões
+- `components/seo/ArticleJsonLd.tsx`: schema `Article` para textos históricos (autor
+  histórico, não redator do site; `publisher` = igreja; `isPartOf` o hub `/confissoes`).
+  O nó `about` liga a obra à sua entidade na Wikipedia via `sameAs` (entity linking,
+  reforço de AEO/Frente 3).
+- Ligado em `catecismo`, `confissao-belga` e `canones-de-dort` (layouts). Autores:
+  Ursino/Oleviano, Guido de Brès, Sínodo de Dordrecht (Organization). Datas da obra
+  (1563/1561/1619) vão em `about.datePublished`, não na página.
+
 ### Pendente próximo
-- **Frente 4 (conteúdo)** — posts long-tail + recuperar o post antigo do Wayback.
-  É o motor real de longo prazo; schema/técnica só habilitam.
-- **`Article`/`Event`** — quando as flags `/blog` e `/agenda` forem ativadas.
+- **Frente 4 (conteúdo)** — os 5 posts long-tail (briefing pronto em
+  `docs/guia-posts-long-tail.html`). É o motor real de longo prazo; schema/técnica só habilitam.
+- **`Event`** — quando a flag `/agenda` for ativada.
 - **Wikidata** (fora do código) e **Frente 5 (medição)** quando o stack for ligado.
 
 ---

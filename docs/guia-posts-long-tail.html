@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pauta do Blog · Posts Long-Tail (IRB)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --navy-900: #000d1a;
+    --navy-700: #002347;
+    --navy-500: #0a3a68;
+    --gold: #c5a059;
+    --gold-deep: #9c7a30;
+    --gold-bright: #d8bd7e;
+
+    --bg: #eeede7;
+    --surface: #ffffff;
+    --surface-alt: #f7f5ef;
+    --ink: #14202b;
+    --ink-strong: var(--navy-700);
+    --muted: #5c6b78;
+    --line: rgba(0, 35, 71, 0.14);
+    --line-strong: rgba(0, 35, 71, 0.28);
+    --accent: var(--gold-deep);
+    --chip-bg: rgba(0, 35, 71, 0.06);
+    --note-bg: #fbf6e9;
+    --note-line: var(--gold);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #000d1a;
+      --surface: #071c30;
+      --surface-alt: #0a2035;
+      --ink: rgba(255, 255, 255, 0.9);
+      --ink-strong: #ffffff;
+      --muted: rgba(255, 255, 255, 0.58);
+      --line: rgba(255, 255, 255, 0.12);
+      --line-strong: rgba(255, 255, 255, 0.24);
+      --accent: var(--gold-bright);
+      --chip-bg: rgba(255, 255, 255, 0.07);
+      --note-bg: rgba(197, 160, 89, 0.1);
+      --note-line: var(--gold);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #000d1a;
+    --surface: #071c30;
+    --surface-alt: #0a2035;
+    --ink: rgba(255, 255, 255, 0.9);
+    --ink-strong: #ffffff;
+    --muted: rgba(255, 255, 255, 0.58);
+    --line: rgba(255, 255, 255, 0.12);
+    --line-strong: rgba(255, 255, 255, 0.24);
+    --accent: var(--gold-bright);
+    --chip-bg: rgba(255, 255, 255, 0.07);
+    --note-bg: rgba(197, 160, 89, 0.1);
+    --note-line: var(--gold);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Raleway", system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header.masthead {
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-700) 45%, var(--navy-500));
+    color: #fff;
+    border-bottom: 4px solid var(--gold);
+  }
+  header.masthead .wrap { padding-top: 56px; padding-bottom: 48px; }
+  .eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    margin: 0 0 18px;
+  }
+  header.masthead h1 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  header.masthead h1 em { color: var(--gold-bright); font-style: italic; }
+  header.masthead p.lead {
+    font-size: 1.12rem;
+    color: rgba(255, 255, 255, 0.72);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  /* Section rhythm */
+  main .block { padding: 52px 0; border-bottom: 1px solid var(--line); }
+  main .block:last-child { border-bottom: 0; }
+  h2.section-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    color: var(--ink-strong);
+    line-height: 1.1;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+  .section-kicker {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  p { margin: 0 0 16px; max-width: 68ch; }
+  a { color: var(--accent); }
+
+  /* TOC */
+  .toc { background: var(--surface-alt); border: 1px solid var(--line); padding: 22px 26px; }
+  .toc h3 {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 14px; font-weight: 500;
+  }
+  .toc ol { margin: 0; padding: 0; list-style: none; counter-reset: toc; }
+  .toc li { counter-increment: toc; border-top: 1px solid var(--line); }
+  .toc li:first-child { border-top: 0; }
+  .toc a {
+    display: flex; gap: 14px; align-items: baseline;
+    padding: 11px 0; text-decoration: none; color: var(--ink);
+  }
+  .toc a:hover { color: var(--accent); }
+  .toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: "JetBrains Mono", monospace; font-size: 12px;
+    color: var(--accent); min-width: 2.4ch;
+  }
+  .toc .target { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+
+  /* Principle list */
+  .principles { display: grid; gap: 2px; margin-top: 24px; }
+  .principle {
+    background: var(--surface); border: 1px solid var(--line);
+    border-left: 3px solid var(--gold); padding: 18px 22px;
+  }
+  .principle h4 {
+    font-family: "Raleway", sans-serif; font-weight: 700;
+    font-size: 1.02rem; color: var(--ink-strong); margin: 0 0 4px;
+  }
+  .principle p { margin: 0; color: var(--muted); font-size: 0.97rem; }
+  .principle code { font-family: "JetBrains Mono", monospace; font-size: 0.85em; background: var(--chip-bg); padding: 1px 5px; }
+
+  /* Post brief card */
+  .brief {
+    background: var(--surface); border: 1px solid var(--line-strong);
+    border-top: 4px solid var(--gold); padding: 34px 34px 30px;
+  }
+  .brief .post-index {
+    font-family: "JetBrains Mono", monospace; font-size: 12px;
+    letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase;
+    display: flex; gap: 12px; align-items: center; margin: 0 0 10px;
+  }
+  .brief .post-index .sep { width: 26px; height: 1px; background: var(--line-strong); }
+  .brief h3.post-title {
+    font-family: "Cormorant Garamond", Georgia, serif; font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2.05rem); color: var(--ink-strong);
+    line-height: 1.12; margin: 0 0 18px; text-wrap: balance;
+  }
+
+  .field { margin: 22px 0; }
+  .field > .label {
+    font-family: "JetBrains Mono", monospace; font-size: 10.5px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+    display: block; margin-bottom: 8px;
+  }
+  .kv { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 620px) { .kv { grid-template-columns: 1fr 1fr; } }
+  .kv .cell { background: var(--surface-alt); border: 1px solid var(--line); padding: 14px 16px; }
+  .kv .cell .label {
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+    display: block; margin-bottom: 6px;
+  }
+  .kv .cell .val { font-size: 0.97rem; color: var(--ink); }
+  .kv .cell .val.mono { font-family: "JetBrains Mono", monospace; font-size: 0.86rem; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    font-family: "JetBrains Mono", monospace; font-size: 12px;
+    background: var(--chip-bg); color: var(--ink); padding: 4px 10px;
+    border: 1px solid var(--line);
+  }
+  .chip.primary { background: var(--gold); color: var(--navy-900); border-color: var(--gold); font-weight: 500; }
+
+  ol.outline, ul.cover, ul.refs, ul.faq, ul.links { margin: 0; padding-left: 0; list-style: none; }
+  ol.outline { counter-reset: h2; }
+  ol.outline li {
+    counter-increment: h2; padding: 7px 0 7px 40px; position: relative;
+    border-top: 1px dotted var(--line); font-size: 0.98rem;
+  }
+  ol.outline li:first-child { border-top: 0; }
+  ol.outline li::before {
+    content: "H2 " counter(h2); position: absolute; left: 0; top: 7px;
+    font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+  ul.cover li, ul.refs li, ul.faq li, ul.links li {
+    padding: 6px 0 6px 22px; position: relative; font-size: 0.97rem;
+  }
+  ul.cover li::before, ul.links li::before {
+    content: "·"; position: absolute; left: 6px; color: var(--gold); font-weight: 700;
+  }
+  ul.refs li::before {
+    content: "\201D"; position: absolute; left: 0; top: 2px;
+    font-family: "Cormorant Garamond", serif; color: var(--gold); font-size: 1.2rem; line-height: 1;
+  }
+  ul.faq li { padding-left: 26px; }
+  ul.faq li::before {
+    content: "?"; position: absolute; left: 4px; top: 5px;
+    font-family: "JetBrains Mono", monospace; color: var(--accent); font-weight: 500; font-size: 0.85rem;
+  }
+  .ref-src { color: var(--muted); font-size: 0.85em; }
+  .links a { font-family: "JetBrains Mono", monospace; font-size: 0.86rem; }
+
+  /* Example blocks (definição-primeiro + scripture) */
+  .example {
+    background: var(--note-bg); border-left: 3px solid var(--note-line);
+    padding: 16px 20px; margin-top: 8px;
+  }
+  .example .tag {
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-deep); display: block; margin-bottom: 6px;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .example .tag { color: var(--gold-bright); } }
+  :root[data-theme="dark"] .example .tag { color: var(--gold-bright); }
+  .example p { margin: 0; font-family: "Cormorant Garamond", Georgia, serif; font-size: 1.2rem; font-style: italic; color: var(--ink-strong); max-width: none; }
+
+  /* Callout */
+  .callout {
+    background: var(--surface-alt); border: 1px solid var(--line);
+    border-left: 3px solid var(--gold); padding: 18px 22px; margin: 24px 0;
+  }
+  .callout strong { color: var(--ink-strong); }
+
+  /* Checklist */
+  ul.checklist { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 2px; }
+  ul.checklist li {
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 12px 16px 12px 44px; position: relative; font-size: 0.96rem;
+  }
+  ul.checklist li::before {
+    content: ""; position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px; border: 1.5px solid var(--gold);
+  }
+
+  footer.docfoot {
+    background: var(--navy-700); color: rgba(255, 255, 255, 0.7);
+    border-top: 4px solid var(--gold); padding: 36px 0; margin-top: 12px;
+    font-size: 0.9rem;
+  }
+  footer.docfoot .wrap { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+  footer.docfoot a { color: var(--gold-bright); font-family: "JetBrains Mono", monospace; font-size: 0.82rem; }
+  footer.docfoot .sig { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+
+  hr.rule { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Pauta editorial · Blog IRB</p>
+    <h1>Cinco posts que a igreja já <em>tem o que dizer</em></h1>
+    <p class="lead">Guia para quem vai escrever os cinco artigos de cauda longa (long-tail) do blog. Cada bloco abaixo diz o que o texto precisa cobrir, quais termos usar, o que citar e como abrir. O objetivo duplo: ranquear no Google e ser citado pelas IAs (ChatGPT, Perplexity, AI Overviews).</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- COMO USAR -->
+    <section class="block" id="como-usar">
+      <p class="section-kicker">Antes de começar</p>
+      <h2 class="section-title">Como escrever para o Google e para as IAs ao mesmo tempo</h2>
+      <p>Estes cinco temas foram escolhidos porque têm busca real e <strong>pouca concorrência forte</strong>: são a "cunha" da igreja reformada continental (Três Formas de Unidade), onde as igrejas presbiterianas e os grandes portais competem menos. O que faz um texto desses funcionar não é tamanho, é <strong>clareza citável</strong>. Sete princípios valem para os cinco:</p>
+
+      <div class="principles">
+        <div class="principle">
+          <h4>1. Comece pela definição</h4>
+          <p>O primeiro parágrafo responde a pergunta do título em uma ou duas frases diretas, começando pelo termo. É esse trecho que a IA extrai e que o Google mostra. Ex.: <em>"Uma igreja reformada é..."</em>.</p>
+        </div>
+        <div class="principle">
+          <h4>2. Escreva em blocos de pergunta e resposta</h4>
+          <p>Subtítulos em forma de pergunta ("O que significa...?", "Por que...?") com resposta curta logo abaixo. É o formato que vira <em>featured snippet</em> e resposta de IA.</p>
+        </div>
+        <div class="principle">
+          <h4>3. Cite a fonte primária, com número</h4>
+          <p>Sempre que possível, remeta ao documento confessional (Catecismo, Confissão Belga, Cânones) e ao versículo, com a referência exata. A IRB tem as confissões na íntegra no site: isso é ativo raro que a IA cita.</p>
+        </div>
+        <div class="principle">
+          <h4>4. Use os blocos do template</h4>
+          <p>O post é montado com <code>lead</code>, <code>heading</code>, <code>paragraph</code>, <code>scripture</code> (citação bíblica com referência) e <code>pullquote</code> (destaque). Veja <code>docs/blog-posts.md</code> para o passo a passo técnico.</p>
+        </div>
+        <div class="principle">
+          <h4>5. Sem travessão no texto</h4>
+          <p>Padrão da casa: nada de <code>—</code> no corpo. Use ponto médio <code>·</code>, vírgula ou parênteses. (Citação literal de terceiros é a única exceção.)</p>
+        </div>
+        <div class="principle">
+          <h4>6. Tom solene, não acadêmico e não raso</h4>
+          <p>Pastoral e claro, para quem está chegando à fé reformada. Frases curtas. Evite jargão sem explicar. Cerca de 900 a 1.400 palavras (5 a 8 min de leitura).</p>
+        </div>
+        <div class="principle">
+          <h4>7. Feche com convite e links internos</h4>
+          <p>Termine ligando o leitor à página do site correspondente (a confissão, o catecismo) e, quando fizer sentido, ao convite de visitar a igreja.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Uma ressalva honesta:</strong> os termos e as intenções abaixo vêm de pesquisa qualitativa (ver <code>docs/seo-palavras-chave.md</code>), sem número de volume. Trate como mapa, não território. Quando o Search Console tiver dados reais de impressão, ajuste os títulos e as palavras-chave ao que de fato traz gente.
+      </div>
+    </section>
+
+    <!-- TOC -->
+    <section class="block" id="indice">
+      <div class="toc">
+        <h3>Os cinco posts</h3>
+        <ol>
+          <li><a href="#post-1"><span>Qual é o seu único consolo na vida e na morte?</span><span class="target">/catecismo</span></a></li>
+          <li><a href="#post-2"><span>O que são as Três Formas de Unidade?</span><span class="target">/confissoes</span></a></li>
+          <li><a href="#post-3"><span>Diferença entre igreja reformada e presbiteriana</span><span class="target">/sobre</span></a></li>
+          <li><a href="#post-4"><span>Os Cinco Pontos do Calvinismo (Cânones de Dort)</span><span class="target">/canones-de-dort</span></a></li>
+          <li><a href="#post-5"><span>Por que cantamos salmos no culto?</span><span class="target">/agenda · /doutrina</span></a></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== POST 1 ===================== -->
+    <section class="block" id="post-1">
+      <div class="brief">
+        <p class="post-index">Post 01 <span class="sep"></span> Página-alvo /catecismo <span class="sep"></span> Intenção informacional</p>
+        <h3 class="post-title">Qual é o seu único consolo na vida e na morte?</h3>
+
+        <div class="field">
+          <div class="kv">
+            <div class="cell"><span class="label">Título sugerido (H1)</span><span class="val">Qual é o seu único consolo na vida e na morte? A Pergunta 1 do Catecismo de Heidelberg</span></div>
+            <div class="cell"><span class="label">Slug</span><span class="val mono">/blog/unico-consolo-na-vida-e-na-morte</span></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Meta description (150 a 160 caracteres)</span>
+          <div class="kv"><div class="cell"><span class="val">O único consolo do cristão, segundo a Pergunta 1 do Catecismo de Heidelberg: não pertencer a si mesmo, mas ao fiel Salvador Jesus Cristo. Entenda o que isso significa.</span></div></div>
+        </div>
+
+        <div class="field">
+          <span class="label">Palavra-chave principal · secundárias</span>
+          <div class="chips">
+            <span class="chip primary">qual é o seu único consolo na vida e na morte</span>
+            <span class="chip">único consolo na vida e na morte</span>
+            <span class="chip">catecismo de heidelberg pergunta 1</span>
+            <span class="chip">catecismo de heidelberg</span>
+            <span class="chip">dia do senhor 1</span>
+            <span class="chip">pertencer a cristo</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Abertura "definição primeiro"</span>
+          <div class="example">
+            <span class="tag">Bloco lead · use algo assim na primeira frase</span>
+            <p>O único consolo do cristão, na vida e na morte, é não pertencer a si mesmo, mas pertencer de corpo e alma ao seu fiel Salvador Jesus Cristo. É assim que o Catecismo de Heidelberg abre, na sua primeira pergunta.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Estrutura sugerida</span>
+          <ol class="outline">
+            <li>A pergunta que abre o Catecismo (por que começar por consolo, e não por doutrina)</li>
+            <li>A resposta, frase por frase: "não pertenço a mim mesmo, mas a Cristo"</li>
+            <li>Comprado pelo sangue, guardado pelo Pai, selado pelo Espírito</li>
+            <li>O que muda na vida de quem crê nisso (a Pergunta 2: miséria, libertação, gratidão)</li>
+            <li>Convite: leia o Catecismo na íntegra e visite a igreja</li>
+          </ol>
+        </div>
+
+        <div class="field">
+          <span class="label">Cobrir obrigatoriamente</span>
+          <ul class="cover">
+            <li>Que "consolo" (Trost) aqui é fundamento de confiança, não conforto emocional passageiro.</li>
+            <li>A estrutura tripla do Catecismo que a Pergunta 2 anuncia: pecado e miséria · libertação · gratidão.</li>
+            <li>Que o Catecismo tem 129 perguntas, dividido em 52 Dias do Senhor (um por domingo do ano).</li>
+            <li>Contexto breve: Heidelberg, 1563, redigido sob Frederico III; tradicionalmente ligado a Zacarias Ursino e Caspar Oleviano.</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Citar (fonte primária)</span>
+          <ul class="refs">
+            <li>Catecismo de Heidelberg, Dia do Senhor 1, Perguntas e Respostas 1 e 2 <span class="ref-src">(fonte primária, citar a resposta)</span></li>
+            <li>Romanos 14.7-8 · 1 Coríntios 6.19-20 · 1 Pedro 1.18-19 · João 6.39 <span class="ref-src">(provas do próprio Catecismo)</span></li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">FAQ sugerida (bom para rich result e IA)</span>
+          <ul class="faq">
+            <li>O que é o Catecismo de Heidelberg?</li>
+            <li>Quantas perguntas tem o Catecismo de Heidelberg?</li>
+            <li>O que significa "não pertencer a si mesmo"?</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Links internos</span>
+          <ul class="links">
+            <li><a href="#">/catecismo</a> (página-alvo, o texto completo)</li>
+            <li><a href="#">/confissoes</a> (as Três Formas de Unidade)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== POST 2 ===================== -->
+    <section class="block" id="post-2">
+      <div class="brief">
+        <p class="post-index">Post 02 <span class="sep"></span> Página-alvo /confissoes <span class="sep"></span> Intenção informacional</p>
+        <h3 class="post-title">O que são as Três Formas de Unidade?</h3>
+
+        <div class="field">
+          <div class="kv">
+            <div class="cell"><span class="label">Título sugerido (H1)</span><span class="val">O que são as Três Formas de Unidade das igrejas reformadas?</span></div>
+            <div class="cell"><span class="label">Slug</span><span class="val mono">/blog/tres-formas-de-unidade</span></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Meta description</span>
+          <div class="kv"><div class="cell"><span class="val">As Três Formas de Unidade são as confissões que unem as igrejas reformadas continentais: a Confissão Belga, o Catecismo de Heidelberg e os Cânones de Dort. Entenda cada uma.</span></div></div>
+        </div>
+
+        <div class="field">
+          <span class="label">Palavra-chave principal · secundárias</span>
+          <div class="chips">
+            <span class="chip primary">três formas de unidade</span>
+            <span class="chip">três formas de unidade das igrejas reformadas</span>
+            <span class="chip">símbolos de fé reformados</span>
+            <span class="chip">confissões reformadas</span>
+            <span class="chip">confissão belga</span>
+            <span class="chip">catecismo de heidelberg</span>
+            <span class="chip">cânones de dort</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Abertura "definição primeiro"</span>
+          <div class="example">
+            <span class="tag">Bloco lead</span>
+            <p>As Três Formas de Unidade são os três documentos confessionais que unem as igrejas reformadas de tradição continental: a Confissão Belga (1561), o Catecismo de Heidelberg (1563) e os Cânones de Dort (1619).</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Estrutura sugerida</span>
+          <ol class="outline">
+            <li>O que são e por que "de unidade" (unem igrejas de países e línguas diferentes)</li>
+            <li>Confissão Belga: o que a igreja crê (Guido de Brès, 1561, 37 artigos)</li>
+            <li>Catecismo de Heidelberg: como a igreja ensina (1563, 129 perguntas)</li>
+            <li>Cânones de Dort: a resposta ao arminianismo (Sínodo de Dort, 1618-1619)</li>
+            <li>Por que uma igreja é "confessional" e o que isso protege</li>
+          </ol>
+        </div>
+
+        <div class="field">
+          <span class="label">Cobrir obrigatoriamente</span>
+          <ul class="cover">
+            <li>A diferença de gênero entre os três: confissão (o que cremos), catecismo (ensino em perguntas), cânones (decisões de um sínodo).</li>
+            <li>Que são o padrão das igrejas reformadas <em>continentais</em>, distintas dos Padrões de Westminster dos presbiterianos (gancho para o Post 03).</li>
+            <li>Que "confessional" significa subordinar a confissão à Escritura, não acima dela: as confissões valem porque resumem fielmente a Bíblia.</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Citar (fonte primária)</span>
+          <ul class="refs">
+            <li>Confissão Belga, Artigo 7 (suficiência da Escritura) <span class="ref-src">(por que a confissão se submete à Bíblia)</span></li>
+            <li>2 Timóteo 3.16-17 · Judas 3 <span class="ref-src">("a fé uma vez dada aos santos")</span></li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">FAQ sugerida</span>
+          <ul class="faq">
+            <li>Quais são as Três Formas de Unidade?</li>
+            <li>Qual a diferença entre confissão e catecismo?</li>
+            <li>O que é uma igreja confessional?</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Links internos</span>
+          <ul class="links">
+            <li><a href="#">/confissoes</a> (página-alvo) · <a href="#">/confissao-belga</a> · <a href="#">/catecismo</a> · <a href="#">/canones-de-dort</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== POST 3 ===================== -->
+    <section class="block" id="post-3">
+      <div class="brief">
+        <p class="post-index">Post 03 <span class="sep"></span> Página-alvo /sobre <span class="sep"></span> Intenção informacional (alta conversão de nicho)</p>
+        <h3 class="post-title">Diferença entre igreja reformada e presbiteriana</h3>
+
+        <div class="field">
+          <div class="kv">
+            <div class="cell"><span class="label">Título sugerido (H1)</span><span class="val">Qual a diferença entre igreja reformada e presbiteriana?</span></div>
+            <div class="cell"><span class="label">Slug</span><span class="val mono">/blog/reformada-e-presbiteriana-diferenca</span></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Meta description</span>
+          <div class="kv"><div class="cell"><span class="val">Reformadas e presbiterianas compartilham a teologia da graça, mas diferem nas confissões e na origem: as continentais seguem as Três Formas de Unidade; as presbiterianas, Westminster.</span></div></div>
+        </div>
+
+        <div class="field">
+          <span class="label">Palavra-chave principal · secundárias</span>
+          <div class="chips">
+            <span class="chip primary">diferença entre reformada e presbiteriana</span>
+            <span class="chip">igreja reformada x presbiteriana</span>
+            <span class="chip">reformada continental</span>
+            <span class="chip">três formas de unidade</span>
+            <span class="chip">padrões de westminster</span>
+            <span class="chip">o que é uma igreja reformada</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Abertura "definição primeiro"</span>
+          <div class="example">
+            <span class="tag">Bloco lead</span>
+            <p>Igrejas reformadas e presbiterianas partilham a mesma teologia da graça soberana, mas diferem na herança confessional: as reformadas continentais confessam as Três Formas de Unidade, enquanto as presbiterianas seguem os Padrões de Westminster.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Estrutura sugerida</span>
+          <ol class="outline">
+            <li>O que as duas têm em comum (as doutrinas da graça, o mesmo tronco da Reforma)</li>
+            <li>A raiz histórica: continente europeu (reformada) x Ilhas Britânicas e Escócia (presbiteriana)</li>
+            <li>As confissões: Três Formas de Unidade x Padrões de Westminster</li>
+            <li>Diferenças de acento (governo da igreja, prática litúrgica, salmodia)</li>
+            <li>O que a IRB é, e por que isso importa em Brasília</li>
+          </ol>
+        </div>
+
+        <div class="field">
+          <span class="label">Cobrir obrigatoriamente</span>
+          <ul class="cover">
+            <li>Deixar claro que <strong>não é oposição</strong>: são irmãs na mesma família reformada, com padrões confessionais diferentes.</li>
+            <li>Que "reformada" às vezes é usada em sentido amplo (toda a tradição calvinista) e em sentido estrito (continental, Três Formas). Explicar os dois usos evita confusão.</li>
+            <li>O diferencial local da IRB: reformada continental / confessional em Brasília, num cenário onde a maioria das igrejas do nicho é presbiteriana. (Este é o gancho de SEO local.)</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Citar (fonte primária)</span>
+          <ul class="refs">
+            <li>Confissão Belga, Artigos 27-32 (a Igreja e seu governo) <span class="ref-src">(base para a parte de polity)</span></li>
+            <li>Efésios 2.20 · Atos 15 <span class="ref-src">(fundamento apostólico e o concílio de Jerusalém)</span></li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">FAQ sugerida</span>
+          <ul class="faq">
+            <li>Reformada e presbiteriana são a mesma coisa?</li>
+            <li>O que significa "reformada continental"?</li>
+            <li>A Igreja Reformada de Brasília é presbiteriana?</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Links internos</span>
+          <ul class="links">
+            <li><a href="#">/sobre</a> (página-alvo) · <a href="#">/confissoes</a> · <a href="#">/blog/o-que-e-uma-igreja-reformada</a> (post já publicado, tema irmão)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== POST 4 ===================== -->
+    <section class="block" id="post-4">
+      <div class="brief">
+        <p class="post-index">Post 04 <span class="sep"></span> Página-alvo /canones-de-dort <span class="sep"></span> Intenção informacional</p>
+        <h3 class="post-title">O que são os Cinco Pontos do Calvinismo (Cânones de Dort)?</h3>
+
+        <div class="field">
+          <div class="kv">
+            <div class="cell"><span class="label">Título sugerido (H1)</span><span class="val">O que são os Cinco Pontos do Calvinismo? Os Cânones de Dort explicados</span></div>
+            <div class="cell"><span class="label">Slug</span><span class="val mono">/blog/cinco-pontos-do-calvinismo-canones-de-dort</span></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Meta description</span>
+          <div class="kv"><div class="cell"><span class="val">Os Cinco Pontos do Calvinismo nasceram nos Cânones de Dort (1619), resposta ao arminianismo. Entenda cada ponto do TULIP a partir do documento original.</span></div></div>
+        </div>
+
+        <div class="field">
+          <span class="label">Palavra-chave principal · secundárias</span>
+          <div class="chips">
+            <span class="chip primary">cinco pontos do calvinismo</span>
+            <span class="chip">cânones de dort</span>
+            <span class="chip">tulip calvinismo</span>
+            <span class="chip">cinco pontos da graça</span>
+            <span class="chip">sínodo de dort</span>
+            <span class="chip">remonstrantes arminianismo</span>
+            <span class="chip">graça soberana</span>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Estratégia:</strong> "cinco pontos do calvinismo" e "TULIP" no genérico têm concorrência de Wikipédia, Ligonier e TGC. Não vencemos ali. O ângulo vencedor da IRB é a <strong>fonte documental</strong>: "cânones de dort" como documento original, onde há menos briga. Puxe o texto para esse enquadramento.
+        </div>
+
+        <div class="field">
+          <span class="label">Abertura "definição primeiro"</span>
+          <div class="example">
+            <span class="tag">Bloco lead</span>
+            <p>Os Cinco Pontos do Calvinismo são um resumo, feito muito depois, dos cinco capítulos dos Cânones de Dort, o documento que o Sínodo de Dort (1618-1619) escreveu para responder aos cinco artigos dos arminianos.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Estrutura sugerida</span>
+          <ol class="outline">
+            <li>De onde vêm os cinco pontos: a controvérsia com os remonstrantes (arminianos)</li>
+            <li>O Sínodo de Dort e a estrutura dos Cânones (cinco cabeças de doutrina)</li>
+            <li>Os cinco pontos, um a um, na ordem de Dort e no acrônimo TULIP</li>
+            <li>Por que "TULIP" é útil mas incompleto (a ordem original é outra)</li>
+            <li>O que essas doutrinas produzem: humildade, gratidão, segurança</li>
+          </ol>
+        </div>
+
+        <div class="field">
+          <span class="label">Cobrir obrigatoriamente (os cinco, com o nome de Dort e o do TULIP)</span>
+          <ul class="cover">
+            <li><strong>Eleição incondicional</strong> (Dort, 1ª cabeça) · o "U" de <em>Unconditional election</em>.</li>
+            <li><strong>Expiação definida / limitada</strong> (2ª cabeça) · o "L" de <em>Limited atonement</em>.</li>
+            <li><strong>Depravação total</strong> (3ª e 4ª cabeças, sobre a corrupção humana) · o "T" de <em>Total depravity</em>.</li>
+            <li><strong>Graça irresistível / eficaz</strong> (3ª e 4ª cabeças, sobre a conversão) · o "I" de <em>Irresistible grace</em>.</li>
+            <li><strong>Perseverança dos santos</strong> (5ª cabeça) · o "P" de <em>Perseverance</em>.</li>
+            <li>Avisar que a ordem de Dort (E-L-D-G-P) não é a do acrônimo inglês TULIP, montado só depois.</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Citar (fonte primária)</span>
+          <ul class="refs">
+            <li>Cânones de Dort, Primeira Cabeça de Doutrina, Artigo 7 (eleição) <span class="ref-src">(citar do documento, não de resumos)</span></li>
+            <li>Efésios 1.4-5 · João 6.37-39 · Romanos 8.29-30 <span class="ref-src">(a cadeia da graça soberana)</span></li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">FAQ sugerida</span>
+          <ul class="faq">
+            <li>O que significa TULIP?</li>
+            <li>O que foi o Sínodo de Dort?</li>
+            <li>Qual a diferença entre calvinismo e arminianismo?</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Links internos</span>
+          <ul class="links">
+            <li><a href="#">/canones-de-dort</a> (página-alvo, o texto completo) · <a href="#">/doutrina</a> (doutrinas da graça)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== POST 5 ===================== -->
+    <section class="block" id="post-5">
+      <div class="brief">
+        <p class="post-index">Post 05 <span class="sep"></span> Página-alvo /agenda · /doutrina <span class="sep"></span> Intenção informacional (nicho litúrgico)</p>
+        <h3 class="post-title">Por que cantamos salmos no culto? (salmodia)</h3>
+
+        <div class="field">
+          <div class="kv">
+            <div class="cell"><span class="label">Título sugerido (H1)</span><span class="val">Por que cantamos salmos no culto? A salmodia na adoração reformada</span></div>
+            <div class="cell"><span class="label">Slug</span><span class="val mono">/blog/por-que-cantamos-salmos-no-culto</span></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Meta description</span>
+          <div class="kv"><div class="cell"><span class="val">A igreja reformada canta salmos porque são o cancioneiro que Deus mesmo inspirou. Entenda a salmodia, o saltério genebrino e o lugar dos Salmos no culto.</span></div></div>
+        </div>
+
+        <div class="field">
+          <span class="label">Palavra-chave principal · secundárias</span>
+          <div class="chips">
+            <span class="chip primary">por que cantar salmos no culto</span>
+            <span class="chip">salmodia</span>
+            <span class="chip">canto de salmos</span>
+            <span class="chip">saltério genebrino</span>
+            <span class="chip">culto reformado</span>
+            <span class="chip">liturgia reformada</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Abertura "definição primeiro"</span>
+          <div class="example">
+            <span class="tag">Bloco lead</span>
+            <p>A igreja reformada canta os Salmos no culto porque eles são o cancioneiro que o próprio Deus inspirou e entregou ao seu povo. Cantar as palavras da Escritura é deixar que Deus dê à igreja as suas próprias palavras de louvor.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Estrutura sugerida</span>
+          <ol class="outline">
+            <li>Os Salmos como o hinário dado por Deus (não escolha de gosto, mas dom)</li>
+            <li>O que a Escritura manda cantar (salmos, hinos e cânticos espirituais)</li>
+            <li>Calvino e o saltério genebrino: a recuperação do canto congregacional</li>
+            <li>Por que os Salmos formam o coração cristão (louvor, lamento, arrependimento, esperança)</li>
+            <li>Como é na prática na IRB (convite ao culto)</li>
+          </ol>
+        </div>
+
+        <div class="field">
+          <span class="label">Cobrir obrigatoriamente</span>
+          <ul class="cover">
+            <li>O saltério genebrino: Calvino, em Genebra, versificou os Salmos com melodias próprias para a congregação cantar. (Liga direto ao post antigo "Salmo 1 · CBS Genebrino".)</li>
+            <li>Que os Salmos abrangem toda a experiência da alma diante de Deus, inclusive o lamento, que os cânticos modernos costumam evitar.</li>
+            <li>Explicar "salmos, hinos e cânticos espirituais" (Cl 3.16) sem transformar em briga: o ponto é o valor central e insubstituível dos Salmos.</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Citar (fonte primária)</span>
+          <ul class="refs">
+            <li>Colossenses 3.16 · Efésios 5.19 <span class="ref-src">("ensinando-vos com salmos, hinos e cânticos espirituais")</span></li>
+            <li>Salmo 95.1-2 · Salmo 100 · Tiago 5.13 <span class="ref-src">(o mandato de cantar ao Senhor)</span></li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">FAQ sugerida</span>
+          <ul class="faq">
+            <li>O que é salmodia?</li>
+            <li>O que é o saltério genebrino?</li>
+            <li>A igreja reformada só canta salmos?</li>
+          </ul>
+        </div>
+
+        <div class="field">
+          <span class="label">Links internos</span>
+          <ul class="links">
+            <li><a href="#">/agenda</a> (horários de culto) · <a href="#">/doutrina</a> · <a href="#">/media</a> (pregações, quando ativo)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section class="block" id="checklist">
+      <p class="section-kicker">Antes de entregar</p>
+      <h2 class="section-title">Checklist do redator</h2>
+      <ul class="checklist">
+        <li>O primeiro parágrafo responde ao título em uma ou duas frases, começando pelo termo-alvo.</li>
+        <li>Cada seção principal é uma pergunta com resposta curta logo abaixo.</li>
+        <li>Toda afirmação doutrinária tem fonte: confissão (com número) e/ou versículo.</li>
+        <li>Nenhum travessão (<code>—</code>) no corpo do texto.</li>
+        <li>Título e meta description usam a palavra-chave principal, com naturalidade.</li>
+        <li>Há pelo menos dois links internos para páginas reais do site.</li>
+        <li>Bloco de FAQ ao final (alimenta rich result e citação por IA).</li>
+        <li>Entre 900 e 1.400 palavras, tom pastoral e claro.</li>
+        <li>Passado para quem publica: montar no template (ver <code>docs/blog-posts.md</code>) e gerar a capa.</li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<footer class="docfoot">
+  <div class="wrap">
+    <span class="sig">Igreja Reformada de Brasília · Pauta do blog</span>
+    <a href="./seo-palavras-chave.md">docs/seo-palavras-chave.md</a>
+    <a href="./seo-roadmap.md">docs/seo-roadmap.md</a>
+    <a href="./blog-posts.md">docs/blog-posts.md</a>
+  </div>
+</footer>
+
+</body>
+</html>
