@@ -83,7 +83,7 @@ export default function CatecismoPage() {
             <em className="text-gold-400">Heidelberg.</em>
           </>
         }
-        subtitle="O único consolo na vida e na morte — 52 Domingos, 129 Perguntas."
+        subtitle="O único consolo na vida e na morte · 52 Domingos, 129 Perguntas."
       >
         <div className="flex items-center justify-center gap-6 mt-8">
           {[
@@ -101,8 +101,24 @@ export default function CatecismoPage() {
         </div>
       </Masthead>
 
-      {/* Parts navigation */}
       <Section bg="surface">
+        {/* Abertura definicional: o primeiro texto corrido após o H1, o trecho
+            que buscadores e IAs extraem para responder "o que é". Padrão
+            "definição primeiro" (ver docs/seo-roadmap.md, Frente 3 / AEO). */}
+        <AnimatedContent>
+          <p
+            className="font-serif text-navy-700 leading-relaxed max-w-3xl mx-auto mb-12"
+            style={{ fontSize: "var(--text-size-lg)" }}
+          >
+            O Catecismo de Heidelberg é um dos três documentos confessionais das
+            igrejas reformadas, escrito em 1563. Em 129 perguntas e respostas,
+            distribuídas por 52 Domingos, ensina a fé cristã a partir de uma só
+            certeza: o único consolo do cristão, na vida e na morte, é pertencer
+            de corpo e alma ao seu fiel Salvador Jesus Cristo.
+          </p>
+        </AnimatedContent>
+
+        {/* Parts navigation */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {[1, 2, 3].map((part) => {
             const p = partLabels[part]

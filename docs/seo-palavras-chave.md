@@ -195,8 +195,9 @@ dedicada no site — são "aterrissagens" naturais para estes termos.
 | igreja confessional o que é | informacional | `/sobre` |
 | calvinismo o que é | informacional | `/doutrina` |
 
-> O site já ranqueia com o post **"O que é uma igreja reformada?"** (Wix). Migrar/
-> preservar esse conteúdo é prioridade — é ativo de SEO já existente.
+> ✅ O post **"O que é uma igreja reformada?"** (que já ranqueava no Wix) foi
+> **recuperado via Wayback e republicado** em `/blog/o-que-e-uma-igreja-reformada`,
+> com 301 da URL antiga e JSON-LD `BlogPosting`. Ativo de SEO preservado.
 
 ---
 
@@ -244,11 +245,13 @@ Westminster) não competem diretamente.
 2. **Title tags / meta descriptions** de cada página de confissão com o termo exato
    como cabeça (ex.: `<title>Catecismo de Heidelberg — …`). O conteúdo já existe; é
    só garantir que o `metadata` de cada página lidere pelo termo.
-3. **Preservar o ativo existente** "O que é uma igreja reformada?" ao migrar do Wix.
+3. ✅ **Preservar o ativo existente** "O que é uma igreja reformada?" — recuperado do
+   Wix (Wayback) e republicado em `/blog`, com 301 da URL antiga.
 4. **Dados estruturados (Schema.org)**: marcar como `Church` (subtipo de
    `LocalBusiness`) com `address`, `geo`, `openingHours` — ajuda o pacote local e os
    rich results de horário de culto. **✅ Implementado — ver §9.**
-5. **Pauta de blog** de baixa concorrência e alta intenção (long-tail):
+5. **Pauta de blog** de baixa concorrência e alta intenção (long-tail) — briefing de
+   redação pronto em [`guia-posts-long-tail.html`](./guia-posts-long-tail.html):
    - "Qual é o seu único consolo na vida e na morte? — Pergunta 1 de Heidelberg"
    - "O que são as Três Formas de Unidade?"
    - "Diferença entre igreja reformada e presbiteriana"
@@ -279,14 +282,17 @@ O que já foi feito no repositório para dar base técnica de indexação e SEO 
 |---|---|---|
 | **`robots.txt`** | `app/robots.ts` | Libera o crawl, **bloqueia `/admin` e `/login`**, aponta para `/sitemap.xml`. Serve em `irbrasilia.org/robots.txt`. |
 | **`sitemap.xml`** | `app/sitemap.ts` | Lista as 10 páginas públicas estáveis. **Respeita as feature flags** (`/agenda`, `/media`, `/blog`, `/biblioteca` só entram quando `website_config_variables.*.active === true` — hoje todas desligadas). Serve em `irbrasilia.org/sitemap.xml`. |
-| **Redirects 301** | `next.config.ts` | Estrutura pronta. Só a URL confirmada `/post/o-que-e-uma-igreja-reformada` → `/sobre` (provisório). **A lista real precisa dos dados do Search Console.** |
+| **Redirects 301** | `next.config.ts` | `/post/o-que-é-uma-igreja-reformada` → `/blog/o-que-e-uma-igreja-reformada` (post recuperado). Mais 5 URLs antigas do Wix (`/pregacoes` e 4 posts de terceiros), levantadas via `site:irbrasilia.org` e hoje em 404 → equivalente temático (`/catecismo`, `/doutrina`). `permanent: true` (308 = 301); parâmetro com regex cobre as posições acentuadas. **O sweep completo ainda depende do Search Console.** |
+| **JSON-LD `Article` / `BlogPosting`** | `components/seo/ArticleJsonLd.tsx` (confissões), `BlogPostingJsonLd.tsx` (blog) | Artigos elegíveis a rich result. Confissões com `about` + `sameAs` (Wikipedia) para *entity linking* (reforço de AEO). Aberturas "definição primeiro" nas páginas-chave alimentam o mesmo objetivo. |
 | **JSON-LD `Church`** | `components/seo/ChurchJsonLd.tsx` (injetado em `app/layout.tsx`) | Monta o schema a partir do `const/index.ts` (fonte única). Preenchidos: identidade, `address`, `areaServed`, `geo`, `telephone`/`contactPoint`, `openingHoursSpecification` (4 cultos/estudos), `sameAs` com o **YouTube**. |
 | **Coordenadas do templo** | `const/index.ts` (`CHURCH_COORDS`) | Setado `-15.8343599,-48.053391`. **Efeito colateral positivo:** `utils/maps.ts` usa `CHURCH_COORDS || CHURCH_ADDRESS_QUERY`, então o **mapa passou a fixar o pino exato** em vez de geocodificar pelo texto — comportamento que o próprio comentário do const recomendava. |
 
 ### ⏳ Pendente (depende de dado externo, não de código)
 
-- **Lista real de 301** — levantar URLs antigas no Search Console → Páginas (ou
-  `site:irbrasilia.org`) e adicionar entradas no `next.config.ts`.
+- **Sweep completo de 301** — os redirects conhecidos já entraram (post recuperado +
+  5 URLs do Wix via `site:irbrasilia.org`). Falta o levantamento definitivo no Search
+  Console → Páginas, que revela o que o `site:` não mostra, e adicionar o que faltar
+  no `next.config.ts`.
 - **Campos `⚠️` do JSON-LD** (comentados em `ChurchJsonLd.tsx` aguardando confirmação):
   - `sameAs`: **Facebook** e **Instagram** (URLs reais).
   - `parentOrganization`: confirmar se a IRB é confederada à federação *Igrejas
@@ -296,9 +302,10 @@ O que já foi feito no repositório para dar base técnica de indexação e SEO 
 
 ### ⚠️ Observações técnicas
 
-- **`logo` do schema é SVG** (`/logo/logo-navy.svg`) — os únicos PNGs disponíveis têm
-  7–8 MB, pesados demais para referência de logo. SVG é aceito; se um validador
-  reclamar, gerar um PNG enxuto.
+- **`logo` do schema**: o `ChurchJsonLd` referencia o SVG (`/logo/logo-navy.svg`),
+  aceito. Para os artigos (`Article`/`BlogPosting`), já existe um raster enxuto
+  `public/logo/logo-navy.png` (592x512), usado como `publisher.logo` (o Google prefere
+  raster para logo de publisher).
 - **`openingHoursSpecification` só tem `opens`** (horário de início), não `closes` —
   não temos a duração dos cultos. Válido assim; fica mais forte com o fim.
 - **Validar após publicar:** [Rich Results Test](https://search.google.com/test/rich-results)
