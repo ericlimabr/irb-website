@@ -12,7 +12,8 @@ import {
   WEEKLY_STUDY_TIME,
 } from "@/const"
 import { whatsappLink } from "@/utils/whatsapp"
-import { mapsEmbedUrl, mapsDirectionsUrl } from "@/utils/maps"
+import { mapsDirectionsUrl } from "@/utils/maps"
+import ChurchMap from "@/components/layout/ChurchMap"
 import { website_config_variables } from "@/config"
 
 export const metadata: Metadata = {
@@ -125,16 +126,7 @@ export default function ContatoPage() {
         </AnimatedContent>
 
         <AnimatedContent>
-          <div className="border border-border-subtle">
-            <iframe
-              src={mapsEmbedUrl()}
-              title={`Mapa — ${CHURCH_ADDRESS_FULL}`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-              className="w-full h-[380px] md:h-[460px] block"
-            />
-          </div>
+          <ChurchMap />
         </AnimatedContent>
 
         <AnimatedContent>
