@@ -47,19 +47,21 @@ tags pela UI da GTM sem redeploy.
 | **Google Search Console** | ✅ Integrado | — |
 | **Google Business Profile** | ✅ Integrado | "Igreja Reformada de Brasília", Setor Hoteleiro |
 | **Meta Pixel — PageView** | ✅ Publicado (v9) e validado | `2253501382066542`, Custom HTML na GTM. All Pages + gate `ad_storage` + exceção "Bloqueio - Área interna". Preview confirmou: não dispara sem aceite; dispara 1× após aceite; nada em /admin·/login. Falta só conferir no *Meta Events Manager* (Test Events). |
-| **Meta Pixel — eventos de conversão** | 🟡 Em criação | `Lead` (form), `Contact` (whatsapp), `FindLocation` (rotas), `ViewContent` (youtube). Cada tag reusa o trigger GA4 existente + mesmos 2 guardrails (gate `ad_storage` + exceção admin/login). |
+| **Meta Pixel — eventos de conversão** | ✅ Publicado (v10) e validado | `Lead` (form), `Contact` (whatsapp), `FindLocation` (rotas), `ViewContent` (youtube). Cada tag reusa o trigger GA4 existente + gate `ad_storage` + exceção admin/login + sequenciamento após "Meta Pixel - PageView". Preview confirmou as 4 disparando na interação certa e nada em /admin·/login. Falta conferir no *Meta Events Manager* (Test Events). |
 | **Qualidade do contêiner GTM** | ✅ Excelente | Domínios revisados; 2º admin adicionado (GTM/GA4/Ads) |
 
 ---
 
 ## GTM — o que existe no container (`GTM-PH2RDK44`)
 
-**9 tags de medição:** GA4 - Configuration (`G-9VGVR21929`), GA4 - `contact_form_submit`,
+**13 tags de medição:** GA4 - Configuration (`G-9VGVR21929`), GA4 - `contact_form_submit`,
 GA4 - `directions_click`, GA4 - `whatsapp_click`, GA4 - `youtube_click`,
 Google Ads - Conversion Linker, Google Ads - Remarketing (`AW-18399148896`),
 Microsoft Clarity (`y4vr1pvdsk`), Meta Pixel - PageView (`2253501382066542`,
-Custom HTML). Os 4 eventos de CTA são **tags de evento GA4** próprias (não só
-triggers).
+Custom HTML) e as 4 de evento do Meta: Meta - Lead (form), Meta - Contact
+(whatsapp), Meta - FindLocation (rotas), Meta - ViewContent (youtube). Os 4
+eventos de CTA têm **tags de evento GA4** próprias (não só triggers), e as 4
+tags do Meta reaproveitam esses mesmos gatilhos.
 
 > ⚠️ **O Meta Pixel não herda os guardrails automaticamente.** Diferente das tags
 > do Google, o pixel do Meta **ignora o Consent Mode** e o snippet dispara
@@ -77,6 +79,7 @@ triggers).
 | **v7** | Clarity travado em consentimento adicional `analytics_storage` (só dispara com aceite). |
 | **v8** | Acionador "Bloqueio - Área interna (admin/login)" (`{{Page Path}}` RegEx `^/(admin\|login)`) aplicado como **exceção nas 8 tags** → nada dispara em `/admin` e `/login`. |
 | **v9** | Tag "Meta Pixel - PageView" (`2253501382066542`, Custom HTML, All Pages) com gate `ad_storage` + exceção "Bloqueio - Área interna". Validada no Tag Assistant. |
+| **v10** | 4 tags de evento do Meta (Lead/Contact/FindLocation/ViewContent), cada uma no gatilho GA4 existente + gate `ad_storage` + exceção admin/login + sequenciamento após a tag PageView. Validadas no Tag Assistant. Total: 13 tags. |
 
 ---
 
@@ -86,10 +89,10 @@ triggers).
 |---|---|---|
 | **Marcar eventos-chave no GA4** | 🔴 Próximo (com prazo) | `whatsapp_click`, `directions_click`, `contact_form_submit`. Só aparecem para estrelar no relatório **agregado** ~24–48h após começarem a ser recebidos (Realtime já confirmou). `youtube_click` fica comum. |
 | **Importar eventos-chave como conversão no Ads** | 🟠 Depois do acima | Ads → Metas → Conversões → Importar → GA4. Gera o Conversion Label e liga ao `AW-18399148896`. Exige os eventos-chave já marcados. |
-| **Meta Pixel — tags de evento (GTM)** | 🟡 Em criação | `Lead`/`Contact`/`FindLocation`/`ViewContent`, cada uma no trigger GA4 existente + gate `ad_storage` + exceção admin/login. |
-| **Meta — verificar domínio** | 🟠 Depois das tags | Business Manager → Segurança da marca → Domínios → `irbrasilia.org`. Pré-requisito do AEM. |
-| **Meta — priorizar eventos (AEM)** | 🟠 Depois das tags | Events Manager → Config. agregadas de eventos → ordenar os até 8 eventos (ex.: `Lead` no topo). Só após começarem a chegar. |
-| **Meta — conferir no Events Manager** | 🔴 Próximo | Test Events do lado do Facebook (exige o Business Manager de vocês) para fechar o ciclo do `PageView` já publicado. |
+| **Meta — conferir no Events Manager** | 🔴 Próximo | Test Events do lado do Facebook (exige o Business Manager de vocês) para confirmar o recebimento dos 5 eventos (`PageView` + Lead/Contact/FindLocation/ViewContent) já publicados na v10. |
+| **Meta — verificar domínio** | 🟠 Depois de conferir | Business Manager → Segurança da marca → Domínios → `irbrasilia.org`. Pré-requisito do AEM. |
+| **Meta — priorizar eventos (AEM)** | 🟠 Depois do domínio | Events Manager → Config. agregadas de eventos → ordenar os até 8 (ex.: `Lead` no topo, depois `Contact`, `FindLocation`, `ViewContent`, `PageView`). |
+| **Meta — escolher meta da campanha** | 🟠 Ao anunciar | Selecionar `Lead` como evento de otimização/conversão ao criar o anúncio. |
 | **Meta Pixel — evento `Donate`/`Schedule`** | ⚪ Futuro | Só quando existir dízimo/PIX (`Donate`) ou RSVP na /agenda (`Schedule`). |
 | **Painel de analytics no `/admin`** (GA4 Data API) | ⚪ Planejado | Ver `admin-analytics-integration.md` |
 | **Verificação de anunciante** (Google Ads) | ⚪ Adiado | Questionário pulado; retomar para elegibilidade de anúncios |
