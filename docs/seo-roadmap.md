@@ -9,10 +9,12 @@ busca) — este aqui é a lista de *entregáveis*.
 > `CHURCH_COORDS` (que também fixou o pino do mapa). Este roadmap é o que vem **depois**
 > disso.
 
-> **Fora de escopo por ora (integração futura, decisão do cliente):** GTM, Google
-> Analytics, Microsoft Clarity, Google Ads, Meta Ads e Search Console entram **depois**.
-> Este roadmap **não** os implementa; a Frente 5 apenas deixa o terreno preparado para
-> quando forem ligados.
+> **Atualização: a Frente 5 (medição) já está LIVE.** GTM, GA4, Microsoft Clarity,
+> Google Ads, Consent Mode v2/LGPD, Google Business Profile e Google Search Console já
+> foram integrados. O estado detalhado (IDs, tags, versões do container) vive em
+> [`analytics-stack.md`](./analytics-stack.md); o texto da Frente 5 abaixo foi
+> atualizado. Restam só refinamentos de medição/anúncios (GA4/Ads), que **não bloqueiam
+> SEO**.
 
 ---
 
@@ -93,19 +95,32 @@ Schema e técnica *habilitam*; conteúdo é o que **ranqueia e é citado**.
 
 ---
 
-## Frente 5 — Medição (só preparar o terreno; implementar depois)
+## Frente 5 — Medição (✅ LIVE)
 
-Conforme definido pelo cliente, o stack de medição/anúncios entra **depois**. O que
-dá para adiantar **sem** implementá-lo:
+O stack de medição/anúncios **foi implementado e está no ar**. Detalhes completos
+(IDs, as 8 tags do container, histórico de versões, pendências finas) em
+[`analytics-stack.md`](./analytics-stack.md). Resumo:
 
-- Deixar **um único ponto de injeção** limpo no layout para GTM/Analytics/Clarity
-  plugarem sem retrabalho.
-- Nomear CTAs/botões (WhatsApp, "como chegar", envio do formulário) de forma que
-  virem **eventos** rastreáveis quando o GTM chegar.
-- Reservar `env` e `config` para os IDs (GTM/GA/Ads/Meta/Clarity) sem valores ainda.
+- **GTM** (`GTM-PH2RDK44`) como ponto único, só em produção real (não dispara em
+  previews `*.vercel.app`).
+- **GA4**, **Microsoft Clarity**, **Google Ads** (Conversion Linker + Remarketing),
+  **GA4 ↔ Ads** vinculados.
+- **Eventos de CTA** ao vivo e validados: `whatsapp_click`, `directions_click`,
+  `youtube_click`, `contact_form_submit`.
+- **Consent Mode v2 + banner LGPD** + `/politica-de-privacidade`; Clarity travado no
+  consentimento (GTM v7); analytics **excluído de `/admin` e `/login`** (código + GTM v8).
+- **Google Business Profile** e **Google Search Console** integrados.
 
-> **Não** criar tags, pixels ou contas agora — apenas manter o código "pronto para
-> receber".
+**Refinamentos que restam** (não bloqueiam SEO, a maioria em UI externa): marcar os
+eventos-chave no GA4, importá-los como conversão no Google Ads, Meta Pixel (se houver
+redes), painel de analytics no `/admin` (GA4 Data API), verificação de anunciante no Ads.
+
+> ⚠️ **Search Console é uma property NOVA** (mesmo domínio de sempre, mas conta recém-
+> criada). Ela **não faz backfill**: o relatório de Páginas popula só conforme o Google
+> recrawleia daqui pra frente, então **não** vai listar prontamente os 404 das URLs
+> antigas do Wix. Para o sweep de 301 no curto prazo, a ferramenta prática continua
+> sendo `site:irbrasilia.org` (foi assim que as 5 URLs já redirecionadas foram achadas);
+> o Search Console fecha a lista aos poucos, com o tempo.
 
 ---
 
@@ -198,13 +213,18 @@ Ordem sugerida para execução:
   → `/catecismo`; `/post/salmos-salmo-1-…`, `/post/jesus-é-o-único-caminho-…`,
   `/post/…shabbat…`, `/post/refutando-o-relativismo-…` → `/doutrina` (equivalente
   temático; são reposts de terceiros). `permanent: true` (308 = 301). Parâmetro com
-  regex nas posições acentuadas. **Sweep definitivo ainda depende do Search Console.**
+  regex nas posições acentuadas. **Sweep definitivo:** o Search Console é uma property
+  nova (sem backfill), então no curto prazo a descoberta é via `site:irbrasilia.org`;
+  o relatório de Páginas fecha a lista com o tempo.
 
 ### Pendente próximo
 - **Frente 4 (conteúdo)** — os 5 posts long-tail (briefing pronto em
   `docs/guia-posts-long-tail.html`). É o motor real de longo prazo; schema/técnica só habilitam.
 - **`Event`** — quando a flag `/agenda` for ativada.
-- **Wikidata** (fora do código) e **Frente 5 (medição)** quando o stack for ligado.
+- **Wikidata** (fora do código; item de entidade, não artigo de Wikipédia, que uma
+  igreja local dificilmente satisfaz por notabilidade).
+- **Frente 5 (medição)** — já LIVE; restam só refinamentos de GA4/Ads (ver
+  `analytics-stack.md`), que não bloqueiam SEO.
 
 ---
 
