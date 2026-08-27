@@ -29,9 +29,12 @@ momento, **no Brasil** (termos doutrinários nacionais).
 >
 > **A tarefa real não é "migrar", é reindexar.** O site novo já está publicado; falta
 > o Google recrawlear e substituir o cache velho. Pontos de atenção:
-> 1. **Forçar o recrawl:** ligar o **Search Console** para o domínio, submeter o
+> 1. **Forçar o recrawl:** o **Search Console já está integrado** (ver
+>    `analytics-stack.md`), mas é uma property **nova** (mesmo domínio, conta recém-
+>    criada) e **não faz backfill** do histórico. O que fazer nela: submeter o
 >    `sitemap.xml` do site novo e usar "Solicitar indexação" nas páginas principais.
->    É o que corrige o índice desatualizado.
+>    É o que acelera a correção do índice desatualizado; os relatórios (Páginas,
+>    Desempenho) vão populando com o tempo, não retroativamente.
 > 2. **URLs antigas que agora dão 404:** as páginas do site antigo ainda indexadas
 >    (ex.: `/post/o-que-e-uma-igreja-reformada`) não existem mais e retornam 404. Onde
 >    houver equivalente no site novo, criar **redirect 301** da URL antiga → nova
@@ -282,7 +285,7 @@ O que já foi feito no repositório para dar base técnica de indexação e SEO 
 |---|---|---|
 | **`robots.txt`** | `app/robots.ts` | Libera o crawl, **bloqueia `/admin` e `/login`**, aponta para `/sitemap.xml`. Serve em `irbrasilia.org/robots.txt`. |
 | **`sitemap.xml`** | `app/sitemap.ts` | Lista as 10 páginas públicas estáveis. **Respeita as feature flags** (`/agenda`, `/media`, `/blog`, `/biblioteca` só entram quando `website_config_variables.*.active === true` — hoje todas desligadas). Serve em `irbrasilia.org/sitemap.xml`. |
-| **Redirects 301** | `next.config.ts` | `/post/o-que-é-uma-igreja-reformada` → `/blog/o-que-e-uma-igreja-reformada` (post recuperado). Mais 5 URLs antigas do Wix (`/pregacoes` e 4 posts de terceiros), levantadas via `site:irbrasilia.org` e hoje em 404 → equivalente temático (`/catecismo`, `/doutrina`). `permanent: true` (308 = 301); parâmetro com regex cobre as posições acentuadas. **O sweep completo ainda depende do Search Console.** |
+| **Redirects 301** | `next.config.ts` | `/post/o-que-é-uma-igreja-reformada` → `/blog/o-que-e-uma-igreja-reformada` (post recuperado). Mais 5 URLs antigas do Wix (`/pregacoes` e 4 posts de terceiros), levantadas via `site:irbrasilia.org` e hoje em 404 → equivalente temático (`/catecismo`, `/doutrina`). `permanent: true` (308 = 301); parâmetro com regex cobre as posições acentuadas. **Sweep completo:** Search Console é property nova (sem backfill), então a descoberta prática é via `site:`; o relatório de Páginas completa a lista com o tempo. |
 | **JSON-LD `Article` / `BlogPosting`** | `components/seo/ArticleJsonLd.tsx` (confissões), `BlogPostingJsonLd.tsx` (blog) | Artigos elegíveis a rich result. Confissões com `about` + `sameAs` (Wikipedia) para *entity linking* (reforço de AEO). Aberturas "definição primeiro" nas páginas-chave alimentam o mesmo objetivo. |
 | **JSON-LD `Church`** | `components/seo/ChurchJsonLd.tsx` (injetado em `app/layout.tsx`) | Monta o schema a partir do `const/index.ts` (fonte única). Preenchidos: identidade, `address`, `areaServed`, `geo`, `telephone`/`contactPoint`, `openingHoursSpecification` (4 cultos/estudos), `sameAs` com o **YouTube**. |
 | **Coordenadas do templo** | `const/index.ts` (`CHURCH_COORDS`) | Setado `-15.8343599,-48.053391`. **Efeito colateral positivo:** `utils/maps.ts` usa `CHURCH_COORDS || CHURCH_ADDRESS_QUERY`, então o **mapa passou a fixar o pino exato** em vez de geocodificar pelo texto — comportamento que o próprio comentário do const recomendava. |
@@ -290,9 +293,11 @@ O que já foi feito no repositório para dar base técnica de indexação e SEO 
 ### ⏳ Pendente (depende de dado externo, não de código)
 
 - **Sweep completo de 301** — os redirects conhecidos já entraram (post recuperado +
-  5 URLs do Wix via `site:irbrasilia.org`). Falta o levantamento definitivo no Search
-  Console → Páginas, que revela o que o `site:` não mostra, e adicionar o que faltar
-  no `next.config.ts`.
+  5 URLs do Wix via `site:irbrasilia.org`). O Search Console **já está integrado**, mas
+  é uma property **nova** (sem backfill): o relatório de Páginas não lista de imediato os
+  404 antigos; vai populando conforme o Google recrawleia. Então, no curto prazo, seguir
+  com `site:irbrasilia.org` para achar URLs e ir adicionando ao `next.config.ts`; revisar
+  o Search Console periodicamente conforme ele acumula dados.
 - **Campos `⚠️` do JSON-LD** (comentados em `ChurchJsonLd.tsx` aguardando confirmação):
   - `sameAs`: **Facebook** e **Instagram** (URLs reais).
   - `parentOrganization`: confirmar se a IRB é confederada à federação *Igrejas
