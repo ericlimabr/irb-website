@@ -73,6 +73,15 @@ const nextConfig: NextConfig = {
         destination: "/blog/o-que-e-uma-igreja-reformada",
         permanent: false,
       },
+      // /campanha é só o guarda-chuva das landing pages (não tem page.tsx
+      // próprio, então daria 404). Manda o path base para a LP ativa, para quem
+      // apara a URL. `permanent: false` = 307: a LP "principal" pode mudar a
+      // cada campanha, então não pode ficar cacheado.
+      {
+        source: "/campanha",
+        destination: "/campanha/venha-nos-visitar",
+        permanent: false,
+      },
     ]
   },
 }
