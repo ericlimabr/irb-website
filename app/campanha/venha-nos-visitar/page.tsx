@@ -75,8 +75,20 @@ const FIRST_VISIT = [
   },
 ]
 
-/** Um par de botões reutilizado no herói e no rodapé de conversão. */
-function CtaButtons({ className = "" }: { className?: string }) {
+/**
+ * Um par de botões reutilizado no herói e no rodapé de conversão. O primeiro é
+ * sempre "Como chegar"; o segundo é "Adicionar à agenda" (herói) ou "Falar no
+ * WhatsApp" (conversão final), via `secondary`.
+ */
+function CtaButtons({
+  className = "",
+  secondary = "whatsapp",
+}: {
+  className?: string
+  secondary?: "whatsapp" | "agenda"
+}) {
+  const secondaryClass =
+    "inline-flex items-center justify-center gap-2 font-mono uppercase tracking-[0.1em] text-2xs px-8 py-4 bg-transparent border border-white/40 text-white hover:border-gold-400 hover:text-gold-400 transition-colors duration-500"
   return (
     <div className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-3 ${className}`}>
       <a
@@ -87,14 +99,20 @@ function CtaButtons({ className = "" }: { className?: string }) {
       >
         Como chegar →
       </a>
-      <a
-        href={whatsappLink()}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center justify-center gap-2 font-mono uppercase tracking-[0.1em] text-2xs px-8 py-4 bg-transparent border border-white/40 text-white hover:border-gold-400 hover:text-gold-400 transition-colors duration-500"
-      >
-        Falar no WhatsApp
-      </a>
+      {secondary === "agenda" ? (
+        <a href="/campanha/agenda" className={secondaryClass}>
+          Adicionar à minha agenda
+        </a>
+      ) : (
+        <a
+          href={whatsappLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={secondaryClass}
+        >
+          Falar no WhatsApp
+        </a>
+      )}
     </div>
   )
 }
@@ -187,7 +205,7 @@ export default function VenhaNosVisitarPage() {
             {CHURCH_ADDRESS.city} · {CHURCH_ADDRESS.state}
           </p>
 
-          <CtaButtons className="mt-8 w-full sm:w-auto justify-center" />
+          <CtaButtons className="mt-8 w-full sm:w-auto justify-center" secondary="agenda" />
 
           <p className="font-sans text-white/50 text-xs mt-6">
             Visitantes são bem-vindos. Não é preciso avisar nem ser membro.
@@ -271,6 +289,24 @@ export default function VenhaNosVisitarPage() {
           >
             Abrir rota no Maps →
           </a>
+
+          {/* Agendar — adiciona o Culto Matutino do próximo domingo na agenda
+              da própria pessoa. Rota única /campanha/agenda decide pelo
+              dispositivo (Apple → .ics; resto → Google). O clique é medido
+              como Schedule na GTM. */}
+          <div className="mt-14 border-t border-border-subtle pt-12">
+            <p className="section-tag mb-4">Não quer esquecer?</p>
+            <p className="mx-auto mb-6 max-w-xl font-sans text-text-secondary">
+              Adicione o próximo culto de domingo (09h) na sua agenda e receba um
+              lembrete. O endereço vai junto no evento.
+            </p>
+            <a
+              href="/campanha/agenda"
+              className="inline-flex items-center justify-center gap-2 font-mono uppercase tracking-[0.1em] text-2xs px-8 py-4 bg-transparent border border-gold-500 text-gold-600 hover:bg-gold-500 hover:text-navy-900 transition-colors duration-500"
+            >
+              Adicionar à minha agenda
+            </a>
+          </div>
         </div>
       </section>
 
