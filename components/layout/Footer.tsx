@@ -1,6 +1,11 @@
 import { website_config_variables } from "@/config"
 import Link from "next/link"
 import Logo from "@/components/ui/Logo"
+import ConsentManageButton from "@/components/analytics/ConsentManageButton"
+import {
+  analyticsEnabled,
+  consentPreviewEnabled,
+} from "@/components/analytics/GoogleTagManager"
 
 export default function Footer() {
   const footerLinks = [
@@ -36,6 +41,13 @@ export default function Footer() {
     },
   ]
 
+  const footerLinkClass =
+    "font-mono uppercase tracking-[0.1em] text-primary-foreground/60 hover:text-gold-400 transition-colors duration-500 text-fs-9"
+
+  // Só mostra "Gerenciar cookies" onde o banner pode de fato reabrir (produção,
+  // ou preview de QA). Em dev normal o banner nem monta, então seria um botão morto.
+  const showConsentManage = analyticsEnabled() || consentPreviewEnabled()
+
   return (
     <footer data-chrome-link className="bg-navy-700 border-t-4 border-gold-500">
       <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -52,14 +64,13 @@ export default function Footer() {
           {footerLinks
             .filter((item) => item.listable)
             .map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="font-mono uppercase tracking-[0.1em] text-primary-foreground/60 hover:text-gold-400 transition-colors duration-500 text-fs-9"
-              >
+              <Link key={link.href} href={link.href} className={footerLinkClass}>
                 {link.label}
               </Link>
             ))}
+          {showConsentManage && (
+            <ConsentManageButton className={footerLinkClass} />
+          )}
         </div>
 
         {/* Right: Soli Deo Gloria */}

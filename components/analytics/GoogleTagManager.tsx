@@ -33,6 +33,16 @@ const isProduction = process.env.VERCEL_ENV
  */
 export const analyticsEnabled = () => isProduction && !!GTM_ID
 
+/**
+ * Preview de QA (dev): renderiza SÓ a UI do banner de consentimento localmente,
+ * sem ligar o GTM/Consent Mode (que seguem restritos à produção). Serve para ver
+ * o visual/texto do banner no localhost, já que `analyticsEnabled()` é falso em
+ * dev. Ative com `NEXT_PUBLIC_CONSENT_PREVIEW=1`. NUNCA setar em produção.
+ */
+export const consentPreviewEnabled = () =>
+  process.env.NEXT_PUBLIC_CONSENT_PREVIEW === "1" ||
+  process.env.NODE_ENV !== "production"
+
 export function GoogleTagManagerScript() {
   if (!analyticsEnabled()) return null
 

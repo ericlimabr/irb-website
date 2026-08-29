@@ -26,7 +26,18 @@ export function trackEvent(payload: DataLayerEvent) {
   window.dataLayer.push(payload)
 }
 
-const CONSENT_COOKIE = "irb_consent"
+/**
+ * Nome do cookie de consentimento, COM versão no nome.
+ *
+ * Bump da versão = "reexibir o banner para todos". Quando o texto do banner
+ * muda de forma material (o que a pessoa consente muda), incremente o sufixo:
+ * o cookie antigo deixa de casar, `getConsent()` volta a `null` e quem já tinha
+ * decidido reencontra o banner e decide de novo sob o texto novo. Até re-aceitar,
+ * o Consent Mode mantém tudo negado (comportamento conservador correto).
+ *
+ * Histórico: v2 em 2026-08-29 (novo texto com o benefício concreto da visita).
+ */
+export const CONSENT_COOKIE = "irb_consent_v2"
 type ConsentValue = "granted" | "denied"
 
 /**
@@ -60,6 +71,8 @@ export function setConsent(granted: boolean) {
 /** Escolha já registrada, ou `null` se o usuário ainda não decidiu. */
 export function getConsent(): ConsentValue | null {
   if (typeof document === "undefined") return null
-  const m = document.cookie.match(/(?:^|; )irb_consent=([^;]+)/)
+  const m = document.cookie.match(
+    new RegExp("(?:^|; )" + CONSENT_COOKIE + "=([^;]+)"),
+  )
   return m ? (decodeURIComponent(m[1]) as ConsentValue) : null
 }
