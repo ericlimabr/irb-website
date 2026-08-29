@@ -1,4 +1,5 @@
 import { analyticsEnabled } from "./GoogleTagManager"
+import { CONSENT_COOKIE } from "@/utils/analytics"
 
 /**
  * Google Consent Mode v2 — estado PADRÃO do consentimento, definido ANTES de a
@@ -38,7 +39,7 @@ export default function ConsentDefault() {
     wait_for_update:500
   });
   try {
-    var m = document.cookie.match(/(?:^|; )irb_consent=([^;]+)/);
+    var m = document.cookie.match(/(?:^|; )${CONSENT_COOKIE}=([^;]+)/);
     if (m && decodeURIComponent(m[1]) === 'granted') {
       gtag('consent','update',{
         ad_storage:'granted',

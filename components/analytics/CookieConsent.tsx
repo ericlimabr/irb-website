@@ -16,6 +16,9 @@ type ConsentMetric = "shown" | "accept" | "reject"
  */
 function reportConsent(type: ConsentMetric) {
   if (typeof window === "undefined") return
+  // Fora de produção o banner é renderizado só para inspeção visual —
+  // não medir nem escrever no banco de produção.
+  if (process.env.NODE_ENV !== "production") return
   try {
     const params = new URLSearchParams(window.location.search)
     const isCampaign =
@@ -48,9 +51,11 @@ function reportConsent(type: ConsentMetric) {
 /**
  * Banner de consentimento de cookies (LGPD).
  *
- * Só aparece para quem ainda não decidiu (`getConsent() === null`). "Recusar" e
- * "Aceitar" têm o mesmo tamanho e a mesma posição — recusar precisa ser tão
- * fácil quanto aceitar. Enquanto o banner não é respondido, o Consent Mode v2
+ * Só aparece para quem ainda não decidiu (`getConsent() === null`). "Aceitar"
+ * vem primeiro (à esquerda) como leve destaque, mas "Recusar" mantém o MESMO
+ * tamanho e a mesma visibilidade — a LGPD exige que recusar seja tão fácil
+ * quanto aceitar, e isso é sobre igualdade de esforço, não de posição. Enquanto
+ * o banner não é respondido, o Consent Mode v2
  * mantém tudo NEGADO (ver `ConsentDefault`), então nenhuma medição roda.
  *
  * Renderizado só quando a medição está ligada (gate no layout via
@@ -70,6 +75,16 @@ export default function CookieConsent() {
     }
   }, [])
 
+  useEffect(() => {
+    // Reabertura sob demanda: o link "Gerenciar cookies" do rodapé dispara este
+    // evento para quem JÁ decidiu poder mudar/retirar o consentimento (LGPD:
+    // retirar tem de ser tão fácil quanto conceder). Não remede como "shown"
+    // porque não é uma exibição espontânea, e sim uma reabertura pedida.
+    const open = () => setVisible(true)
+    window.addEventListener("irb:open-consent", open)
+    return () => window.removeEventListener("irb:open-consent", open)
+  }, [])
+
   const decide = (granted: boolean) => {
     reportConsent(granted ? "accept" : "reject")
     setConsent(granted)
@@ -79,7 +94,23 @@ export default function CookieConsent() {
   return (
     <AnimatePresence>
       {visible && (
+        // Escurecimento da tela inteira para focar a atenção no banner.
+        // `pointer-events-none` é OBRIGATÓRIO: sem ele o overlay bloquearia o
+        // site e viraria cookie wall (proibido pela LGPD). Assim ele SÓ escurece
+        // — o conteúdo continua clicável por trás. `aria-hidden`: leitor de tela ignora.
         <motion.div
+          key="cookie-scrim"
+          aria-hidden="true"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="pointer-events-none fixed inset-0 z-[55] bg-navy-900/40"
+        />
+      )}
+      {visible && (
+        <motion.div
+          key="cookie-banner"
           role="dialog"
           aria-label="Aviso de privacidade e cookies"
           initial={{ opacity: 0, y: 24 }}
@@ -94,9 +125,10 @@ export default function CookieConsent() {
                 Privacidade
               </p>
               <p className="font-sans text-primary-foreground/70 text-sm leading-relaxed">
-                Usamos cookies e ferramentas de análise (Google Analytics,
-                Microsoft Clarity) para entender como o site é usado e melhorá-lo.
-                Nada disso é ativado sem a sua permissão. Saiba mais na nossa{" "}
+                Usamos cookies e ferramentas de análise (Google Analytics e
+                Microsoft Clarity) para ver o que confunde quem chega ao site e
+                melhorar as informações sobre os cultos e como chegar até nós.
+                Nada é ativado sem a sua permissão. Saiba mais na nossa{" "}
                 <Link
                   href="/politica-de-privacidade"
                   className="text-gold-400 underline underline-offset-4 hover:text-gold-500"
@@ -110,17 +142,17 @@ export default function CookieConsent() {
             <div className="flex shrink-0 gap-3">
               <button
                 type="button"
-                onClick={() => decide(false)}
-                className="font-mono uppercase tracking-[0.1em] border border-primary-foreground/30 px-5 py-3 text-primary-foreground/80 hover:border-primary-foreground/60 hover:text-primary-foreground transition-colors duration-500 text-2xs"
-              >
-                Recusar
-              </button>
-              <button
-                type="button"
                 onClick={() => decide(true)}
                 className="font-mono uppercase tracking-[0.1em] bg-gold-500 px-5 py-3 text-navy-800 hover:bg-gold-400 transition-colors duration-500 text-2xs"
               >
                 Aceitar
+              </button>
+              <button
+                type="button"
+                onClick={() => decide(false)}
+                className="font-mono uppercase tracking-[0.1em] border border-primary-foreground/30 px-5 py-3 text-primary-foreground/80 hover:border-primary-foreground/60 hover:text-primary-foreground transition-colors duration-500 text-2xs"
+              >
+                Recusar
               </button>
             </div>
           </div>

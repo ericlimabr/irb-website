@@ -2,6 +2,7 @@ import {
   GoogleTagManagerScript,
   GoogleTagManagerNoScript,
   analyticsEnabled,
+  consentPreviewEnabled,
 } from "./GoogleTagManager"
 import ConsentDefault from "./ConsentDefault"
 import CookieConsent from "./CookieConsent"
@@ -22,7 +23,7 @@ export default function Analytics() {
       <ConsentDefault />
       <GoogleTagManagerNoScript />
       <GoogleTagManagerScript />
-      {analyticsEnabled() && <CookieConsent />}
+      {(analyticsEnabled() || consentPreviewEnabled()) && <CookieConsent />}
     </>
   )
 }
