@@ -141,3 +141,26 @@ model Faq {
 
   @@map("faqs")
 }
+
+/// Medição do banner de consentimento (LGPD), a única fonte de sinal para
+/// tráfego que ainda NÃO consentiu — GA4/Clarity/pixel só veem quem aceita.
+/// Registro é agregado e SEM PII: nada de IP, User-Agent cru ou identificador
+/// que reconheça a pessoa (isso viraria rastreamento e exigiria consentimento).
+/// Só o tipo do clique + contexto grosseiro, permitido por interesse legítimo
+/// (medir o próprio mecanismo de consentimento).
+model ConsentEvent {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  type     String // "shown" | "accept" | "reject"
+  source   String? // "campaign" | "organic"
+  campaign String? // utm_campaign, quando presente
+  device   String? // "mobile" | "tablet" | "desktop"
+  inApp    Boolean @default(false) // navegador in-app do FB/IG (WebView)
+  country  String? // país (ISO) derivado do edge, sem guardar o IP
+  path     String? // rota onde o banner apareceu
+
+  @@index([type])
+  @@index([source])
+  @@map("consent_events")
+}
