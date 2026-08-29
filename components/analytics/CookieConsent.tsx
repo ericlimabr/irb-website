@@ -5,6 +5,46 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { getConsent, setConsent } from "@/utils/analytics"
 
+type ConsentMetric = "shown" | "accept" | "reject"
+
+/**
+ * Reporta a interação com o banner (exibido / aceitou / recusou) ao nosso
+ * endpoint agregado. Roda ANTES do consentimento de propósito — medir o próprio
+ * mecanismo é interesse legítimo, e não seta cookie nem manda PII: só o tipo do
+ * clique e o contexto de marketing da URL (UTM/fbclid). `sendBeacon` garante o
+ * envio mesmo se a pessoa sair logo depois.
+ */
+function reportConsent(type: ConsentMetric) {
+  if (typeof window === "undefined") return
+  try {
+    const params = new URLSearchParams(window.location.search)
+    const isCampaign =
+      params.has("fbclid") ||
+      params.has("gclid") ||
+      [...params.keys()].some((k) => k.startsWith("utm_"))
+
+    const payload = JSON.stringify({
+      type,
+      source: isCampaign ? "campaign" : "organic",
+      campaign: params.get("utm_campaign") ?? undefined,
+      path: window.location.pathname,
+    })
+
+    const url = "/api/consent-metric"
+    const blob = new Blob([payload], { type: "application/json" })
+    if (!navigator.sendBeacon?.(url, blob)) {
+      void fetch(url, {
+        method: "POST",
+        body: payload,
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+      }).catch(() => {})
+    }
+  } catch {
+    // Medição nunca pode quebrar o banner.
+  }
+}
+
 /**
  * Banner de consentimento de cookies (LGPD).
  *
@@ -23,11 +63,15 @@ export default function CookieConsent() {
     // O cookie só existe no cliente. Ler aqui (e não durante o render) mantém o
     // banner FORA do HTML do SSR, evitando hydration mismatch para quem já
     // decidiu. Este set no efeito é intencional.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (getConsent() === null) setVisible(true)
+    if (getConsent() === null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisible(true)
+      reportConsent("shown")
+    }
   }, [])
 
   const decide = (granted: boolean) => {
+    reportConsent(granted ? "accept" : "reject")
     setConsent(granted)
     setVisible(false)
   }
