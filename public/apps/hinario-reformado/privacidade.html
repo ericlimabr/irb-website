@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Política de Privacidade — Hinário Reformado</title>
+    <meta
+      name="description"
+      content="Política de privacidade do aplicativo Hinário Reformado, das Igrejas Reformadas do Brasil."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Raleway:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ground: #efe7d6;
+        --surface: #fffdf8;
+        --ink: #1c2733;
+        --ink-soft: #55606e;
+        --accent: #a8833e;
+        --heading: #002347;
+        --rule: rgba(0, 35, 71, 0.12);
+        --shadow: 0 1px 2px rgba(0, 35, 71, 0.05), 0 12px 32px rgba(0, 35, 71, 0.08);
+        color-scheme: light;
+      }
+      :root:not([data-theme='light']) {
+        @media (prefers-color-scheme: dark) {
+          --ground: #00101f;
+          --surface: #001830;
+          --ink: #e7e1d2;
+          --ink-soft: #a2acb9;
+          --accent: #c5a059;
+          --heading: #ece2ca;
+          --rule: rgba(197, 160, 89, 0.22);
+          --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme='dark'] {
+        --ground: #00101f;
+        --surface: #001830;
+        --ink: #e7e1d2;
+        --ink-soft: #a2acb9;
+        --accent: #c5a059;
+        --heading: #ece2ca;
+        --rule: rgba(197, 160, 89, 0.22);
+        --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--ground);
+        color: var(--ink);
+        font-family: 'Raleway', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-size: 17px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: clamp(1.25rem, 4vw, 3rem);
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--rule);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: clamp(1.5rem, 5vw, 3.5rem);
+      }
+
+      .eyebrow {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 0.75rem;
+      }
+      h1 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-weight: 600;
+        font-size: clamp(2.1rem, 6vw, 3rem);
+        line-height: 1.1;
+        color: var(--heading);
+        margin: 0 0 0.4rem;
+        text-wrap: balance;
+      }
+      .meta {
+        color: var(--ink-soft);
+        font-size: 0.92rem;
+        margin: 0 0 0.5rem;
+      }
+      .rule {
+        height: 2px;
+        width: 3rem;
+        background: var(--accent);
+        border: 0;
+        margin: 1.5rem 0 2rem;
+      }
+
+      .lead {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 1.4rem;
+        font-style: italic;
+        line-height: 1.45;
+        color: var(--ink);
+        margin: 0 0 2rem;
+      }
+
+      h2 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-weight: 600;
+        font-size: 1.6rem;
+        color: var(--heading);
+        margin: 2.5rem 0 0.6rem;
+        display: flex;
+        align-items: baseline;
+        gap: 0.6rem;
+      }
+      h2 .n {
+        font-family: 'Raleway', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--accent);
+        letter-spacing: 0.05em;
+      }
+      p {
+        margin: 0 0 1rem;
+      }
+      ul {
+        margin: 0 0 1rem;
+        padding-left: 1.2rem;
+      }
+      li {
+        margin: 0.35rem 0;
+      }
+      strong {
+        color: var(--heading);
+        font-weight: 600;
+      }
+      a {
+        color: var(--accent);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+      }
+      .fill {
+        background: rgba(168, 131, 62, 0.14);
+        border-bottom: 1px dashed var(--accent);
+        padding: 0 0.25rem;
+        border-radius: 3px;
+      }
+      footer {
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--rule);
+        color: var(--ink-soft);
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <article class="card">
+        <p class="eyebrow">Igrejas Reformadas do Brasil</p>
+        <h1>Política de Privacidade</h1>
+        <p class="meta">Aplicativo <strong>Hinário Reformado</strong> · Vigente desde 8 de setembro de 2026</p>
+        <hr class="rule" />
+
+        <p class="lead">
+          O Hinário Reformado funciona inteiramente no seu aparelho. Ele não cria conta, não pede
+          login e não coleta dados pessoais.
+        </p>
+
+        <h2><span class="n">1</span> Quem é o responsável</h2>
+        <p>
+          Este aplicativo é mantido pelas <strong>Igrejas Reformadas do Brasil</strong>. Para dúvidas
+          sobre esta política ou sobre privacidade, escreva para
+          <a href="mailto:conselho@irbrasilia.org">conselho@irbrasilia.org</a>.
+        </p>
+
+        <h2><span class="n">2</span> O que o aplicativo coleta</h2>
+        <p>
+          <strong>Nenhum dado pessoal.</strong> Não coletamos nome, e-mail, telefone, localização,
+          contatos, identificadores de publicidade nem qualquer informação que identifique você.
+          O app não possui contas de usuário.
+        </p>
+
+        <h2><span class="n">3</span> Dados que ficam no seu aparelho</h2>
+        <p>
+          Para funcionar, o app guarda algumas informações <strong>apenas localmente</strong>, no
+          armazenamento do próprio aparelho:
+        </p>
+        <ul>
+          <li>seus <strong>favoritos</strong>;</li>
+          <li>seu <strong>histórico de leitura</strong> e preferências de uso (como tema e tamanho de fonte).</li>
+        </ul>
+        <p>
+          Esses dados <strong>nunca saem do seu aparelho</strong>, não são enviados para nós nem para
+          terceiros, e são apagados quando você desinstala o aplicativo.
+        </p>
+
+        <h2><span class="n">4</span> Uso da internet</h2>
+        <p>
+          O aplicativo é <strong>offline-first</strong>: abre e funciona por completo sem conexão. A
+          internet é usada apenas, e de forma opcional, para <strong>verificar se há atualização</strong>
+          de conteúdo ou do próprio app. Essas verificações não enviam dados pessoais e, se a rede
+          falhar, o app continua funcionando normalmente com o conteúdo já instalado.
+        </p>
+
+        <h2><span class="n">5</span> O que o aplicativo não faz</h2>
+        <ul>
+          <li>não exibe <strong>anúncios</strong>;</li>
+          <li>não usa ferramentas de <strong>rastreamento</strong> ou de análise de comportamento;</li>
+          <li>não grava sua tela nem cria mapas de calor;</li>
+          <li>não <strong>vende nem compartilha</strong> dados — porque não os coleta.</li>
+        </ul>
+
+        <h2><span class="n">6</span> Serviços de terceiros</h2>
+        <p>
+          O aplicativo é distribuído pela <strong>Google Play</strong>, que pode coletar dados
+          técnicos próprios (por exemplo, para instalação e diagnóstico), conforme a política da
+          Google. A verificação de atualizações usa a infraestrutura da <strong>Expo (EAS)</strong>
+          para checar novas versões. Esses serviços operam sob suas próprias políticas de
+          privacidade e não recebem de nós nenhum dado pessoal seu.
+        </p>
+
+        <h2><span class="n">7</span> Crianças</h2>
+        <p>
+          O aplicativo é adequado a todas as idades e, por não coletar dados pessoais, não representa
+          risco à privacidade de crianças.
+        </p>
+
+        <h2><span class="n">8</span> Seus direitos (LGPD)</h2>
+        <p>
+          Como não tratamos dados pessoais, não há dados sob nossa guarda para acessar, corrigir ou
+          excluir. Os dados locais (favoritos e histórico) estão sob seu controle direto e podem ser
+          removidos a qualquer momento, apagando-os no app ou desinstalando-o. Ainda assim, se tiver
+          qualquer questão relativa à Lei Geral de Proteção de Dados (Lei nº 13.709/2018), fale
+          conosco pelo e-mail acima.
+        </p>
+
+        <h2><span class="n">9</span> Alterações desta política</h2>
+        <p>
+          Podemos atualizar esta política para refletir melhorias no aplicativo. Quando isso
+          acontecer, mudaremos a data de vigência no topo desta página. Recomendamos consultá-la
+          periodicamente.
+        </p>
+
+        <footer>
+          <p>
+            Hinário Reformado — Igrejas Reformadas do Brasil. Última atualização: 8 de setembro de
+            2026.
+          </p>
+        </footer>
+      </article>
+    </div>
+  </body>
+</html>

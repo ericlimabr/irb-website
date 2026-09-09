@@ -11,6 +11,21 @@ import type { NextConfig } from "next"
  * adicione uma entrada aqui para cada uma. `permanent: true` = 301.
  */
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      // Publicação (cópia downstream) da Política de Privacidade do app "Hinário
+      // Reformado". A FONTE DA VERDADE vive no repo do app
+      // (docs/legal/politica-de-privacidade.html); aqui servimos uma cópia
+      // VERBATIM como arquivo estático em public/apps/hinario-reformado/
+      // privacidade.html, com URL limpa (sem .html) via rewrite. Esta URL é
+      // registrada no Google Play e NÃO pode mudar. Quando sair uma nova versão
+      // da política, é só recopiar o HTML por cima do arquivo em public/.
+      {
+        source: "/apps/hinario-reformado/privacidade",
+        destination: "/apps/hinario-reformado/privacidade.html",
+      },
+    ]
+  },
   async redirects() {
     return [
       // Post que tinha tração no site antigo (Wix), recuperado via Wayback e
