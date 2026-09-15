@@ -1,6 +1,6 @@
 export const website_config_variables = {
   email: {
-    active: false,
+    active: true,
   },
   blog: {
     active: false,
