@@ -11,6 +11,7 @@ import {
   ImageIcon,
   MessageCircle,
   ListChecks,
+  ClipboardList,
 } from "lucide-react"
 
 export interface NavItem {
@@ -82,6 +83,12 @@ const mainNavItems: NavItem[] = [
     icon: MessageCircle,
     label: "Mensagens",
     href: "/admin/mensagens",
+    isAvailable: true,
+  },
+  {
+    icon: ClipboardList,
+    label: "Inscrições",
+    href: "/admin/inscricoes",
     isAvailable: true,
   },
 ]

@@ -21,7 +21,11 @@ const staticRoutes: Route[] = [
   { path: "/ministerios", priority: 0.6, changeFrequency: "yearly" },
   { path: "/galeria", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contato", priority: 0.6, changeFrequency: "yearly" },
-  { path: "/politica-de-privacidade", priority: 0.3, changeFrequency: "yearly" },
+  {
+    path: "/politica-de-privacidade",
+    priority: 0.3,
+    changeFrequency: "yearly",
+  },
   // Post recuperado do site antigo, indexável mesmo com o /blog desligado
   // (alvo do 301 da URL antiga do Wix). Ver next.config.ts.
   {
@@ -51,6 +55,12 @@ const flaggedRoutes: (Route & { active: boolean })[] = [
     priority: 0.6,
     changeFrequency: "weekly",
     active: website_config_variables.blog.active,
+  },
+  {
+    path: "/conferencia",
+    priority: 0.8,
+    changeFrequency: "weekly",
+    active: website_config_variables.conferencia.active,
   },
   {
     path: "/biblioteca",

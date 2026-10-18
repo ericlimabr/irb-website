@@ -1,0 +1,990 @@
+/*
+ * O CSS da conferencia, portado do mockup
+ * ~/Documentos/igreja/conferencia/MOCKUP-CONFERENCIA.html sem mudar o desenho.
+ *
+ * Tudo esta preso ao embrulho `.conf` da pagina: o mockup escrevia em `body`,
+ * `*` e `:root`, que aqui vazariam para o resto do site. As variaveis de cor
+ * sao as mesmas de app/globals.css, repetidas com os nomes curtos do mockup
+ * para o arquivo continuar legivel lado a lado com ele.
+ *
+ * As duas unicas diferencas em relacao ao mockup: a tarja de "mockup nao
+ * publicado" e as notas sairam, e o heroi usa 100dvh inteiros, porque nao ha
+ * mais tarja de 33px para descontar.
+ */
+.conf {
+  --navy-950: hsl(210 100% 2%);
+  --navy-900: hsl(210 100% 5%);
+  --navy-800: hsl(210 100% 9%);
+  --navy-700: hsl(210 100% 14%);
+  --navy-600: hsl(213 55% 27%);
+  --navy-50: hsl(214 33% 93%);
+  --gold-600: hsl(37 46% 45%);
+  --gold-500: hsl(37 46% 56%);
+  --gold-400: hsl(40 55% 55%);
+  --gold-200: hsl(37 55% 76%);
+  --bg: hsl(0 0% 96%);
+  --surface: #fff;
+  --surface-alt: hsl(48 14% 97%);
+  --txt: hsl(0 0% 10%);
+  --txt2: hsl(0 0% 36%);
+  --txt3: hsl(0 0% 50%);
+  --borda: hsl(48 8% 91%);
+  --serif: var(--font-cormorant-garamond), "Cormorant Garamond", Georgia, serif;
+  --sans: var(--font-raleway), "Raleway", system-ui, sans-serif;
+  --mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+}
+.conf * {
+  box-sizing: border-box;
+}
+
+.conf {
+  margin: 0;
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+.conf img {
+  max-width: 100%;
+  display: block;
+}
+.conf h1,
+.conf h2,
+.conf h3,
+.conf h4 {
+  font-family: var(--serif);
+  font-weight: 300;
+  margin: 0;
+  line-height: 1.1;
+}
+.conf p {
+  margin: 0;
+}
+.conf a {
+  color: inherit;
+}
+.conf .wrap {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.conf .olho {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+}
+.conf .olho.claro {
+  color: var(--gold-400);
+}
+.conf .secao {
+  padding: 96px 0;
+}
+.conf .linha-fina {
+  height: 1px;
+  background: var(--borda);
+  border: 0;
+  margin: 0;
+}
+/* heroi */
+.conf .heroi {
+  position: relative;
+  background: var(--navy-900);
+  color: #fff;
+  overflow: hidden;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding: 72px 0 108px;
+}
+.conf .heroi .marca-fundo {
+  position: absolute;
+  right: -120px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 760px;
+  max-width: none;
+  opacity: 0.07;
+  pointer-events: none;
+}
+.conf .heroi .wrap {
+  position: relative;
+  z-index: 1;
+}
+.conf .selo {
+  width: 84px;
+  margin-bottom: 34px;
+  opacity: 0.95;
+}
+.conf .lugar-data {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  align-items: center;
+  margin-bottom: 26px;
+}
+.conf .lugar-data span {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-400);
+}
+.conf .lugar-data b {
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 400;
+}
+.conf .nome-evento {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 18px;
+}
+.conf .heroi h1 {
+  font-size: clamp(3.4rem, 11vw, 6.6rem);
+  letter-spacing: -0.02em;
+}
+.conf .heroi h1 em {
+  font-style: italic;
+  color: var(--gold-400);
+}
+.conf .sub-tema {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.3rem, 4.4vw, 2rem);
+  color: rgba(255, 255, 255, 0.88);
+  margin-top: 14px;
+  max-width: 760px;
+}
+.conf .publico {
+  margin-top: 30px;
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 16px;
+}
+.conf .botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 40px;
+}
+.conf .bt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  padding: 17px 30px;
+  border: 1px solid var(--gold-500);
+  background: var(--gold-500);
+  color: var(--navy-900);
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.45s;
+}
+.conf .bt:hover {
+  background: var(--gold-400);
+  border-color: var(--gold-400);
+}
+.conf .bt.vazio {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.conf .bt.vazio:hover {
+  color: var(--gold-400);
+  border-color: var(--gold-400);
+}
+.conf .bt svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+/* tema */
+.conf .tema {
+  background: var(--surface);
+}
+.conf .citacao {
+  border-left: 2px solid var(--gold-500);
+  padding-left: 28px;
+  margin: 34px 0 0;
+  max-width: 820px;
+}
+.conf .citacao p {
+  font-family: var(--serif);
+  font-size: clamp(1.35rem, 3.6vw, 1.9rem);
+  line-height: 1.45;
+  color: var(--navy-700);
+}
+.conf .citacao footer {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--txt3);
+  margin-top: 18px;
+}
+.conf .tres-passos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 56px;
+}
+.conf .passo {
+  border-top: 1px solid var(--borda);
+  padding-top: 20px;
+}
+.conf .passo b {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1.6rem;
+  display: block;
+  color: var(--navy-700);
+}
+.conf .passo span {
+  font-size: 15px;
+  color: var(--txt2);
+}
+/* palestras */
+.conf .palestras {
+  background: var(--navy-800);
+  color: #fff;
+}
+.conf .palestras .olho {
+  color: var(--gold-400);
+}
+.conf .palestras h2 {
+  color: #fff;
+}
+.conf .cartao {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 28px;
+  padding: 38px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.conf .cartao:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+.conf .cartao .num {
+  font-family: var(--serif);
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+  font-size: 3.6rem;
+  line-height: 1;
+  color: var(--gold-500);
+}
+.conf .cartao h3 {
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  color: #fff;
+}
+.conf .cartao .diz {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.74);
+  margin-top: 12px;
+}
+.conf .cartao .tese {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--gold-200);
+  margin-top: 18px;
+  max-width: 760px;
+}
+.conf .cartao .pe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: center;
+  margin-top: 22px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+.conf .etiqueta {
+  border: 1px solid var(--gold-500);
+  color: var(--gold-400);
+  padding: 3px 9px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
+/* preletores */
+.conf .preletores {
+  background: var(--surface-alt);
+}
+.conf .dupla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-top: 52px;
+}
+.conf .pessoa .moldura {
+  position: relative;
+  padding: 14px 0 0 14px;
+}
+.conf .pessoa .moldura::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 72%;
+  height: 88%;
+  background: var(--gold-200);
+  z-index: 0;
+}
+.conf .pessoa .foto {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 4/5;
+  background: var(--navy-700) center/cover no-repeat;
+}
+.conf .pessoa h3 {
+  font-size: 2rem;
+  margin-top: 26px;
+  color: var(--navy-700);
+}
+.conf .pessoa .cargo {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+  margin-top: 10px;
+}
+.conf .pessoa .igreja {
+  font-size: 15px;
+  color: var(--txt2);
+  margin-top: 4px;
+}
+.conf .pessoa p.bio {
+  font-size: 16px;
+  color: var(--txt2);
+  margin-top: 16px;
+}
+/* programacao */
+.conf .grade-dia {
+  background: var(--surface);
+}
+.conf .bloco {
+  display: grid;
+  grid-template-columns: 92px 1fr auto;
+  gap: 20px;
+  align-items: center;
+  border: 1px solid var(--borda);
+  padding: 20px 24px;
+  margin-top: 10px;
+  background: var(--surface-alt);
+}
+.conf .bloco.destaque {
+  background: var(--navy-700);
+  border-color: var(--navy-700);
+  color: #fff;
+}
+.conf .bloco .hora {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--gold-600);
+}
+.conf .bloco.destaque .hora {
+  color: var(--gold-400);
+}
+.conf .bloco b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.5rem;
+  display: block;
+}
+.conf .bloco small {
+  font-size: 14px;
+  color: var(--txt2);
+}
+.conf .bloco.destaque small {
+  color: rgba(255, 255, 255, 0.7);
+}
+.conf .bloco .dur {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--txt3);
+}
+.conf .bloco.destaque .dur {
+  color: rgba(255, 255, 255, 0.6);
+}
+.conf .dia-rotulo {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-top: 48px;
+}
+.conf .dia-rotulo .d {
+  font-family: var(--serif);
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+  font-size: 3.4rem;
+  line-height: 1;
+  color: var(--navy-700);
+}
+.conf .dia-rotulo .m {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--txt3);
+}
+.conf .aviso-domingo {
+  border: 1px dashed var(--gold-500);
+  padding: 24px;
+  margin-top: 10px;
+  background: var(--surface-alt);
+}
+/* quem pode vir */
+.conf .quem {
+  position: relative;
+  background: var(--navy-900);
+  color: #fff;
+  overflow: hidden;
+}
+.conf .quem .fundo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.18;
+}
+.conf .quem .wrap {
+  position: relative;
+  z-index: 1;
+}
+.conf .quem h2 {
+  color: #fff;
+}
+.conf .lista-quem {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 48px;
+}
+.conf .lista-quem div {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding-top: 20px;
+}
+.conf .lista-quem b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.6rem;
+  display: block;
+  color: var(--gold-200);
+}
+.conf .lista-quem span {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.76);
+}
+/* inscricao */
+.conf .inscricao {
+  background: var(--surface);
+}
+.conf .pergunta {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5.5vw, 3rem);
+  color: var(--navy-700);
+  max-width: 760px;
+}
+.conf .resposta {
+  font-size: 17px;
+  color: var(--txt2);
+  margin-top: 18px;
+  max-width: 640px;
+}
+.conf form {
+  margin-top: 44px;
+  max-width: 680px;
+}
+.conf .campo {
+  margin-bottom: 22px;
+}
+.conf .campo label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--txt2);
+  margin-bottom: 8px;
+}
+.conf .campo input,
+.conf .campo select {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 300;
+  padding: 15px 16px;
+  border: 1px solid var(--borda);
+  background: var(--surface-alt);
+  color: var(--txt);
+  border-radius: 0;
+}
+.conf .campo input:focus,
+.conf .campo select:focus {
+  outline: 2px solid var(--gold-500);
+  outline-offset: -2px;
+}
+.conf .dois {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: end;
+}
+.conf .campo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.conf .escolhas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.conf .escolhas button {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 13px 20px;
+  border: 1px solid var(--borda);
+  background: var(--surface-alt);
+  color: var(--txt2);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.conf .escolhas button.on {
+  background: var(--navy-700);
+  border-color: var(--navy-700);
+  color: #fff;
+}
+.conf .nota-dado {
+  font-size: 13.5px;
+  color: var(--txt3);
+  margin-top: 18px;
+}
+.conf .nota-dado a {
+  color: var(--gold-600);
+}
+.conf .conta-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--borda);
+  border-bottom: 1px solid var(--borda);
+  padding: 22px 0;
+  margin: 30px 0;
+}
+.conf .conta-total .rot {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--txt2);
+}
+.conf .conta-total .det {
+  font-size: 14px;
+  color: var(--txt3);
+  margin-top: 6px;
+}
+.conf .conta-total .val {
+  font-family: var(--serif);
+  font-variant-numeric: lining-nums;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--navy-700);
+}
+.conf #recibo {
+  display: none;
+  margin-top: 30px;
+  border: 1px solid var(--borda);
+  background: var(--surface-alt);
+  padding: 30px 28px;
+  text-align: center;
+}
+.conf #recibo.on {
+  display: block;
+}
+.conf .pg-valor {
+  font-family: var(--serif);
+  font-variant-numeric: lining-nums;
+  font-size: 3rem;
+  color: var(--navy-700);
+  margin-top: 10px;
+}
+.conf .pg-txt {
+  font-size: 14px;
+  color: var(--txt2);
+  margin: 12px auto 0;
+  max-width: 420px;
+}
+.conf .pg-qr {
+  width: 220px;
+  margin: 22px auto 0;
+  border: 10px solid #fff;
+}
+.conf .pg-copia {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  word-break: break-all;
+  background: #fff;
+  border: 1px solid var(--borda);
+  padding: 14px;
+  margin-top: 10px;
+  text-align: left;
+  color: var(--txt);
+}
+.conf .bt.vazio-escuro {
+  background: transparent;
+  color: var(--navy-700);
+  border-color: var(--navy-700);
+  margin-top: 14px;
+}
+.conf .bt.vazio-escuro:hover {
+  background: var(--navy-700);
+  color: #fff;
+}
+.conf .pg-nota {
+  font-size: 13.5px;
+  color: var(--txt3);
+  margin: 18px auto 0;
+  max-width: 460px;
+}
+@media (max-width: 860px) {
+  .conf .conta-total .val {
+    font-size: 2.1rem;
+  }
+}
+/* local */
+.conf .local {
+  background: var(--surface-alt);
+}
+.conf .local .caixa {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+  margin-top: 40px;
+}
+.conf .local .end {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  color: var(--navy-700);
+  line-height: 1.3;
+}
+.conf .local .det {
+  font-size: 15px;
+  color: var(--txt2);
+  margin-top: 14px;
+}
+.conf .bt.escuro {
+  background: var(--navy-700);
+  border-color: var(--navy-700);
+  color: #fff;
+  margin-top: 26px;
+}
+.conf .local .mapa iframe {
+  width: 100%;
+  height: 320px;
+  border: 1px solid var(--borda);
+  display: block;
+  background: var(--navy-50);
+}
+.conf .fotos-local {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 28px;
+}
+.conf .fotos-local figure {
+  margin: 0;
+}
+.conf .fotos-local .ph {
+  aspect-ratio: 4/3;
+  background: var(--navy-50);
+  border: 1px dashed var(--gold-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+}
+.conf .fotos-local img {
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  width: 100%;
+}
+.conf .fotos-local figcaption {
+  font-size: 14px;
+  color: var(--txt2);
+  margin-top: 10px;
+}
+@media (max-width: 860px) {
+  .conf .fotos-local {
+    grid-template-columns: 1fr;
+  }
+  .conf .local .mapa iframe {
+    height: 260px;
+  }
+}
+.conf .bt.escuro:hover {
+  background: var(--navy-600);
+  border-color: var(--navy-600);
+}
+/* rodape */
+.conf .rodape {
+  background: var(--navy-950);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 64px 0 120px;
+  text-align: center;
+}
+.conf .rodape img {
+  width: 72px;
+  margin: 0 auto 22px;
+  filter: brightness(0) invert(1);
+  opacity: 0.75;
+}
+.conf .rodape b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: #fff;
+  display: block;
+}
+.conf .rodape p {
+  font-size: 14px;
+  margin-top: 10px;
+}
+/* barra presa */
+.conf .presa {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  background: var(--navy-950);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  transform: translateY(110%);
+  transition: transform 0.45s;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.conf .presa.on {
+  transform: none;
+}
+.conf .presa .txt {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+.conf .presa .txt b {
+  color: var(--gold-400);
+  font-weight: 500;
+}
+.conf .presa .bt {
+  padding: 13px 22px;
+  font-size: 11px;
+}
+.conf h2.titulo {
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  margin-top: 16px;
+  color: var(--navy-700);
+}
+.conf .intro {
+  font-size: 17px;
+  color: var(--txt2);
+  margin-top: 20px;
+  max-width: 680px;
+}
+@media (max-width: 860px) {
+  .conf .secao {
+    padding: 64px 0;
+  }
+  .conf .tres-passos,
+  .conf .dupla,
+  .conf .lista-quem,
+  .conf .dois,
+  .conf .local .caixa {
+    grid-template-columns: 1fr;
+  }
+  .conf .dupla {
+    gap: 56px;
+  }
+  .conf .cartao {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 30px 0;
+  }
+  .conf .cartao .num {
+    font-size: 2.6rem;
+  }
+  .conf .bloco {
+    grid-template-columns: 72px 1fr;
+    padding: 16px 18px;
+  }
+  .conf .bloco .dur {
+    grid-column: 2;
+    margin-top: 2px;
+  }
+  .conf .heroi {
+    min-height: 0;
+    padding: 40px 0 64px;
+  }
+  .conf .heroi h1 {
+    font-size: clamp(2.9rem, 12vw, 6.6rem);
+  }
+  .conf .publico {
+    margin-top: 20px;
+    font-size: 15.5px;
+  }
+  .conf .botoes {
+    margin-top: 26px;
+    gap: 10px;
+  }
+  .conf .lugar-data {
+    gap: 6px 14px;
+    margin-bottom: 20px;
+  }
+  .conf .nome-evento {
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+  .conf .sub-tema {
+    margin-top: 10px;
+  }
+  .conf .heroi .marca-fundo {
+    width: 520px;
+    right: -200px;
+    opacity: 0.06;
+  }
+  .conf .selo {
+    width: 56px;
+    margin-bottom: 18px;
+  }
+  .conf .botoes .bt {
+    flex: 1 1 auto;
+  }
+  .conf .presa {
+    padding: 10px 14px;
+  }
+  .conf .presa .txt {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .conf .presa .bt {
+    padding: 12px 16px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+}
+
+/*
+ * O que o mockup nao precisava ter, porque nada la era de verdade: a isca de
+ * robo escondida, a mensagem de erro e o botao travado depois do envio.
+ */
+.conf .isca {
+  position: absolute;
+  left: -9999px;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+.conf .erro {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid hsl(0 60% 55% / 0.45);
+  background: hsl(0 60% 55% / 0.07);
+  color: hsl(0 60% 38%);
+  font-size: 14.5px;
+}
+.conf .bt:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.conf .bt:disabled:hover {
+  background: var(--gold-500);
+  border-color: var(--gold-500);
+}
+
+/*
+ * O sinal de espera, que o mockup não tinha porque nele o botão não enviava
+ * nada. Entre o clique e o Pix na tela o servidor grava a inscrição, monta o
+ * código, manda o e-mail de confirmação e avisa a igreja. Isso leva alguns
+ * segundos, e sem sinal a pessoa acha que o clique não pegou e clica de novo.
+ */
+/*
+ * O `data-round` no elemento não é enfeite: canto reto é regra do projeto
+ * inteiro, imposta com !important em globals.css, e `data-round` é a saída que
+ * aquele arquivo documenta para o que é de fato circular. Sem ele, o giro vira
+ * um quadrado rodando.
+ */
+.conf .girando {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid hsl(0 0% 0% / 0.22);
+  border-top-color: var(--navy-900);
+  animation: conf-gira 0.7s linear infinite;
+}
+@keyframes conf-gira {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Parar de vez apagaria o único sinal de que algo está acontecendo, então
+     aqui ela só desacelera. */
+  .conf .girando {
+    animation-duration: 2.4s;
+  }
+}
+.conf .aguarde {
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--txt2);
+  text-align: center;
+}
+/* Vazia enquanto nada é enviado, e aí não ocupa espaço nenhum. */
+.conf .aguarde:empty {
+  display: none;
+}
+/*
+ * Enquanto envia, o formulário recua: fica claro que ele está ocupado e que
+ * não é hora de mexer nos campos.
+ */
+.conf form[aria-busy="true"] .campo,
+.conf form[aria-busy="true"] .dois,
+.conf form[aria-busy="true"] .conta-total {
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}

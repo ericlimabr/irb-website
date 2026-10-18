@@ -1,4 +1,9 @@
-import { CHURCH_ADDRESS_QUERY } from "@/const"
+import {
+  CHURCH_ADDRESS_QUERY,
+  CONFERENCE_DAYS,
+  CONFERENCE_EDITION,
+  CONFERENCE_TITLE,
+} from "@/const"
 
 /**
  * Próximo domingo às 09h (Culto Matutino), como instante UTC.
@@ -34,7 +39,10 @@ export function nextSundayService(): { start: Date; end: Date } {
 
 /** Carimbo iCalendar/Google em UTC: `20260830T120000Z`. */
 function icalStamp(d: Date): string {
-  return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")
+  return d
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}/, "")
 }
 
 const EVENT_TITLE = "Culto · Igreja Reformada de Brasília"
@@ -83,6 +91,58 @@ export function icsBody(): string {
     `LOCATION:${escapeICS(CHURCH_ADDRESS_QUERY)}`,
     `DESCRIPTION:${escapeICS(EVENT_NOTE)}`,
     "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n")
+}
+
+/**
+ * 2ª Conferência Reformada — os dois dias na agenda da pessoa.
+ *
+ * O .ics leva DOIS eventos, o sábado e a pregação de domingo, porque é um
+ * arquivo e cabe mais de um. A URL do Google Agenda só sabe criar um evento
+ * por vez, então ela leva o sábado, que é a conferência propriamente dita; o
+ * domingo é o culto normal da igreja, no horário de sempre.
+ */
+const CONF_TITLES = [
+  `${CONFERENCE_EDITION} · ${CONFERENCE_TITLE}`,
+  `${CONFERENCE_TITLE} · pregação no culto matutino`,
+]
+
+const CONF_NOTE =
+  "Duas palestras no sábado e a pregação do culto de domingo, sobre a doutrina da criação."
+
+export function conferenceGoogleCalendarUrl(): string {
+  const { start, end } = CONFERENCE_DAYS[0]
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: CONF_TITLES[0],
+    dates: `${icalStamp(start)}/${icalStamp(end)}`,
+    location: CHURCH_ADDRESS_QUERY,
+    details: CONF_NOTE,
+  })
+  return `https://calendar.google.com/calendar/render?${params.toString()}`
+}
+
+export function conferenceIcsBody(): string {
+  const eventos = CONFERENCE_DAYS.flatMap((dia, i) => [
+    "BEGIN:VEVENT",
+    `UID:conferencia-${dia.key}-${icalStamp(dia.start)}@irbrasilia.org`,
+    `DTSTAMP:${icalStamp(new Date())}`,
+    `DTSTART:${icalStamp(dia.start)}`,
+    `DTEND:${icalStamp(dia.end)}`,
+    `SUMMARY:${escapeICS(CONF_TITLES[i])}`,
+    `LOCATION:${escapeICS(CHURCH_ADDRESS_QUERY)}`,
+    `DESCRIPTION:${escapeICS(CONF_NOTE)}`,
+    "END:VEVENT",
+  ])
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//IRB//Conferencia//PT-BR",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    ...eventos,
     "END:VCALENDAR",
   ].join("\r\n")
 }

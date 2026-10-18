@@ -164,3 +164,75 @@ model ConsentEvent {
   @@index([source])
   @@map("consent_events")
 }
+
+enum InscricaoStatus {
+  AGUARDANDO
+  PAGA
+  CANCELADA
+}
+
+enum InscricaoDias {
+  AMBOS
+  SABADO
+  DOMINGO
+}
+
+enum InscricaoVinculo {
+  MEMBRO
+  OUTRA_IGREJA
+  CONVIDADO
+  SEM_IGREJA
+}
+
+/// Inscrição na 2ª Conferência Reformada (7 e 8 de novembro de 2026).
+///
+/// O pagamento é Pix sem intermediário: não há webhook que confirme nada, e a
+/// conciliação é feita a olho no extrato da igreja, PELO NOME DE QUEM PAGA.
+///
+/// `centavos` é fixo em 7 e igual em toda inscrição: marca que o Pix é da
+/// conferência, e não identifica ninguém. `txid` leva o número da inscrição
+/// dentro do BR Code, e alguns bancos o repassam a quem recebe, o que ajuda
+/// mas não serve de garantia. Por isso o formulário pergunta o nome do
+/// pagador quando o Pix sai da conta de outra pessoa.
+model Inscricao {
+  id        String   @id @default(uuid())
+  numero    Int      @unique @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nome     String
+  email    String
+  whatsapp String
+
+  /// 12 anos ou mais, que pagam; e até 11 anos, que não pagam.
+  adultos  Int @default(1)
+  criancas Int @default(0)
+
+  dias    InscricaoDias    @default(AMBOS)
+  vinculo InscricaoVinculo @default(MEMBRO)
+
+  /// Nome de quem faz o Pix, quando não é a própria pessoa inscrita.
+  pagador String?
+
+  /// Identificação no extrato, 1 a 99, e o total em centavos (adultos × 2000
+  /// + centavos). Centavo em ponto flutuante arredonda errado, então o valor
+  /// nunca é gravado como real.
+  /// Preenchidos logo depois do insert, quando `numero` já existe: é dele que
+  /// sai a identificação. Por isso nascem zerados e o txid nasce nulo.
+  centavos Int     @default(0)
+  valor    Int     @default(0)
+  txid     String? @unique
+
+  status     InscricaoStatus @default(AGUARDANDO)
+  pagoEm     DateTime?
+  /// Quando o lembrete da véspera foi enviado, para não enviar duas vezes.
+  lembreteEm DateTime?
+  /// Sobra da planilha do Google Drive, trocada em 18/10/2026 pela exportação
+  /// em Excel na tela do admin. Nada escreve nem lê esta coluna; ela continua
+  /// no banco porque apagar coluna é destrutivo e ninguém pediu.
+  planilhaEm DateTime?
+
+  @@index([status])
+  @@index([valor])
+  @@map("inscricoes")
+}
