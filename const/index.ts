@@ -1,4 +1,5 @@
 export * from "./mockups"
+export * from "./conferencia"
 
 /**
  * Home Page
@@ -141,7 +142,8 @@ export const FAQ_ITEMS: { question: string; answer: string }[] = [
       "São os três documentos confessionais das igrejas reformadas continentais: a Confissão Belga (1561), com 37 artigos que expõem a fé; o Catecismo de Heidelberg (1563), com 129 perguntas e respostas sobre o único consolo do cristão; e os Cânones de Dort (1619), que resumem a doutrina da graça soberana. Juntos, definem o que a igreja crê e ensina.",
   },
   {
-    question: "A igreja é calvinista? O que são os cinco pontos (Cânones de Dort)?",
+    question:
+      "A igreja é calvinista? O que são os cinco pontos (Cânones de Dort)?",
     answer:
       "Sim, no sentido histórico e confessional. Os cinco pontos do calvinismo, ou cinco pontos da graça, foram formulados no Sínodo de Dort (1618–1619) e ensinam que a salvação é obra de Deus do princípio ao fim: depravação total, eleição incondicional, expiação definida, graça eficaz e perseverança dos santos. Eles exaltam a soberania de Deus e a suficiência da sua graça.",
   },
@@ -154,7 +156,8 @@ export const FAQ_ITEMS: { question: string; answer: string }[] = [
     answer: `A Igreja Reformada de Brasília fica em ${CHURCH_ADDRESS_FULL}. Na página de contato há um mapa e a rota; se preferir, fale conosco pelo WhatsApp para orientações de como chegar.`,
   },
   {
-    question: "Preciso ser membro para visitar? Como faço minha primeira visita?",
+    question:
+      "Preciso ser membro para visitar? Como faço minha primeira visita?",
     answer:
       "Não é preciso ser membro nem avisar com antecedência: visitantes são bem-vindos em todos os cultos. Basta comparecer. Se quiser, mande uma mensagem pelo WhatsApp antes — teremos prazer em recebê-lo e orientar sobre horário e localização.",
   },
@@ -544,9 +547,7 @@ export const PRIVACY_POLICY: {
     },
     {
       title: "2. Quais dados coletamos",
-      paragraphs: [
-        "Coletamos duas categorias de dados:",
-      ],
+      paragraphs: ["Coletamos duas categorias de dados:"],
       list: [
         {
           term: "Dados que você nos fornece",
@@ -619,8 +620,14 @@ export const PRIVACY_POLICY: {
           `tratando dados em nosso nome:`,
       ],
       list: [
-        { term: "Google (Analytics e Ads)", text: "medição de audiência e campanhas." },
-        { term: "Microsoft (Clarity)", text: "análise de usabilidade e gravação de sessão." },
+        {
+          term: "Google (Analytics e Ads)",
+          text: "medição de audiência e campanhas.",
+        },
+        {
+          term: "Microsoft (Clarity)",
+          text: "análise de usabilidade e gravação de sessão.",
+        },
       ],
     },
     {
