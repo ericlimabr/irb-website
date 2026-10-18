@@ -933,3 +933,58 @@
   background: var(--gold-500);
   border-color: var(--gold-500);
 }
+
+/*
+ * O sinal de espera, que o mockup não tinha porque nele o botão não enviava
+ * nada. Entre o clique e o Pix na tela o servidor grava a inscrição, monta o
+ * código, manda o e-mail de confirmação e avisa a igreja. Isso leva alguns
+ * segundos, e sem sinal a pessoa acha que o clique não pegou e clica de novo.
+ */
+/*
+ * O `data-round` no elemento não é enfeite: canto reto é regra do projeto
+ * inteiro, imposta com !important em globals.css, e `data-round` é a saída que
+ * aquele arquivo documenta para o que é de fato circular. Sem ele, o giro vira
+ * um quadrado rodando.
+ */
+.conf .girando {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid hsl(0 0% 0% / 0.22);
+  border-top-color: var(--navy-900);
+  animation: conf-gira 0.7s linear infinite;
+}
+@keyframes conf-gira {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Parar de vez apagaria o único sinal de que algo está acontecendo, então
+     aqui ela só desacelera. */
+  .conf .girando {
+    animation-duration: 2.4s;
+  }
+}
+.conf .aguarde {
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--txt2);
+  text-align: center;
+}
+/* Vazia enquanto nada é enviado, e aí não ocupa espaço nenhum. */
+.conf .aguarde:empty {
+  display: none;
+}
+/*
+ * Enquanto envia, o formulário recua: fica claro que ele está ocupado e que
+ * não é hora de mexer nos campos.
+ */
+.conf form[aria-busy="true"] .campo,
+.conf form[aria-busy="true"] .dois,
+.conf form[aria-busy="true"] .conta-total {
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}

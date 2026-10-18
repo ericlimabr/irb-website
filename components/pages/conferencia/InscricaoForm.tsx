@@ -118,7 +118,7 @@ export default function InscricaoForm() {
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} aria-busy={enviando}>
       {/* Isca de robô: fora da vista e fora da ordem de tabulação. */}
       <input
         type="text"
@@ -307,12 +307,24 @@ export default function InscricaoForm() {
         disabled={enviando || recibo !== null}
         style={{ width: "100%", padding: 19 }}
       >
+        {enviando && <span className="girando" data-round aria-hidden="true" />}
         {recibo
           ? "Inscrição enviada"
           : enviando
-            ? "Enviando…"
+            ? "Gerando o seu Pix…"
             : "Confirmar e ver o Pix"}
       </button>
+
+      {/*
+        O aviso de espera. Fica sempre no documento, e só ganha texto durante o
+        envio: região de aviso que nasce na hora costuma não ser lida em voz
+        alta, e vazia ela não ocupa espaço nenhum (.aguarde:empty).
+      */}
+      <p className="aguarde" role="status" aria-live="polite">
+        {enviando
+          ? "Isso leva alguns segundos. Estamos gravando a sua inscrição, montando o código do Pix e enviando a confirmação para o seu e-mail. Não feche a página nem clique de novo."
+          : null}
+      </p>
 
       {erro && (
         <p className="erro" role="alert">
