@@ -170,6 +170,35 @@
   color: rgba(255, 255, 255, 0.72);
   font-size: 16px;
 }
+/* Os dois dias e a hora, no herói. A barra dourada à esquerda é a mesma
+   marca da citação do tema, para os dois blocos lerem como a mesma página. */
+.conf .dias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  margin-top: 30px;
+  padding: 0;
+  list-style: none;
+}
+.conf .dias li {
+  border-left: 2px solid var(--gold-500);
+  padding-left: 16px;
+}
+.conf .dias b {
+  display: block;
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-400);
+}
+.conf .dias span {
+  display: block;
+  margin-top: 6px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.82);
+}
 .conf .botoes {
   display: flex;
   flex-wrap: wrap;
