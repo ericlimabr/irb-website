@@ -12,6 +12,7 @@ import {
   CONFERENCE_AUDIENCE,
   CONFERENCE_CLOSED,
   CONFERENCE_DATES_LABEL,
+  CONFERENCE_DAYS,
   CONFERENCE_EDITION,
   CONFERENCE_LECTURES,
   CONFERENCE_PATH,
@@ -117,6 +118,19 @@ export default async function ConferenciaPage() {
             dúvidas sobre a fé. A inscrição é de {CONFERENCE_PRICE_LABEL} por
             adulto, a partir de 12 anos, e crianças de até 11 anos não pagam.
           </p>
+          {/* Os dois dias com a hora, na primeira tela. Quem chega pelo
+              convite decide pelo horário antes de ler qualquer outra coisa, e
+              a programação completa está lá embaixo, longe demais para isso.
+              O texto vem de CONFERENCE_DAYS, o mesmo que alimenta o arquivo
+              de agenda, para a página e o convite nunca divergirem. */}
+          <ul className="dias">
+            {CONFERENCE_DAYS.map((dia) => (
+              <li key={dia.key}>
+                <b>{dia.label}</b>
+                <span>{dia.note}</span>
+              </li>
+            ))}
+          </ul>
           <div className="botoes">
             {!encerrada && (
               <a className="bt" href="#inscricao">
