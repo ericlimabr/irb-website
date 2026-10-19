@@ -261,3 +261,31 @@ export const CONFERENCE_TIE_CHOICES = [
   { value: "CONVIDADO", label: "Convidado por alguém" },
   { value: "SEM_IGREJA", label: "Ainda não frequento nenhuma igreja" },
 ] as const
+
+/**
+ * O vínculo que faz o formulário perguntar qual é a igreja. Está aqui, e não
+ * escrito à mão no componente, para a pergunta e o enum do banco não se
+ * separarem se um dia o rótulo mudar.
+ */
+export const CONFERENCE_TIE_ASKS_CHURCH = "OUTRA_IGREJA"
+
+/** Teto do nome da igreja, igual ao da coluna na planilha exportada. */
+export const CONFERENCE_CHURCH_MAX = 120
+
+/**
+ * Como a pessoa ficou sabendo da conferência.
+ *
+ * A pergunta NÃO tem resposta padrão, e é por isso que o seletor abre vazio:
+ * um padrão aqui registraria uma origem que ninguém informou, e a igreja
+ * tomaria por divulgação o que foi só a primeira opção da lista. Quem não
+ * responde deixa a coluna vazia, e vazio se lê como vazio.
+ */
+export const CONFERENCE_SOURCE_CHOICES = [
+  { value: "IGREJA", label: "Nos avisos da igreja" },
+  { value: "CONVITE", label: "Alguém me convidou" },
+  { value: "INSTAGRAM", label: "Instagram" },
+  { value: "YOUTUBE", label: "YouTube" },
+  { value: "WHATSAPP", label: "WhatsApp" },
+  { value: "GOOGLE", label: "Procurando no Google" },
+  { value: "OUTRO", label: "De outro jeito" },
+] as const

@@ -42,7 +42,7 @@ A página `/conferencia` da 2ª Conferência Reformada (7 e 8 de novembro de
 | `lib/xlsx.ts` | Escreve o arquivo `.xlsx`: o XML das células e o zip em volta. |
 | `lib/whatsapp.ts` | O aviso de inscrição no WhatsApp, pelo CallMeBot. |
 | `utils/mascaras.ts` | A formatação dos campos enquanto a pessoa digita. |
-| `prisma/schema.prisma` | Modelo `Inscricao` e os três enums. |
+| `prisma/schema.prisma` | Modelo `Inscricao` e os quatro enums. |
 | `public/conferencia/` | As cinco fotos e a capa do link, tiradas do mockup. |
 
 O BR Code foi conferido contra os códigos do mockup: para 1, 5 e 8 adultos a
@@ -100,6 +100,46 @@ As oito perguntas que estavam na tarja do mockup, ainda sem resposta:
 7. Se o café do intervalo é oferecido pela igreja ou se cada um leva algo.
 8. O cronograma do sábado é proposta, e precisa do aval do preletor.
 
+## As duas perguntas de 19/10/2026
+
+O formulário passou a perguntar mais duas coisas, e as duas entram no banco e
+na planilha:
+
+1. **Qual é a sua igreja**, um campo de texto que **só aparece** quando a
+   pessoa escolhe "De outra igreja" em "Você é". A opção que destrava a
+   pergunta está em `CONFERENCE_TIE_ASKS_CHURCH`, e não escrita à mão no
+   componente, para o rótulo e o enum do banco não se separarem depois. O
+   servidor grava a igreja **somente** nesse vínculo: em qualquer outro a
+   coluna fica nula, mesmo que o envio traga texto, porque ali a pergunta não
+   foi feita. O nome é limitado a 120 caracteres
+   (`CONFERENCE_CHURCH_MAX`) e ganha as iniciais em maiúscula como os outros
+   nomes do formulário.
+2. **Como você ficou sabendo da conferência**, um seletor com sete respostas
+   em `CONFERENCE_SOURCE_CHOICES`: avisos da igreja, convite de alguém,
+   Instagram, YouTube, WhatsApp, busca no Google e de outro jeito. Ele **abre
+   vazio e é opcional**. Isso é de propósito: uma primeira opção já escolhida
+   faria a igreja ler como divulgação o que foi só o padrão da lista. Resposta
+   fora da lista é tratada como resposta nenhuma.
+
+Os rótulos aparecem duas vezes, e não é repetição por descuido. No formulário
+eles estão na primeira pessoa, que é como se responde ("Alguém me convidou");
+na planilha, na terceira, que é como se lê ("Por convite de alguém"). A
+tradução mora em `comoSoubeLabel`, em `utils/inscricao.ts`, do mesmo jeito que
+`vinculoLabel` já fazia.
+
+**No banco** são a coluna `igreja` (texto, anulável) e a coluna `comoSoube`
+(enum `InscricaoComoSoube`, anulável). O SQL está em
+`prisma/adiciona-igreja-e-como-soube.sql` e **já foi aplicado** em 19/10/2026
+no banco do `DIRECT_URL`. Conferido depois com
+
+```
+npx prisma migrate diff --from-url "$DIRECT_URL" --to-schema-datamodel prisma/schema.prisma --script
+```
+
+que respondeu migração vazia: o banco e o `schema.prisma` estão iguais. As duas
+colunas nascem nulas, então **nenhuma inscrição antiga foi alterada**; elas
+aparecem na planilha como célula vazia.
+
 ## A planilha em Excel
 
 No admin há um botão **Baixar em Excel**. Ele aponta para
@@ -107,9 +147,15 @@ No admin há um botão **Baixar em Excel**. Ele aponta para
 `.xlsx`. Não existe planilha guardada em lugar nenhum: o que a igreja baixa é
 sempre o estado de agora, e por isso não há o que sincronizar nem reenviar.
 
-**São 15 colunas, com tudo o que a inscrição tem:** número, recebida em, nome,
-e-mail, WhatsApp, adultos, crianças, pessoas, dias, de onde vem, quem paga o
-Pix, valor, identificador do Pix, situação e paga em.
+**São 17 colunas, com tudo o que a inscrição tem:** número, recebida em, nome,
+e-mail, WhatsApp, adultos, crianças, pessoas, dias, de onde vem, qual igreja,
+como ficou sabendo, quem paga o Pix, valor, identificador do Pix, situação e
+paga em.
+
+As duas colunas novas ficam **vazias** quando a pergunta não foi feita (a
+igreja, para quem não é de outra igreja) ou não foi respondida (como ficou
+sabendo, que é opcional). Vazio é informação: escrever "Não informado" seria
+registrar como resposta o que ninguém disse.
 
 A rota exige sessão. Rota de arquivo não passa pelo layout do admin, então ela
 confere por conta própria quem está logado; sem sessão responde 401.
@@ -158,8 +204,9 @@ não avisar do que avisar o número errado.
 **O aviso é cópia, o banco é o original.** Nada aqui lança erro, e o CallMeBot
 fora do ar não derruba inscrição de ninguém.
 
-**O que vai na mensagem:** número, nome, quantas pessoas, dias, de onde vem e
-valor, mais o endereço do admin. **E-mail e telefone de quem se inscreveu não
+**O que vai na mensagem:** número, nome, quantas pessoas, dias, de onde vem
+(com o nome da igreja, quando é de outra igreja), como ficou sabendo da
+conferência, se respondeu, e o valor, mais o endereço do admin. **E-mail e telefone de quem se inscreveu não
 vão.** WhatsApp é tela de bloqueio, prévia de notificação e aparelho
 emprestado; esses dados ficam atrás do login do admin, que é onde eles já
 estão. O aviso serve para decidir se vale olhar, não para carregar o cadastro.

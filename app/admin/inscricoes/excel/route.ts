@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { getUser } from "@/utils/getUser"
 import { montaXlsx, type ColunaExcel, type ValorDeCelula } from "@/lib/xlsx"
-import { diasLabel, vinculoLabel } from "@/utils/inscricao"
+import { comoSoubeLabel, diasLabel, vinculoLabel } from "@/utils/inscricao"
 
 /**
  * A lista de inscrições em Excel, no lugar da planilha do Drive.
@@ -33,6 +33,8 @@ const COLUNAS: ColunaExcel[] = [
   { titulo: "Pessoas", formato: "inteiro", largura: 9 },
   { titulo: "Dias", largura: 24 },
   { titulo: "De onde vem", largura: 32 },
+  { titulo: "Qual igreja", largura: 30 },
+  { titulo: "Como ficou sabendo", largura: 26 },
   { titulo: "Quem paga o Pix", largura: 26 },
   { titulo: "Valor", formato: "dinheiro", largura: 12 },
   { titulo: "Identificador do Pix", largura: 20 },
@@ -71,6 +73,10 @@ export async function GET() {
     i.adultos + i.criancas,
     diasLabel(i.dias),
     vinculoLabel(i.vinculo),
+    // As duas colunas ficam vazias quando a pergunta não foi feita ou não foi
+    // respondida. Vazio é informação: dizer "Não informado" seria resposta.
+    i.igreja ?? "",
+    comoSoubeLabel(i.comoSoube),
     i.pagador ?? "",
     // Em reais, como número: assim a coluna soma no Excel. O banco guarda
     // centavos inteiros justamente para a conta não arredondar errado.

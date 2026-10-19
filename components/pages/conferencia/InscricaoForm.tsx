@@ -3,10 +3,13 @@
 import { useRef, useState, useTransition } from "react"
 import { submitInscricao, type InscricaoResult } from "@/app/actions/inscricao"
 import {
+  CONFERENCE_CHURCH_MAX,
   CONFERENCE_DAY_CHOICES,
   CONFERENCE_MAX_ADULTS,
   CONFERENCE_MAX_CHILDREN,
   CONFERENCE_PRICE_LABEL,
+  CONFERENCE_SOURCE_CHOICES,
+  CONFERENCE_TIE_ASKS_CHURCH,
   CONFERENCE_TIE_CHOICES,
 } from "@/const"
 import { brl, inscricaoTotalCents, pessoasLabel } from "@/utils/inscricao"
@@ -30,11 +33,11 @@ import {
  * NÃO diz que eles identificam a pessoa: quem identifica no extrato é o nome
  * de quem paga.
  *
- * Os quatro campos de texto se formatam enquanto a pessoa digita: o telefone
- * ganha parêntese e traço, o nome ganha as iniciais em maiúscula e o e-mail
- * desce para minúscula. As regras estão em utils/mascaras.ts, e nenhuma delas
- * recusa o que foi digitado: formatar não é validar, e quem valida é o
- * servidor.
+ * Os campos de texto se formatam enquanto a pessoa digita: o telefone ganha
+ * parêntese e traço, o e-mail desce para minúscula e os três nomes (o da
+ * pessoa, o de quem paga e o da igreja) ganham as iniciais em maiúscula. As
+ * regras estão em utils/mascaras.ts, e nenhuma delas recusa o que foi
+ * digitado: formatar não é validar, e quem valida é o servidor.
  */
 
 function Escolhas({
@@ -71,6 +74,10 @@ export default function InscricaoForm() {
   const [adultos, setAdultos] = useState(1)
   const [criancas, setCriancas] = useState(0)
   const [dias, setDias] = useState<string>(CONFERENCE_DAY_CHOICES[0].value)
+  const [vinculo, setVinculo] = useState<string>(
+    CONFERENCE_TIE_CHOICES[0].value,
+  )
+  const [igreja, setIgreja] = useState("")
   const [proprio, setProprio] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
   const [recibo, setRecibo] = useState<Extract<
@@ -245,8 +252,45 @@ export default function InscricaoForm() {
 
       <div className="campo">
         <label htmlFor="vinculo">Você é</label>
-        <select id="vinculo" name="vinculo">
+        <select
+          id="vinculo"
+          name="vinculo"
+          value={vinculo}
+          onChange={(e) => setVinculo(e.target.value)}
+        >
           {CONFERENCE_TIE_CHOICES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {vinculo === CONFERENCE_TIE_ASKS_CHURCH && (
+        <div className="campo">
+          <label htmlFor="igreja">Qual é a sua igreja</label>
+          <input
+            id="igreja"
+            name="igreja"
+            required
+            maxLength={CONFERENCE_CHURCH_MAX}
+            placeholder="O nome da igreja, e a cidade se não for em Brasília"
+            value={igreja}
+            onChange={(e) => setIgreja(mascaraNome(e.target.value))}
+            onBlur={() => setIgreja((n) => arrumaNome(n))}
+          />
+        </div>
+      )}
+
+      <div className="campo">
+        <label htmlFor="comoSoube">
+          Como você ficou sabendo da conferência
+        </label>
+        <select id="comoSoube" name="comoSoube" defaultValue="">
+          {/* Abre vazio de propósito: a pergunta é opcional, e uma primeira
+              opção já escolhida contaria como divulgação o que ninguém disse. */}
+          <option value="">Escolha uma opção, se quiser</option>
+          {CONFERENCE_SOURCE_CHOICES.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
