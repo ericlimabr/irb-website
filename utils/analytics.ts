@@ -3,13 +3,19 @@
  *
  * Cliques de link de saída (WhatsApp `wa.me`, rota `/maps/dir`, YouTube) são
  * captados por triggers **nativos de Click** da GTM — casam pela URL de destino,
- * não passam por aqui. Este helper é só para o que a GTM não pega sozinha: hoje,
- * o sucesso do formulário de contato, que é uma server action (o trigger nativo
- * de "Form Submission" não dispara de forma confiável nesse caso).
+ * não passam por aqui. Este helper é só para o que a GTM não pega sozinha: o
+ * sucesso de um formulário que é server action. O trigger nativo de "Form
+ * Submission" dispara no envio, e não no aceite: ele conta a tentativa,
+ * inclusive a que o servidor recusou. Quem empurra daqui já sabe que deu certo.
+ *
+ * `conferencia_inscricao` leva `valor`, o total da inscrição em reais, porque é
+ * em reais, e não em centavos, que Meta e Ads esperam o campo de valor.
  *
  * Os nomes de `event` aqui são o **contrato** que a GTM escuta como Custom Event.
  */
-type DataLayerEvent = { event: "contact_form_submit" }
+type DataLayerEvent =
+  | { event: "contact_form_submit" }
+  | { event: "conferencia_inscricao"; valor: number }
 
 declare global {
   interface Window {

@@ -19,6 +19,7 @@ import {
   mascaraNome,
   telefoneDigitado,
 } from "@/utils/mascaras"
+import { trackEvent } from "@/utils/analytics"
 
 /**
  * O formulário do mockup, agora ligado no servidor.
@@ -99,6 +100,9 @@ export default function InscricaoForm() {
       const r = await submitInscricao(formData)
       if (r.success) {
         setRecibo(r)
+        // Só depois do aceite do servidor: o trigger nativo de envio da GTM
+        // conta também a tentativa que o servidor recusou.
+        trackEvent({ event: "conferencia_inscricao", valor: total / 100 })
         setTimeout(
           () =>
             caixaRecibo.current?.scrollIntoView({
