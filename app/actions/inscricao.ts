@@ -1,12 +1,16 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import {
   InscricaoComoSoube,
   InscricaoDias,
   InscricaoVinculo,
 } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
+import {
+  inscricoesEncerradasAgora,
+  TAG_INSCRICOES,
+} from "@/lib/inscricoes-estado"
 import { getUser } from "@/utils/getUser"
 import { isValidEmail, sanitizeEmail } from "@/utils/strings"
 import { churchPixPayload, pixQrDataUrl, pixQrPng, PIX_KEY } from "@/lib/pix"
@@ -139,6 +143,18 @@ export async function submitInscricao(
   // Resposta fora da lista é tratada como resposta nenhuma. A pergunta é
   // opcional, então vazio aqui é um resultado legítimo, não um erro.
   const comoSoube = ehComoSoube(comoSoubeBruto) ? comoSoubeBruto : null
+  // Encerrada é encerrada, inclusive para quem deixou a página aberta antes
+  // do botão ser clicado, e para quem monta o envio à mão. A leitura aqui
+  // nunca vem de cache, e se ela falhar o erro sobe para o catch de baixo, que
+  // recusa a inscrição: aceitar depois do encerramento é pior do que pedir
+  // para tentar de novo.
+  if (await inscricoesEncerradasAgora()) {
+    return {
+      success: false,
+      error:
+        "As inscrições estão encerradas. Fale com a igreja se ainda quiser participar.",
+    }
+  }
   if (!PIX_KEY) {
     // Sem chave não existe Pix que preste: é melhor não inscrever ninguém do
     // que entregar um código que não paga a igreja.
@@ -247,6 +263,46 @@ export async function submitInscricao(
 export async function getInscricoes() {
   if (!(await getUser())) return []
   return await prisma.inscricao.findMany({ orderBy: { numero: "desc" } })
+}
+
+/**
+ * Encerra ou reabre as inscrições. É o botão do admin.
+ *
+ * Grava no banco e derruba na hora o que estava pronto em cache: o rótulo que
+ * a página pública usa para ler o estado, a própria página e a lista do admin.
+ * Sem isso o botão mudaria o banco e a página continuaria dizendo o contrário
+ * até o cache vencer por conta própria.
+ */
+export async function setInscricoesEncerradas(encerrar: boolean) {
+  if (!(await getUser())) return { error: "Não autorizado." }
+
+  const id = process.env.GLOBAL_CONFIG_ID
+  if (!id) {
+    console.error("GLOBAL_CONFIG_ID ausente: não há onde gravar o estado.")
+    return {
+      error:
+        "Falta a configuração GLOBAL_CONFIG_ID no ambiente. Sem ela não há onde gravar o estado.",
+    }
+  }
+
+  try {
+    await prisma.globalSettings.upsert({
+      where: { id },
+      update: { conferenciaEncerrada: encerrar },
+      create: { id, conferenciaEncerrada: encerrar },
+    })
+  } catch (error) {
+    console.error("Erro ao mudar o estado das inscrições:", error)
+    return { error: "Não foi possível mudar o estado das inscrições." }
+  }
+
+  // `updateTag` e não `revalidateTag`: estamos dentro de uma action, e ele dá
+  // leitura do que acabou de ser escrito. Assim a própria tela do admin já
+  // volta com o estado novo, em vez de mostrar o anterior por um instante.
+  updateTag(TAG_INSCRICOES)
+  revalidatePath(CONFERENCE_PATH)
+  revalidatePath("/admin/inscricoes")
+  return { success: true as const, encerrada: encerrar }
 }
 
 /** Marca uma inscrição como paga, ou desfaz a marcação. */

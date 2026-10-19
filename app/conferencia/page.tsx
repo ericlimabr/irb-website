@@ -4,11 +4,13 @@ import InscricaoForm from "@/components/pages/conferencia/InscricaoForm"
 import BarraInscricao from "@/components/pages/conferencia/BarraInscricao"
 import DeslizaAteAncora from "@/components/pages/conferencia/DeslizaAteAncora"
 import { website_config_variables } from "@/config"
+import { inscricoesEncerradas } from "@/lib/inscricoes-estado"
 import {
   CHURCH_ADDRESS,
   CHURCH_EMAIL,
   CHURCH_NAME,
   CONFERENCE_AUDIENCE,
+  CONFERENCE_CLOSED,
   CONFERENCE_DATES_LABEL,
   CONFERENCE_EDITION,
   CONFERENCE_LECTURES,
@@ -33,6 +35,13 @@ import "./conferencia.css"
  * O texto vem de const/conferencia.ts, e a inscrição de
  * components/pages/conferencia/InscricaoForm.tsx (cliente) mais
  * app/actions/inscricao.ts (servidor). O resto é estático.
+ *
+ * A página tem DOIS estados, e quem decide é o botão em /admin/inscricoes. Com
+ * as inscrições encerradas, o formulário sai do ar e no lugar dele fica o
+ * recado; o botão do herói e a barra presa no pé também somem, porque botão
+ * que convida para um formulário que não existe mais é armadilha. O estado vem
+ * de lib/inscricoes-estado.ts, em cache invalidado pelo próprio botão, para a
+ * página continuar sendo servida pronta.
  *
  * As imagens são <img> cruas, como no mockup: o CSS posiciona a marca de fundo,
  * a moldura dourada atrás da foto do preletor e as fotos do local contando com
@@ -77,7 +86,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default function ConferenciaPage() {
+export default async function ConferenciaPage() {
+  const encerrada = await inscricoesEncerradas()
+
   return (
     <div className="conf">
       <header className="heroi" id="heroi">
@@ -107,9 +118,11 @@ export default function ConferenciaPage() {
             adulto, a partir de 12 anos, e crianças de até 11 anos não pagam.
           </p>
           <div className="botoes">
-            <a className="bt" href="#inscricao">
-              Quero me inscrever
-            </a>
+            {!encerrada && (
+              <a className="bt" href="#inscricao">
+                Quero me inscrever
+              </a>
+            )}
             <a className="bt vazio" href={`${CONFERENCE_PATH}/agenda`}>
               <svg
                 viewBox="0 0 24 24"
@@ -254,17 +267,32 @@ export default function ConferenciaPage() {
 
       <section className="secao inscricao" id="inscricao">
         <div className="wrap">
-          <p className="olho">Inscrição</p>
-          <h2 className="pergunta">Preciso me inscrever para assistir?</h2>
-          <p className="resposta">
-            Sim, e leva menos de um minuto. A inscrição custa{" "}
-            <b>{CONFERENCE_PRICE_LABEL} por adulto, a partir de 12 anos</b>, um
-            valor simbólico que ajuda no café, no material e na estrutura dos
-            dois dias. Crianças de até 11 anos não pagam nada. Assim que você
-            enviar, o Pix aparece aqui na tela com o valor já calculado, e o
-            mesmo código chega no seu e-mail.
-          </p>
-          <InscricaoForm />
+          {encerrada ? (
+            <>
+              <p className="olho">{CONFERENCE_CLOSED.olho}</p>
+              <h2 className="pergunta">{CONFERENCE_CLOSED.titulo}</h2>
+              <p className="resposta">{CONFERENCE_CLOSED.texto}</p>
+              <div className="botoes">
+                <a className="bt" href="/contato">
+                  {CONFERENCE_CLOSED.acao}
+                </a>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="olho">Inscrição</p>
+              <h2 className="pergunta">Preciso me inscrever para assistir?</h2>
+              <p className="resposta">
+                Sim, e leva menos de um minuto. A inscrição custa{" "}
+                <b>{CONFERENCE_PRICE_LABEL} por adulto, a partir de 12 anos</b>,
+                um valor simbólico que ajuda no café, no material e na estrutura
+                dos dois dias. Crianças de até 11 anos não pagam nada. Assim que
+                você enviar, o Pix aparece aqui na tela com o valor já
+                calculado, e o mesmo código chega no seu e-mail.
+              </p>
+              <InscricaoForm />
+            </>
+          )}
         </div>
       </section>
 
@@ -363,7 +391,7 @@ export default function ConferenciaPage() {
         <p>{CHURCH_EMAIL}</p>
       </footer>
 
-      <BarraInscricao />
+      {!encerrada && <BarraInscricao />}
       <DeslizaAteAncora />
     </div>
   )

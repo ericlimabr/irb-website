@@ -48,6 +48,13 @@ model GlobalSettings {
   footerText   String? @default("© Todos os direitos reservados.")
   contactEmail String?
   contactPhone String?
+
+  // --- CONFERÊNCIA ---
+  /// Fecha as inscrições da conferência sem publicar nada: a página passa a
+  /// dizer que elas estão encerradas e a action recusa gravar. É botão do
+  /// admin, e não bandeira de código, justamente para não depender de deploy
+  /// no dia em que a igreja decidir fechar.
+  conferenciaEncerrada Boolean @default(false)
 }
 
 enum UserRole {
