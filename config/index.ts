@@ -14,10 +14,10 @@ export const website_config_variables = {
   library: {
     active: false,
   },
-  // A pagina /conferencia funciona por URL direta desde ja; a bandeira decide
-  // se ela entra no sitemap e se pede indexacao. Ligar quando a chave Pix
-  // estiver no ambiente e a igreja autorizar divulgar.
+  // A pagina /conferencia entra no sitemap e pede indexacao. Ligada em
+  // 19/10/2026: a chave Pix esta no ambiente de producao (inscricao de teste
+  // gerou o BR Code na tela) e a conferencia e em 7 e 8 de novembro.
   conferencia: {
-    active: false,
+    active: true,
   },
 }
