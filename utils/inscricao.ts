@@ -54,6 +54,29 @@ export function vinculoLabel(vinculo: string): string {
   return VINCULO_ESCRITO[vinculo] ?? vinculo
 }
 
+/**
+ * Como a pessoa ficou sabendo, por extenso. Os rótulos do formulário estão na
+ * primeira pessoa ("Alguém me convidou"), que é o certo para quem responde e
+ * o errado para quem lê a planilha depois; aqui eles aparecem na terceira.
+ *
+ * Nulo e vazio devolvem texto vazio: a pergunta é opcional, e inventar
+ * "Não informado" encheria a coluna de uma resposta que ninguém deu.
+ */
+const COMO_SOUBE_ESCRITO: Record<string, string> = {
+  IGREJA: "Pelos avisos da igreja",
+  CONVITE: "Por convite de alguém",
+  INSTAGRAM: "Instagram",
+  YOUTUBE: "YouTube",
+  WHATSAPP: "WhatsApp",
+  GOOGLE: "Procurando no Google",
+  OUTRO: "De outro jeito",
+}
+
+export function comoSoubeLabel(comoSoube: string | null | undefined): string {
+  if (!comoSoube) return ""
+  return COMO_SOUBE_ESCRITO[comoSoube] ?? comoSoube
+}
+
 /** "R$ 20,07" a partir de 2007 centavos. Mesma formatação nos dois lados. */
 export function brl(cents: number): string {
   return `R$ ${(cents / 100).toFixed(2).replace(".", ",")}`

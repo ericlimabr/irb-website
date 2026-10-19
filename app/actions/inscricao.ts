@@ -1,7 +1,11 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { InscricaoDias, InscricaoVinculo } from "@prisma/client"
+import {
+  InscricaoComoSoube,
+  InscricaoDias,
+  InscricaoVinculo,
+} from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { getUser } from "@/utils/getUser"
 import { isValidEmail, sanitizeEmail } from "@/utils/strings"
@@ -12,17 +16,20 @@ import { mapsDirectionsUrl } from "@/utils/maps"
 import { SITE_URL } from "@/utils/siteUrl"
 import {
   brl,
+  comoSoubeLabel,
   diasLabel,
   inscricaoTotalCents,
   pessoasLabel,
   vinculoLabel,
 } from "@/utils/inscricao"
 import {
+  CONFERENCE_CHURCH_MAX,
   CONFERENCE_EDITION,
   CONFERENCE_MAX_ADULTS,
   CONFERENCE_MAX_CHILDREN,
   CONFERENCE_PATH,
   CONFERENCE_PIX_CENTS,
+  CONFERENCE_TIE_ASKS_CHURCH,
 } from "@/const"
 
 /**
@@ -78,6 +85,10 @@ function ehVinculo(v: string): v is InscricaoVinculo {
   return v in InscricaoVinculo
 }
 
+function ehComoSoube(v: string): v is InscricaoComoSoube {
+  return v in InscricaoComoSoube
+}
+
 export async function submitInscricao(
   formData: FormData,
 ): Promise<InscricaoResult> {
@@ -94,6 +105,10 @@ export async function submitInscricao(
   const pagadorBruto = String(formData.get("pagador") ?? "").trim()
   const diasBruto = String(formData.get("dias") ?? "")
   const vinculoBruto = String(formData.get("vinculo") ?? "")
+  const igrejaBruto = String(formData.get("igreja") ?? "")
+    .trim()
+    .slice(0, CONFERENCE_CHURCH_MAX)
+  const comoSoubeBruto = String(formData.get("comoSoube") ?? "").trim()
 
   const adultos = inteiro(formData.get("adultos"), 1, CONFERENCE_MAX_ADULTS)
   const criancas = inteiro(formData.get("criancas"), 0, CONFERENCE_MAX_CHILDREN)
@@ -114,6 +129,16 @@ export async function submitInscricao(
   if (!ehDias(diasBruto) || !ehVinculo(vinculoBruto)) {
     return { success: false, error: "Escolha os dias e de onde você vem." }
   }
+  // A igreja só é gravada no vínculo que a pergunta: em qualquer outro, a
+  // pergunta não apareceu na tela, e o que vier com o formulário é sobra de
+  // quem trocou a escolha depois de digitar, ou de quem montou o envio à mão.
+  const igreja =
+    vinculoBruto === CONFERENCE_TIE_ASKS_CHURCH && igrejaBruto
+      ? igrejaBruto
+      : null
+  // Resposta fora da lista é tratada como resposta nenhuma. A pergunta é
+  // opcional, então vazio aqui é um resultado legítimo, não um erro.
+  const comoSoube = ehComoSoube(comoSoubeBruto) ? comoSoubeBruto : null
   if (!PIX_KEY) {
     // Sem chave não existe Pix que preste: é melhor não inscrever ninguém do
     // que entregar um código que não paga a igreja.
@@ -141,6 +166,8 @@ export async function submitInscricao(
         criancas,
         dias: diasBruto,
         vinculo: vinculoBruto,
+        igreja,
+        comoSoube,
         pagador: pagadorBruto || null,
       },
     })
@@ -184,7 +211,8 @@ export async function submitInscricao(
           "",
           nome,
           pessoas,
-          `${dias} · ${vinculoLabel(vinculoBruto)}`,
+          `${dias} · ${vinculoLabel(vinculoBruto)}${igreja ? `, ${igreja}` : ""}`,
+          ...(comoSoube ? [`Soube: ${comoSoubeLabel(comoSoube)}`] : []),
           `${brl(valor)} por Pix, aguardando pagamento`,
           "",
           `${SITE_URL}/admin/inscricoes`,

@@ -184,6 +184,19 @@ enum InscricaoVinculo {
   SEM_IGREJA
 }
 
+/// Como a pessoa ficou sabendo da conferência. Sem valor padrão de propósito:
+/// a coluna é anulável e quem não responde fica nulo, porque um padrão aqui
+/// contaria como divulgação o que foi só a primeira opção da lista.
+enum InscricaoComoSoube {
+  IGREJA
+  CONVITE
+  INSTAGRAM
+  YOUTUBE
+  WHATSAPP
+  GOOGLE
+  OUTRO
+}
+
 /// Inscrição na 2ª Conferência Reformada (7 e 8 de novembro de 2026).
 ///
 /// O pagamento é Pix sem intermediário: não há webhook que confirme nada, e a
@@ -210,6 +223,14 @@ model Inscricao {
 
   dias    InscricaoDias    @default(AMBOS)
   vinculo InscricaoVinculo @default(MEMBRO)
+
+  /// Qual igreja, perguntado só quando o vínculo é OUTRA_IGREJA. Em qualquer
+  /// outro vínculo o formulário não mostra o campo e o servidor grava nulo,
+  /// para não guardar resposta de pergunta que não foi feita.
+  igreja String?
+
+  /// De onde veio a notícia da conferência, quando a pessoa informa.
+  comoSoube InscricaoComoSoube?
 
   /// Nome de quem faz o Pix, quando não é a própria pessoa inscrita.
   pagador String?
