@@ -133,15 +133,15 @@ export const CONFERENCE_SPEAKERS = [
   {
     name: "Dr. Hamilton Barbosa",
     role: "Presbítero",
-    church: "Igreja Presbiteriana do Brasil, Anápolis (GO)",
-    bio: "Doutor, professor universitário e presbítero da Igreja Presbiteriana do Brasil em Anápolis, em Goiás. Conduz as duas palestras de sábado, e elas se completam: a primeira abre o campo, mostrando como a doutrina da criação responde às visões de mundo de hoje; a segunda se concentra no texto de Gênesis e no que acontece com a teologia quando ele é relido para caber na evolução.",
+    church: "Capela Presbiteriana de Anápolis (GO)",
+    bio: "Doutor, professor universitário e presbítero da Capela Presbiteriana de Anápolis, em Goiás. Conduz as duas palestras de sábado, e elas se completam: a primeira abre o campo, mostrando como a doutrina da criação responde às visões de mundo de hoje; a segunda se concentra no texto de Gênesis e no que acontece com a teologia quando ele é relido para caber na evolução.",
     photo: "/conferencia/hamilton-barbosa.jpg",
   },
   {
     name: "Pr. Jônatas Cunha",
     role: "Pastor",
-    church: "II Igreja Presbiteriana do Brasil, Samambaia Sul (DF)",
-    bio: "Pastor da Segunda Igreja Presbiteriana do Brasil em Samambaia Sul, no Distrito Federal. Fecha os dois dias pregando no culto matutino de domingo, sobre os mandatos da criação: o que muda na vida de quem lê o livro da criação corretamente e reconhece que ela pertence inteira ao Criador.",
+    church: "II Igreja Presbiteriana de Samambaia (DF)",
+    bio: "Pastor da Segunda Igreja Presbiteriana de Samambaia, no Distrito Federal. Fecha os dois dias pregando no culto matutino de domingo, sobre os mandatos da criação: o que muda na vida de quem lê o livro da criação corretamente e reconhece que ela pertence inteira ao Criador.",
     photo: "/conferencia/jonatas-cunha.jpg",
   },
 ] as const
