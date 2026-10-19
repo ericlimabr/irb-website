@@ -37,7 +37,9 @@ A página `/conferencia` da 2ª Conferência Reformada (7 e 8 de novembro de
 | `lib/pix.ts` | BR Code (campos EMV e o CRC-16) e o QR. |
 | `lib/mail.ts` | `sendInscricaoConfirmationEmail`, o e-mail de confirmação com o QR embutido. |
 | `utils/inscricao.ts` | As contas e os rótulos que a tela e o servidor precisam compartilhar. |
-| `app/admin/inscricoes/page.tsx` | A lista para conciliar com o extrato, com o botão de marcar paga e o de baixar em Excel. |
+| `app/admin/inscricoes/page.tsx` | A lista para conciliar com o extrato, com os botões de marcar paga, baixar em Excel e encerrar as inscrições. |
+| `components/pages/conferencia/BotaoEncerrarInscricoes.tsx` | O botão que encerra e reabre as inscrições, com o modal de confirmação. |
+| `lib/inscricoes-estado.ts` | Se as inscrições estão abertas ou encerradas: a leitura em cache para a página e a leitura direta para a gravação. |
 | `app/admin/inscricoes/excel/route.ts` | A planilha em Excel, montada na hora a partir do banco. |
 | `lib/xlsx.ts` | Escreve o arquivo `.xlsx`: o XML das células e o zip em volta. |
 | `lib/whatsapp.ts` | O aviso de inscrição no WhatsApp, pelo CallMeBot. |
@@ -139,6 +141,69 @@ npx prisma migrate diff --from-url "$DIRECT_URL" --to-schema-datamodel prisma/sc
 que respondeu migração vazia: o banco e o `schema.prisma` estão iguais. As duas
 colunas nascem nulas, então **nenhuma inscrição antiga foi alterada**; elas
 aparecem na planilha como célula vazia.
+
+## O botão de encerrar as inscrições
+
+Em `/admin/inscricoes`, ao lado do botão de Excel. Clicar pergunta antes, como
+a lixeira da lista, porque um clique aqui muda a página pública.
+
+**O que acontece na página `/conferencia` quando está encerrado:**
+
+| Antes | Depois |
+| --- | --- |
+| Formulário de inscrição | O recado de `CONFERENCE_CLOSED`, com um botão para `/contato` |
+| "Quero me inscrever" no herói | O botão sai; o de agenda fica |
+| Barra presa no pé convidando a inscrever | A barra não sobe |
+| Palestras, preletores, programação e local | Tudo igual |
+
+A página encolhe de 52,4 KB para 47,7 KB, que é o formulário saindo.
+
+**A gravação também fecha.** Quem deixou a página aberta antes do clique, ou
+quem monta o envio à mão, recebe "As inscrições estão encerradas. Fale com a
+igreja se ainda quiser participar." e **nada é gravado**. Isso foi testado
+disparando a server action direto, com o estado encerrado: resposta de recusa e
+zero linhas no banco.
+
+**Reabrir é o mesmo botão.** Nenhuma inscrição já gravada é tocada por nenhum
+dos dois sentidos.
+
+**O texto não promete vaga** e não diz que dá para pagar no dia: nenhuma das
+duas coisas foi decidida pela igreja (é o item 5 da lista acima), e uma página
+que promete o que ninguém prometeu cria discussão na porta no sábado.
+
+### Onde o estado mora, e por que não é bandeira de código
+
+Na coluna `conferenciaEncerrada` da tabela `GlobalSettings`. Não é bandeira em
+`config/index.ts` porque bandeira exige deploy, e no dia em que a igreja
+decidir fechar ninguém vai querer depender disso. O SQL está em
+`prisma/encerra-inscricoes.sql` e já foi aplicado em 19/10/2026.
+
+### O cache, que é a parte que engana
+
+A página `/conferencia` continua **estática** (o build a marca com `○`), então
+quem a serve é a borda da Vercel e não o servidor. Para isso o estado é lido
+através de `unstable_cache`. Daí três comportamentos que convém ter escritos:
+
+1. **O botão derruba o cache na hora.** Ele chama `updateTag` e
+   `revalidatePath`, então o encerramento aparece imediatamente, e a própria
+   tela do admin já volta com o estado novo.
+2. **O cache tem prazo de 60 segundos**, e isso não é para o botão. Este cache
+   **sobrevive ao build** e é restaurado entre deploys: sem prazo, um deploy
+   feito depois do encerramento poderia republicar a página com o formulário
+   aberto. Isso foi reproduzido de propósito aqui antes do prazo existir, e
+   deixou de acontecer com ele.
+3. **Mudar a coluna direto no banco** não aparece na hora, e sim em até 60
+   segundos, porque o caminho previsto é o botão.
+
+A tela do admin, ao contrário da página pública, lê **sempre direto do banco**,
+sem cache: é a tela de controle, e ela tem de mostrar o que vale agora.
+
+### Se faltar GLOBAL_CONFIG_ID
+
+A coluna vive na linha de `GlobalSettings` apontada por `GLOBAL_CONFIG_ID`. Sem
+essa variável no ambiente, o botão responde que falta configuração, e a leitura
+trata as inscrições como **abertas**: é ausência de configuração, não falha
+momentânea, e recusar toda inscrição por causa dela seria pior.
 
 ## A planilha em Excel
 

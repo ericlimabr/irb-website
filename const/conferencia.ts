@@ -289,3 +289,19 @@ export const CONFERENCE_SOURCE_CHOICES = [
   { value: "GOOGLE", label: "Procurando no Google" },
   { value: "OUTRO", label: "De outro jeito" },
 ] as const
+
+/**
+ * O que a página mostra no lugar do formulário quando a igreja encerra as
+ * inscrições pelo admin.
+ *
+ * O texto não promete vaga nem diz que dá para pagar no dia: nenhuma das duas
+ * coisas foi decidida pela igreja, e uma página que promete o que ninguém
+ * prometeu cria uma discussão na porta no sábado.
+ */
+export const CONFERENCE_CLOSED = {
+  olho: "Inscrição",
+  titulo: "As inscrições estão encerradas",
+  texto:
+    "A inscrição pela internet foi encerrada. Se você ainda quer participar, fale com a igreja: a decisão é dela, caso a caso, e esta página não garante vaga.",
+  acao: "Falar com a igreja",
+} as const
