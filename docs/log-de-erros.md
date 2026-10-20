@@ -4,17 +4,17 @@ Escrito em 20/10/2026. Todos os horários aqui são de Brasília (UTC-3).
 
 ## Glossário
 
-| Termo | O que quer dizer aqui |
-|---|---|
+| Termo                 | O que quer dizer aqui                                                                                                                        |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | Campo-isca (honeypot) | Campo escondido no formulário. Pessoa nenhuma vê; robô preenche tudo o que encontra. Se vier preenchido, o servidor trata o envio como robô. |
-| Autofill | O preenchimento automático do navegador ou do celular, que completa campos pelo **nome** deles. |
-| Gerenciador de senha | Programa que guarda senhas e preenche formulários (1Password, LastPass, Bitwarden, Dashlane, o do próprio navegador). |
-| Action | Função do servidor que o formulário chama ao enviar. Aqui, `app/actions/inscricao.ts`. |
-| Sequência (Postgres) | Contador que dá o próximo número da inscrição. Avança até quando a gravação falha, e é por isso que ela serve de prova. |
-| `console.error` | Mensagem que o servidor escreve no log da Vercel. Só aparece lá, só se alguém abrir, e expira. |
-| CallMeBot | Serviço que entrega mensagem no WhatsApp por uma chamada de endereço. Já era quem avisava das inscrições novas. |
-| Janela de silêncio | Tempo em que o mesmo tipo de falha não avisa de novo, para o celular não tocar sem parar. |
-| Dar baixa | Marcar a falha como vista no admin. Não apaga: o log é histórico. |
+| Autofill              | O preenchimento automático do navegador ou do celular, que completa campos pelo **nome** deles.                                              |
+| Gerenciador de senha  | Programa que guarda senhas e preenche formulários (1Password, LastPass, Bitwarden, Dashlane, o do próprio navegador).                        |
+| Action                | Função do servidor que o formulário chama ao enviar. Aqui, `app/actions/inscricao.ts`.                                                       |
+| Sequência (Postgres)  | Contador que dá o próximo número da inscrição. Avança até quando a gravação falha, e é por isso que ela serve de prova.                      |
+| `console.error`       | Mensagem que o servidor escreve no log da Vercel. Só aparece lá, só se alguém abrir, e expira.                                               |
+| CallMeBot             | Serviço que entrega mensagem no WhatsApp por uma chamada de endereço. Já era quem avisava das inscrições novas.                              |
+| Janela de silêncio    | Tempo em que o mesmo tipo de falha não avisa de novo, para o celular não tocar sem parar.                                                    |
+| Dar baixa             | Marcar a falha como vista no admin. Não apaga: o log é histórico.                                                                            |
 
 ## O que aconteceu
 
@@ -50,8 +50,14 @@ campo-isca**.
 O campo-isca se chamava `website`:
 
 ```tsx
-<input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden
-       className="isca" />
+<input
+  type="text"
+  name="website"
+  tabIndex={-1}
+  autoComplete="off"
+  aria-hidden
+  className="isca"
+/>
 ```
 
 Escondido para gente, com `position:absolute; left:-9999px`. O problema não é
@@ -87,15 +93,15 @@ existe.
 
 Códigos registrados hoje:
 
-| Código | Nível | Quando sai |
-|---|---|---|
-| `ISCA_PREENCHIDA` | Erro | A isca pegou alguém, na inscrição ou no contato. No contato, a mensagem da pessoa é gravada em "detalhe", para não se perder. |
-| `GRAVACAO_FALHOU` | Erro | A inscrição não foi gravada. |
-| `ESTADO_DAS_INSCRICOES_ILEGIVEL` | Erro | Não deu para ler no banco se as inscrições estão abertas. |
-| `PIX_KEY_AUSENTE` | Erro | Falta a chave Pix no ambiente, e ninguém consegue se inscrever. |
-| `MENSAGEM_NAO_GRAVADA` | Erro | Mensagem do formulário de contato perdida. |
-| `LIMITE_POR_EMAIL_ILEGIVEL` | Aviso | A contagem do limite por e-mail falhou; a inscrição seguiu em frente. |
-| `EMAIL_NAO_ENVIADO` | Aviso | A inscrição foi gravada, mas o e-mail com o QR Code não saiu. |
+| Código                           | Nível | Quando sai                                                                                                                                                                                                                                                                                   |
+| -------------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ISCA_MARCADA`                   | Aviso | A isca de robô veio marcada. **Nada foi recusado**: a inscrição ou a mensagem seguiu em frente, e o aviso só pede para a igreja conferir se aquilo é de gente. Antes de 20/10/2026 o código se chamava `ISCA_PREENCHIDA` e recusava; `docs/isca-de-robo.md` conta por que deixou de recusar. |
+| `GRAVACAO_FALHOU`                | Erro  | A inscrição não foi gravada.                                                                                                                                                                                                                                                                 |
+| `ESTADO_DAS_INSCRICOES_ILEGIVEL` | Erro  | Não deu para ler no banco se as inscrições estão abertas.                                                                                                                                                                                                                                    |
+| `PIX_KEY_AUSENTE`                | Erro  | Falta a chave Pix no ambiente, e ninguém consegue se inscrever.                                                                                                                                                                                                                              |
+| `MENSAGEM_NAO_GRAVADA`           | Erro  | Mensagem do formulário de contato perdida.                                                                                                                                                                                                                                                   |
+| `LIMITE_POR_EMAIL_ILEGIVEL`      | Aviso | A contagem do limite por e-mail falhou; a inscrição seguiu em frente.                                                                                                                                                                                                                        |
+| `EMAIL_NAO_ENVIADO`              | Aviso | A inscrição foi gravada, mas o e-mail com o QR Code não saiu.                                                                                                                                                                                                                                |
 
 **4. Um erro que escapava da action foi fechado.** A leitura de "as inscrições
 estão encerradas?" acontecia **antes** do `try`, apesar de o comentário no
@@ -125,10 +131,10 @@ banco e o CallMeBot estiverem os dois fora do ar.
 
 ```
 ⚠️ Falha no site da igreja
-inscricao · ISCA_PREENCHIDA
+inscricao · ISCA_MARCADA
 
-A isca de robô veio preenchida e a inscrição foi recusada. Se foi uma pessoa,
-ela não consegue se inscrever pelo site e precisa de ajuda.
+A isca de robô veio marcada e a inscrição seguiu em frente de propósito.
+Confira se esta inscrição é de gente antes de dar baixa no pagamento.
 Pessoa: <nome que a pessoa digitou>
 20/10 14:22 (horário de Brasília)
 
@@ -137,13 +143,13 @@ https://irbrasilia.org/admin/erros
 
 ## Arquivos
 
-| Arquivo | O que é |
-|---|---|
-| `const/isca.ts` | Nome do campo-isca e os atributos de "não me preencha". |
-| `lib/log-erro.ts` | `registraErro()`: grava e avisa. Nunca lança. |
-| `app/actions/log-erro.ts` | Leitura e baixa, só com sessão. |
-| `app/admin/erros/page.tsx` | A tela "Falhas do site". |
-| `prisma/schema.prisma` | `model LogErro` e `enum LogNivel`. |
+| Arquivo                    | O que é                                                 |
+| -------------------------- | ------------------------------------------------------- |
+| `const/isca.ts`            | Nome do campo-isca e os atributos de "não me preencha". |
+| `lib/log-erro.ts`          | `registraErro()`: grava e avisa. Nunca lança.           |
+| `app/actions/log-erro.ts`  | Leitura e baixa, só com sessão.                         |
+| `app/admin/erros/page.tsx` | A tela "Falhas do site".                                |
+| `prisma/schema.prisma`     | `model LogErro` e `enum LogNivel`.                      |
 
 ## Para colocar no ar
 

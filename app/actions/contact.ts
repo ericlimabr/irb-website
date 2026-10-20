@@ -21,30 +21,24 @@ async function isRateLimited(email: string): Promise<boolean> {
 }
 
 export async function submitContactForm(formData: FormData) {
-  // Isca de robô. Aqui a resposta é "enviado" de propósito, para o robô não
-  // aprender a diferença, e é justamente por isso que o registro abaixo
-  // importa: se a isca pegar uma pessoa, ela acha que mandou a mensagem e
-  // ninguém nunca recebeu. O texto vai para `detalhe` para não se perder, e a
-  // igreja lê em /admin/erros. O campo se chamava `website` até 20/10/2026,
-  // nome que gerenciador de senha preenche sozinho; o novo está em
-  // const/isca.ts.
-  if (formData.get(ISCA_CAMPO)) {
+  // Isca de robô. Ela NÃO RECUSA MAIS NADA, e const/isca.ts explica por quê:
+  // o campo barrou gente de verdade duas vezes na inscrição, e aqui o estrago
+  // era pior, porque a resposta era "enviado" e a mensagem não chegava a
+  // ninguém. Agora a mensagem é gravada e enviada normalmente, e a isca só
+  // deixa um aviso no log para a igreja desconfiar da mensagem.
+  const iscaMarcada = formData.get(ISCA_CAMPO)
+  if (iscaMarcada) {
     await registraErro({
       origem: "contato",
-      codigo: "ISCA_PREENCHIDA",
+      codigo: "ISCA_MARCADA",
+      nivel: "AVISO",
       mensagem:
-        "A isca de robô veio preenchida no formulário de contato. Se foi uma " +
-        "pessoa, ela acha que a mensagem foi enviada, e a mensagem está aqui " +
-        "embaixo, em detalhe.",
+        "A isca de robô veio marcada no formulário de contato. A mensagem foi " +
+        "enviada normalmente; desconfie dela antes de responder.",
       pessoa: String(formData.get("name") ?? "").trim() || null,
       contato: String(formData.get("email") ?? "").trim() || null,
-      causa: [
-        `assunto: ${String(formData.get("subject") ?? "")}`,
-        `whatsapp: ${String(formData.get("whatsapp") ?? "")}`,
-        `mensagem: ${String(formData.get("message") ?? "")}`,
-      ].join("\n"),
+      causa: `valor recebido no campo da isca: ${String(iscaMarcada).slice(0, 200)}`,
     })
-    return { success: true }
   }
 
   const name = formData.get("name") as string
