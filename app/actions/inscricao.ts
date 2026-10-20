@@ -16,6 +16,7 @@ import { isValidEmail, sanitizeEmail } from "@/utils/strings"
 import { churchPixPayload, pixQrDataUrl, pixQrPng, PIX_KEY } from "@/lib/pix"
 import { sendInscricaoConfirmationEmail } from "@/lib/mail"
 import { avisaNoWhatsApp } from "@/lib/whatsapp"
+import { registraErro } from "@/lib/log-erro"
 import { mapsDirectionsUrl } from "@/utils/maps"
 import { SITE_URL } from "@/utils/siteUrl"
 import {
@@ -28,6 +29,7 @@ import {
 } from "@/utils/inscricao"
 import {
   CONFERENCE_CHURCH_MAX,
+  ISCA_CAMPO,
   CONFERENCE_EDITION,
   CONFERENCE_MAX_ADULTS,
   CONFERENCE_MAX_CHILDREN,
@@ -64,7 +66,12 @@ export type InscricaoResult =
       dias: string
       emailEnviado: boolean
     }
-  | { success: false; error: string }
+  | {
+      success: false
+      error: string
+      /** Verdadeiro quando a saída da pessoa é falar com a igreja. */
+      falarComAIgreja?: boolean
+    }
 
 async function isRateLimited(email: string): Promise<boolean> {
   const since = new Date(Date.now() - RATE_LIMIT_WINDOW_MS)
@@ -96,11 +103,31 @@ function ehComoSoube(v: string): v is InscricaoComoSoube {
 export async function submitInscricao(
   formData: FormData,
 ): Promise<InscricaoResult> {
-  // Isca de robô: campo escondido no formulário, que pessoa nenhuma preenche.
-  // Responde como sucesso de propósito, para o robô não aprender a diferença.
-  const botTrap = formData.get("website")
-  if (botTrap) {
-    return { success: false, error: "Não foi possível concluir a inscrição." }
+  // Isca de robô: campo escondido no formulário, que pessoa nenhuma vê.
+  //
+  // Até 20/10/2026 ela se chamava `website`, e gerenciador de senha e autofill
+  // preenchiam o campo sozinhos: quem apanhava era gente de verdade, que ficava
+  // sem conseguir se inscrever de jeito nenhum. O nome novo está em
+  // const/isca.ts. A recusa continua, porque robô existe, mas agora ela vira
+  // linha no log e aviso no WhatsApp, e a pessoa recebe um caminho de saída em
+  // vez de uma parede.
+  if (formData.get(ISCA_CAMPO)) {
+    await registraErro({
+      origem: "inscricao",
+      codigo: "ISCA_PREENCHIDA",
+      mensagem:
+        "A isca de robô veio preenchida e a inscrição foi recusada. Se foi uma " +
+        "pessoa, ela não consegue se inscrever pelo site e precisa de ajuda.",
+      pessoa: String(formData.get("nome") ?? "").trim() || null,
+      contato: String(formData.get("email") ?? "").trim() || null,
+    })
+    return {
+      success: false,
+      error:
+        "Não conseguimos concluir a sua inscrição aqui pelo site. Fale com a " +
+        "igreja pelo WhatsApp e nós inscrevemos você.",
+      falarComAIgreja: true,
+    }
   }
 
   const nome = String(formData.get("nome") ?? "").trim()
@@ -148,28 +175,78 @@ export async function submitInscricao(
   // nunca vem de cache, e se ela falhar o erro sobe para o catch de baixo, que
   // recusa a inscrição: aceitar depois do encerramento é pior do que pedir
   // para tentar de novo.
-  if (await inscricoesEncerradasAgora()) {
+  //
+  // A leitura fica no seu próprio try porque ela acontece ANTES do try grande
+  // lá embaixo: sem isto, um erro aqui escapa da action inteira, a promessa no
+  // navegador é rejeitada e a pessoa fica olhando o botão travado, sem
+  // mensagem nenhuma. Agora o erro é gravado e avisado, e a pessoa é mandada
+  // para o WhatsApp da igreja.
+  try {
+    if (await inscricoesEncerradasAgora()) {
+      return {
+        success: false,
+        error:
+          "As inscrições estão encerradas. Fale com a igreja se ainda quiser participar.",
+      }
+    }
+  } catch (erro) {
+    await registraErro({
+      origem: "inscricao",
+      codigo: "ESTADO_DAS_INSCRICOES_ILEGIVEL",
+      mensagem:
+        "Não deu para ler no banco se as inscrições estão abertas, e por isso " +
+        "nenhuma inscrição está sendo aceita agora.",
+      causa: erro,
+      pessoa: nome || null,
+      contato: email || null,
+    })
     return {
       success: false,
       error:
-        "As inscrições estão encerradas. Fale com a igreja se ainda quiser participar.",
+        "A inscrição está fora do ar neste momento. Fale com a igreja pelo " +
+        "WhatsApp e nós inscrevemos você.",
+      falarComAIgreja: true,
     }
   }
   if (!PIX_KEY) {
     // Sem chave não existe Pix que preste: é melhor não inscrever ninguém do
     // que entregar um código que não paga a igreja.
-    console.error("PIX_KEY ausente: inscrição recusada antes de gravar.")
+    await registraErro({
+      origem: "inscricao",
+      codigo: "PIX_KEY_AUSENTE",
+      mensagem:
+        "Falta a variável PIX_KEY no ambiente: ninguém consegue se inscrever " +
+        "até ela voltar.",
+      pessoa: nome || null,
+      contato: email || null,
+    })
     return {
       success: false,
       error:
         "A inscrição está temporariamente indisponível. Fale com a igreja pelo WhatsApp.",
     }
   }
-  if (await isRateLimited(email)) {
-    return {
-      success: false,
-      error: "Já recebemos inscrições deste e-mail. Tente novamente em 1 hora.",
+  // Se a contagem falhar, a inscrição segue: barrar quem não fez nada é pior
+  // do que deixar passar uma repetição. O erro fica registrado.
+  try {
+    if (await isRateLimited(email)) {
+      return {
+        success: false,
+        error:
+          "Já recebemos inscrições deste e-mail. Tente novamente em 1 hora.",
+      }
     }
+  } catch (erro) {
+    await registraErro({
+      origem: "inscricao",
+      codigo: "LIMITE_POR_EMAIL_ILEGIVEL",
+      mensagem:
+        "Não deu para contar as inscrições recentes deste e-mail. A inscrição " +
+        "seguiu em frente sem o limite.",
+      nivel: "AVISO",
+      causa: erro,
+      contato: email || null,
+    })
   }
 
   try {
@@ -236,6 +313,20 @@ export async function submitInscricao(
       ),
     ])
 
+    if (!emailEnviado) {
+      await registraErro({
+        origem: "inscricao",
+        codigo: "EMAIL_NAO_ENVIADO",
+        mensagem:
+          `A inscrição ${String(inscricao.numero).padStart(4, "0")} foi gravada, ` +
+          "mas o e-mail com o QR Code não saiu. A pessoa viu o código na tela; " +
+          "quem quiser o e-mail precisa receber na mão.",
+        nivel: "AVISO",
+        pessoa: nome,
+        contato: email,
+      })
+    }
+
     revalidatePath("/admin/inscricoes")
 
     return {
@@ -250,11 +341,22 @@ export async function submitInscricao(
       emailEnviado,
     }
   } catch (error) {
-    console.error("Erro ao gravar inscrição da conferência:", error)
+    await registraErro({
+      origem: "inscricao",
+      codigo: "GRAVACAO_FALHOU",
+      mensagem:
+        "A inscrição não foi gravada. Quem estava na tela recebeu um pedido " +
+        "para tentar de novo.",
+      causa: error,
+      pessoa: nome || null,
+      contato: email || null,
+    })
     return {
       success: false,
       error:
-        "Não foi possível concluir a inscrição. Tente de novo em instantes.",
+        "Não foi possível concluir a inscrição. Tente de novo em instantes, " +
+        "ou fale com a igreja pelo WhatsApp.",
+      falarComAIgreja: true,
     }
   }
 }

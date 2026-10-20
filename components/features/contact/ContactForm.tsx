@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react"
 import { submitContactForm } from "@/app/actions/contact"
 import { trackEvent } from "@/utils/analytics"
+import { ISCA_ATRIBUTOS, ISCA_CAMPO } from "@/const"
 
 type Status =
   | { kind: "idle" }
@@ -67,14 +68,16 @@ export default function ContactForm() {
 
   return (
     <form ref={formRef} action={onSubmit} className="space-y-6">
-      {/* Bot trap: the action discards any submission that fills this in. */}
+      {/*
+        Bot trap. The field name and the "do not fill me" attributes live in
+        const/isca.ts, together with the story of what went wrong while it was
+        called `website`: password managers filled it in for real people.
+      */}
       <input
         type="text"
-        name="website"
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden
+        name={ISCA_CAMPO}
         className="absolute left-[-9999px] h-0 w-0 opacity-0"
+        {...ISCA_ATRIBUTOS}
       />
 
       <div className="grid md:grid-cols-2 gap-6">

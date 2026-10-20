@@ -9,6 +9,7 @@ import {
   EyeOff,
   Megaphone,
   Smartphone,
+  AlertTriangle,
 } from "lucide-react"
 import StatCard from "@/components/features/admin/StatCard"
 import QuickActionsCard from "@/components/features/admin/QuickActionsCard"
@@ -24,11 +25,14 @@ async function safeCount(fn: () => Promise<number>): Promise<number> {
 }
 
 export default async function AdminDashboardPage() {
-  const [unread, totalMessages, faqs, posts] = await Promise.all([
+  const [unread, totalMessages, faqs, posts, falhas] = await Promise.all([
     safeCount(() => prisma.contactMessage.count({ where: { read: false } })),
     safeCount(() => prisma.contactMessage.count()),
     safeCount(() => prisma.faq.count()),
     safeCount(() => prisma.post.count()),
+    // Falhas sem baixa. Zero aqui é a notícia boa; qualquer outro número pede
+    // uma olhada em /admin/erros.
+    safeCount(() => prisma.logErro.count({ where: { vistoEm: null } })),
   ])
 
   // Consentimento (LGPD): sinal do tráfego que NÃO aceita cookies — a única
@@ -41,10 +45,14 @@ export default async function AdminDashboardPage() {
       safeCount(() => prisma.consentEvent.count({ where: { type: "accept" } })),
       safeCount(() => prisma.consentEvent.count({ where: { type: "reject" } })),
       safeCount(() =>
-        prisma.consentEvent.count({ where: { type: "shown", source: "campaign" } }),
+        prisma.consentEvent.count({
+          where: { type: "shown", source: "campaign" },
+        }),
       ),
       safeCount(() =>
-        prisma.consentEvent.count({ where: { type: "accept", source: "campaign" } }),
+        prisma.consentEvent.count({
+          where: { type: "accept", source: "campaign" },
+        }),
       ),
       safeCount(() =>
         prisma.consentEvent.count({
@@ -77,6 +85,11 @@ export default async function AdminDashboardPage() {
         />
         <StatCard icon={ListChecks} label="FAQs" value={faqs} />
         <StatCard icon={FileText} label="Publicações" value={posts} />
+        <StatCard
+          icon={AlertTriangle}
+          label="Falhas do site sem baixa"
+          value={falhas}
+        />
       </div>
 
       <div>
@@ -84,10 +97,10 @@ export default async function AdminDashboardPage() {
           Consentimento (LGPD)
         </h2>
         <p className="text-sm text-muted-foreground">
-          Interação com o banner de cookies. Mede também quem chega pela campanha
-          e não aceita — o único sinal desse público, já que Analytics e Clarity
-          só rodam após o aceite. O número é a contagem; o percentual vai no
-          rótulo.
+          Interação com o banner de cookies. Mede também quem chega pela
+          campanha e não aceita — o único sinal desse público, já que Analytics
+          e Clarity só rodam após o aceite. O número é a contagem; o percentual
+          vai no rótulo.
         </p>
       </div>
 
