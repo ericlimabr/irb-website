@@ -274,7 +274,10 @@ const variantStyles = {
     "bg-transparent border border-gold-500 text-gold-500 hover:bg-gold-500 hover:text-navy-700",
   inverse:
     "bg-transparent border border-primary-foreground/30 text-primary-foreground hover:bg-gold-500 hover:text-navy-700 hover:border-gold-500",
-  accent: "bg-gold-500 text-navy-700 hover:bg-gold-600",
+  // The hover text turns white because the hover background is gold-600, the
+  // deep gold: navy on it scores 2.94:1, white scores 5.32:1.
+  accent:
+    "bg-gold-500 text-navy-700 hover:bg-gold-600 hover:text-primary-foreground",
 }
 
 export const IRBButton = ({
