@@ -103,31 +103,32 @@ function ehComoSoube(v: string): v is InscricaoComoSoube {
 export async function submitInscricao(
   formData: FormData,
 ): Promise<InscricaoResult> {
-  // Isca de robô: campo escondido no formulário, que pessoa nenhuma vê.
+  // Isca de robô: caixa de marcar escondida, que pessoa nenhuma vê nem marca.
   //
-  // Até 20/10/2026 ela se chamava `website`, e gerenciador de senha e autofill
-  // preenchiam o campo sozinhos: quem apanhava era gente de verdade, que ficava
-  // sem conseguir se inscrever de jeito nenhum. O nome novo está em
-  // const/isca.ts. A recusa continua, porque robô existe, mas agora ela vira
-  // linha no log e aviso no WhatsApp, e a pessoa recebe um caminho de saída em
-  // vez de uma parede.
-  if (formData.get(ISCA_CAMPO)) {
+  // Ela NÃO RECUSA MAIS NADA, de propósito, e const/isca.ts conta a história
+  // inteira: a isca barrou gente de verdade duas vezes, primeiro pelo nome do
+  // campo e depois pelo preenchimento automático do celular, que acha campo de
+  // texto escondido mesmo sem conhecer o nome dele. Palpite não pode ficar
+  // entre uma pessoa e a inscrição dela. Quem defende de robô aqui é o limite
+  // por e-mail, logo abaixo, que conta linhas no banco em vez de chutar.
+  //
+  // O campo continua existindo como sinal: se vier marcado, a inscrição segue
+  // em frente e fica uma linha de aviso pedindo para a igreja conferir se
+  // aquela inscrição é de gente.
+  const iscaMarcada = formData.get(ISCA_CAMPO)
+  if (iscaMarcada) {
     await registraErro({
       origem: "inscricao",
-      codigo: "ISCA_PREENCHIDA",
+      codigo: "ISCA_MARCADA",
+      nivel: "AVISO",
       mensagem:
-        "A isca de robô veio preenchida e a inscrição foi recusada. Se foi uma " +
-        "pessoa, ela não consegue se inscrever pelo site e precisa de ajuda.",
+        "A isca de robô veio marcada e a inscrição seguiu em frente de " +
+        "propósito. Confira se esta inscrição é de gente antes de dar baixa " +
+        "no pagamento.",
       pessoa: String(formData.get("nome") ?? "").trim() || null,
       contato: String(formData.get("email") ?? "").trim() || null,
+      causa: `valor recebido no campo da isca: ${String(iscaMarcada).slice(0, 200)}`,
     })
-    return {
-      success: false,
-      error:
-        "Não conseguimos concluir a sua inscrição aqui pelo site. Fale com a " +
-        "igreja pelo WhatsApp e nós inscrevemos você.",
-      falarComAIgreja: true,
-    }
   }
 
   const nome = String(formData.get("nome") ?? "").trim()

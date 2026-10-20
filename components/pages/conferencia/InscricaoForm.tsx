@@ -139,12 +139,13 @@ export default function InscricaoForm() {
   return (
     <form onSubmit={onSubmit} aria-busy={enviando}>
       {/*
-        Isca de robô: fora da vista e fora da ordem de tabulação. O nome do
-        campo e os atributos de "não me preencha" moram em const/isca.ts, com a
-        explicação do que deu errado quando ele se chamava `website`.
+        Isca de robô: caixa de marcar escondida com `display: none`. Ser caixa
+        e não ser desenhada são as duas razões independentes para nenhum
+        preenchimento automático encostar nela. Ela não recusa nada, só deixa
+        aviso no log. const/isca.ts conta por que ficou assim.
       */}
       <input
-        type="text"
+        type="checkbox"
         name={ISCA_CAMPO}
         className="isca"
         {...ISCA_ATRIBUTOS}

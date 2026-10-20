@@ -1,24 +1,40 @@
 /**
- * O nome do campo-isca dos formulários públicos.
+ * A isca de robô dos formulários públicos.
  *
- * Isca de robô é um campo escondido que pessoa nenhuma vê: se vier
- * preenchido, quem enviou foi um programa, e o servidor recusa.
+ * Isca de robô é um campo escondido que pessoa nenhuma vê: se vier preenchido,
+ * quem enviou provavelmente foi um programa.
  *
- * Ele se chamava `website` até 20/10/2026, e esse nome era o defeito:
- * gerenciador de senha, autofill do navegador e serviço de preenchimento do
- * celular reconhecem `website`, `url` e `site` e preenchem o campo sozinhos,
- * mesmo escondido e mesmo com `autocomplete="off"`. Quando isso acontece com
- * uma pessoa de verdade, ela é tratada como robô e não consegue se inscrever
- * por mais que tente, sempre com o mesmo erro.
+ * Esta isca JÁ NÃO RECUSA NADA, e é importante saber por quê, porque a
+ * tentação de voltar a recusar é grande.
  *
- * O nome novo não lembra nada que esses programas saibam preencher. Junto com
- * ele, o campo leva os atributos que cada gerenciador documenta para ser
- * ignorado (`data-1p-ignore`, `data-lpignore`, `data-bwignore` e
- * `data-form-type="other"`), em ISCA_ATRIBUTOS.
+ * Ela se chamava `website` e era um campo de texto escondido fora da tela. Esse
+ * nome é reconhecido por gerenciador de senha e por autofill, que o preenchiam
+ * sozinhos, e quem apanhava era gente de verdade: a pessoa era tratada como
+ * robô e não conseguia se inscrever de jeito nenhum, sempre com o mesmo erro.
  *
- * Trocar o nome não basta por si: a partir de agora, isca preenchida também
- * vira linha no log de erro e aviso no WhatsApp, para a igreja descobrir no
- * mesmo minuto se isso voltar a acontecer com alguém.
+ * Em 20/10/2026 trocamos o nome por um que nenhum desses programas conhece e
+ * pusemos todos os atributos de opt-out que cada gerenciador documenta. No
+ * mesmo dia, duas pessoas foram barradas outra vez, as duas pelo celular: o
+ * preenchimento automático do telefone achou o campo de novo, pelo formato e
+ * pela posição, sem precisar do nome.
+ *
+ * A lição é que esse palpite não pode ficar entre uma pessoa e a inscrição
+ * dela. Então a isca virou SINAL, não parede: se vier marcada, o envio segue
+ * normalmente e fica uma linha de aviso no log. Quem defende de robô agora é o
+ * limite por e-mail, que conta linhas no banco e não chuta.
+ *
+ * Duas mudanças tornam o preenchimento automático improvável, e elas são
+ * independentes de propósito:
+ *
+ * 1. O campo é uma CAIXA DE MARCAR. Gerenciador de senha e autofill escrevem
+ *    texto; nenhum deles marca caixa.
+ * 2. O campo é escondido com `display: none`, e não deslocado para fora da
+ *    tela. Campo que não é desenhado não entra no preenchimento automático,
+ *    enquanto campo fora da tela continua sendo um campo de verdade.
+ *
+ * Se as duas falharem, ninguém fica de fora: o pior que acontece é uma linha
+ * de aviso no log pedindo para a igreja conferir se aquela inscrição é de
+ * gente.
  */
 export const ISCA_CAMPO = "confirmacao_de_envio"
 

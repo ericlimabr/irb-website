@@ -69,14 +69,15 @@ export default function ContactForm() {
   return (
     <form ref={formRef} action={onSubmit} className="space-y-6">
       {/*
-        Bot trap. The field name and the "do not fill me" attributes live in
-        const/isca.ts, together with the story of what went wrong while it was
-        called `website`: password managers filled it in for real people.
+        Bot trap: a hidden checkbox that never rejects anything, it only leaves
+        a note in the log. It is a checkbox, and it is display:none rather than
+        pushed off screen, because autofill reached the old off-screen text
+        field twice and locked real people out. See const/isca.ts.
       */}
       <input
-        type="text"
+        type="checkbox"
         name={ISCA_CAMPO}
-        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+        className="hidden"
         {...ISCA_ATRIBUTOS}
       />
 

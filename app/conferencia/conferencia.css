@@ -975,11 +975,7 @@
  * robo escondida, a mensagem de erro e o botao travado depois do envio.
  */
 .conf .isca {
-  position: absolute;
-  left: -9999px;
-  width: 0;
-  height: 0;
-  opacity: 0;
+  display: none;
 }
 .conf .erro {
   margin-top: 16px;
