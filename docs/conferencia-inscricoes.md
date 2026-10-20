@@ -4,6 +4,11 @@ A página `/conferencia` da 2ª Conferência Reformada (7 e 8 de novembro de
 2026), com inscrição e pagamento por Pix. Nasceu do mockup em
 `~/Documentos/igreja/conferencia/MOCKUP-CONFERENCIA.html`.
 
+Em 20/10/2026 o campo-isca deste formulário recusou uma pessoa de verdade, que
+não conseguia se inscrever de jeito nenhum. Desse episódio nasceram a correção
+da isca e o log de falhas do site, com aviso no WhatsApp: está em
+`docs/log-de-erros.md`.
+
 ## Glossário, antes de tudo
 
 - **BR Code**: o texto comprido do Pix "copia e cola". É um padrão do Banco

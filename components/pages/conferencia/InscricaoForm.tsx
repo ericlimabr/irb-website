@@ -11,6 +11,8 @@ import {
   CONFERENCE_SOURCE_CHOICES,
   CONFERENCE_TIE_ASKS_CHURCH,
   CONFERENCE_TIE_CHOICES,
+  ISCA_ATRIBUTOS,
+  ISCA_CAMPO,
 } from "@/const"
 import { brl, inscricaoTotalCents, pessoasLabel } from "@/utils/inscricao"
 import {
@@ -20,6 +22,7 @@ import {
   telefoneDigitado,
 } from "@/utils/mascaras"
 import { trackEvent } from "@/utils/analytics"
+import { whatsappLink } from "@/utils/whatsapp"
 
 /**
  * O formulário do mockup, agora ligado no servidor.
@@ -81,6 +84,9 @@ export default function InscricaoForm() {
   const [igreja, setIgreja] = useState("")
   const [proprio, setProprio] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
+  // Quando o servidor recusa por motivo que não é culpa de quem preencheu, a
+  // mensagem vem acompanhada do caminho de saída: o WhatsApp da igreja.
+  const [saidaNoWhatsapp, setSaidaNoWhatsapp] = useState(false)
   const [recibo, setRecibo] = useState<Extract<
     InscricaoResult,
     { success: true }
@@ -96,6 +102,7 @@ export default function InscricaoForm() {
     const formData = new FormData(event.currentTarget)
     formData.set("dias", dias)
     setErro(null)
+    setSaidaNoWhatsapp(false)
     iniciar(async () => {
       const r = await submitInscricao(formData)
       if (r.success) {
@@ -113,6 +120,7 @@ export default function InscricaoForm() {
         )
       } else {
         setErro(r.error)
+        setSaidaNoWhatsapp(!!r.falarComAIgreja)
       }
     })
   }
@@ -130,14 +138,16 @@ export default function InscricaoForm() {
 
   return (
     <form onSubmit={onSubmit} aria-busy={enviando}>
-      {/* Isca de robô: fora da vista e fora da ordem de tabulação. */}
+      {/*
+        Isca de robô: fora da vista e fora da ordem de tabulação. O nome do
+        campo e os atributos de "não me preencha" moram em const/isca.ts, com a
+        explicação do que deu errado quando ele se chamava `website`.
+      */}
       <input
         type="text"
-        name="website"
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden
+        name={ISCA_CAMPO}
         className="isca"
+        {...ISCA_ATRIBUTOS}
       />
 
       <div className="campo">
@@ -377,6 +387,19 @@ export default function InscricaoForm() {
       {erro && (
         <p className="erro" role="alert">
           {erro}
+          {saidaNoWhatsapp && (
+            <>
+              {" "}
+              <a
+                href={whatsappLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Falar com a igreja no WhatsApp
+              </a>
+              .
+            </>
+          )}
         </p>
       )}
 

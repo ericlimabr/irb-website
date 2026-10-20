@@ -264,3 +264,49 @@ model Inscricao {
   @@index([valor])
   @@map("inscricoes")
 }
+
+/// Falha do site, gravada no banco para a igreja não depender de alguém
+/// reclamar para saber que algo quebrou. Quem escreve é lib/log-erro.ts, e
+/// quem lê é a tela /admin/erros. O aviso no WhatsApp é cópia; o original é
+/// esta tabela.
+model LogErro {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  /// Em que parte do site: "inscricao", "contato", "admin".
+  origem String
+  /// Código curto e estável, para agrupar as falhas iguais e para caber no
+  /// aviso do WhatsApp. Ex.: ISCA_PREENCHIDA, GRAVACAO_FALHOU.
+  codigo String
+  nivel  LogNivel @default(ERRO)
+
+  /// A falha em português, do jeito que alguém da igreja lê.
+  mensagem String  @db.Text
+  /// O que o servidor disse, quando houve exceção: classe, frase e pilha.
+  detalhe  String? @db.Text
+
+  /// Quem estava na tela, quando o formulário já tinha os dados. Serve para
+  /// a igreja ligar para a pessoa e resolver na mão. Fica atrás do login do
+  /// admin, como qualquer dado de inscrição, e NUNCA sai no WhatsApp.
+  pessoa  String?
+  contato String?
+
+  /// Para quantos celulares o aviso saiu. 0 = ninguém foi avisado, por falta
+  /// de configuração, por recusa do CallMeBot ou porque um aviso igual já
+  /// havia saído na janela de silêncio.
+  avisados Int       @default(0)
+  /// Quando alguém marcou como visto no admin.
+  vistoEm  DateTime?
+
+  @@index([createdAt])
+  @@index([codigo])
+  @@map("logs_erro")
+}
+
+enum LogNivel {
+  /// Algo saiu torto e a pessoa não foi prejudicada. Ex.: inscrição gravada,
+  /// e-mail de confirmação não saiu.
+  AVISO
+  /// A pessoa não conseguiu o que vinha fazer.
+  ERRO
+}

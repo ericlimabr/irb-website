@@ -1,3 +1,4 @@
+export * from "./isca"
 export * from "./mockups"
 export * from "./conferencia"
 
