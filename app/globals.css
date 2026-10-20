@@ -13,7 +13,17 @@
   --navy-50: hsl(214 33% 93%);
 
   /* Gold scale */
-  --gold-600: hsl(37 46% 45%);
+  /*
+   * gold-600 is the gold for TEXT on a light background: `text-gold-600`
+   * appears 24 times, always on small mono uppercase labels (text-2xs,
+   * text-3xl). Darkened from 45% to 36% lightness on 20/10/2026, because at
+   * 45% it scored 3.34:1 against the page background, below the 4.5:1 that
+   * WCAG AA asks of body text; at 36% it scores 4.87:1 there and 5.32:1 on
+   * white. Hue and saturation are untouched, so it is the same colour, only
+   * deeper. gold-500 and gold-400 stay as they are: those are the golds for
+   * dark backgrounds, where lighter is what gives contrast.
+   */
+  --gold-600: hsl(37 46% 36%);
   --gold-500: hsl(37 46% 56%);
   --gold-400: hsl(40 55% 55%);
   --gold-200: hsl(37 55% 76%);

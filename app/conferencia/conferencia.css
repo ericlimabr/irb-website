@@ -18,7 +18,15 @@
   --navy-700: hsl(210 100% 14%);
   --navy-600: hsl(213 55% 27%);
   --navy-50: hsl(214 33% 93%);
-  --gold-600: hsl(37 46% 45%);
+  /*
+   * O dourado de TEXTO em fundo claro. Escurecido de 45% para 36% de luz em
+   * 20/10/2026: a 45% ele dava 3,34:1 sobre o fundo da pagina, abaixo do
+   * minimo de 4,5:1 da WCAG AA, e ele carrega letra pequena de 11,5px (os
+   * olhos de secao, a hora da programacao, o cargo dos preletores). A 36%
+   * da 5,32:1 no branco e 4,87:1 no fundo da pagina. Matiz e saturacao nao
+   * mudaram: a cor continua a mesma, so mais fechada.
+   */
+  --gold-600: hsl(37 46% 36%);
   --gold-500: hsl(37 46% 56%);
   --gold-400: hsl(40 55% 55%);
   --gold-200: hsl(37 55% 76%);
@@ -27,7 +35,12 @@
   --surface-alt: hsl(48 14% 97%);
   --txt: hsl(0 0% 10%);
   --txt2: hsl(0 0% 36%);
-  --txt3: hsl(0 0% 50%);
+  /*
+   * O cinza do texto de apoio. De 50% para 44% de luz, pelo mesmo motivo:
+   * a 50% dava 3,98:1 no branco e 3,74:1 no fundo creme. A 44% da 4,94:1 e
+   * 4,65:1. E letra de nota de rodape, duracao e observacao, sempre pequena.
+   */
+  --txt3: hsl(0 0% 44%);
   --borda: hsl(48 8% 91%);
   --serif: var(--font-cormorant-garamond), "Cormorant Garamond", Georgia, serif;
   --sans: var(--font-raleway), "Raleway", system-ui, sans-serif;
@@ -136,7 +149,8 @@
   color: var(--gold-400);
 }
 .conf .lugar-data b {
-  color: rgba(255, 255, 255, 0.35);
+  /* O ponto separador. A 35% dava 3,14:1 e quase nao aparecia. */
+  color: rgba(255, 255, 255, 0.55);
   font-weight: 400;
 }
 .conf .nome-evento {
@@ -846,6 +860,27 @@
   font-size: clamp(2.2rem, 6vw, 3.4rem);
   margin-top: 16px;
   color: var(--navy-700);
+}
+/*
+ * Nas duas secoes de fundo escuro o titulo e a introducao sao claros.
+ *
+ * O que estava errado: `.conf .palestras h2` (linha 296) e `.conf h2.titulo`
+ * (logo acima) tem a MESMA especificidade, duas classes e um elemento cada.
+ * No empate vence a ultima regra do arquivo, e o `.titulo` foi escrito
+ * depois: ele ganhava, e os titulos "O que vai ser ensinado" e "Quem pode
+ * vir" sairam em azul-marinho sobre azul-marinho, 1,15:1 e 1,25:1, de ler
+ * so na sorte. O `.intro` das palestras chegava ao mesmo lugar por outro
+ * caminho: regra propria com o cinza do texto, 2,70:1 no fundo escuro.
+ *
+ * Os seletores abaixo levam tres classes cada, entao vencem por
+ * especificidade e nao dependem de ordem nenhuma.
+ */
+.conf .palestras h2.titulo,
+.conf .quem h2.titulo {
+  color: #fff;
+}
+.conf .palestras .intro {
+  color: rgba(255, 255, 255, 0.82);
 }
 .conf .intro {
   font-size: 17px;
