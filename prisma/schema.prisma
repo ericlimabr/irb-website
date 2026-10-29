@@ -164,6 +164,13 @@ model ConsentEvent {
   campaign String? // utm_campaign, quando presente
   device   String? // "mobile" | "tablet" | "desktop"
   inApp    Boolean @default(false) // navegador in-app do FB/IG (WebView)
+
+  /// Verdadeiro quando o evento pertence à SEGUNDA CHAMADA: a barra compacta
+  /// que reaparece para quem viu o banner inteiro, rolou a página e não
+  /// decidiu nada. É esta coluna que separa a decisão que o banner original
+  /// ganhou da decisão que só veio porque perguntamos de novo. Medido em
+  /// 29/10/2026: de 687 exibições, 535 terminaram sem decisão.
+  retomada Boolean @default(false)
   country  String? // país (ISO) derivado do edge, sem guardar o IP
   path     String? // rota onde o banner apareceu
 

@@ -17,8 +17,21 @@ export const dynamic = "force-dynamic"
 
 const VALID_TYPES = new Set(["shown", "accept", "reject"])
 
-/** Deriva "mobile" | "tablet" | "desktop" do User-Agent (categoria grossa). */
+/**
+ * Deriva "mobile" | "tablet" | "desktop" do User-Agent (categoria grossa).
+ *
+ * A ordem importa, e ela foi corrigida em 29/10/2026. A regra de tablet inclui
+ * `Android` sem a palavra `Mobile`, e é EXATAMENTE assim que o navegador
+ * embutido do Facebook e do Instagram se apresenta no Android. O resultado era
+ * que 98 das 101 exibições contadas como "tablet" eram WebView de aplicativo:
+ * o painel do admin mostrava tablet onde não havia tablet nenhum. Por isso o
+ * teste de app vem primeiro, e dentro de app Android é celular.
+ */
 function deviceFromUA(ua: string): string {
+  if (isInAppUA(ua)) {
+    if (/iPad/i.test(ua)) return "tablet"
+    return /Macintosh|Windows NT|X11/i.test(ua) ? "desktop" : "mobile"
+  }
   if (/iPad|Tablet|PlayBook|Silk|(Android(?!.*Mobile))/i.test(ua)) return "tablet"
   if (/Mobi|Android|iPhone|iPod|Windows Phone/i.test(ua)) return "mobile"
   return "desktop"
@@ -38,6 +51,7 @@ export async function POST(request: NextRequest) {
       source?: string
       campaign?: string
       path?: string
+      retomada?: boolean
     }
 
     const type = body.type
@@ -66,6 +80,10 @@ export async function POST(request: NextRequest) {
         path,
         device: deviceFromUA(ua),
         inApp: isInAppUA(ua),
+        // Segunda chamada: a barra compacta que reaparece para quem não
+        // decidiu. Separa o que o banner original ganhou do que só veio porque
+        // perguntamos de novo.
+        retomada: body.retomada === true,
         country,
       },
     })

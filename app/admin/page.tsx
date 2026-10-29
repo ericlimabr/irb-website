@@ -39,8 +39,19 @@ export default async function AdminDashboardPage() {
   // janela sobre quem chega pela campanha e some antes de GA4/Clarity/pixel
   // poderem medir. Segmenta campanha vs orgânico e mede a fatia que vê o site
   // pelo navegador in-app do FB/IG (a causa provável de gravações vazias).
-  const [cShown, cAccept, cReject, cCampShown, cCampAccept, cCampInApp] =
-    await Promise.all([
+  const [
+    cShown,
+    cAccept,
+    cReject,
+    cCampShown,
+    cCampAccept,
+    cCampInApp,
+    cInAppShown,
+    cInAppAccept,
+    cRetShown,
+    cRetAccept,
+    cRetReject,
+  ] = await Promise.all([
       safeCount(() => prisma.consentEvent.count({ where: { type: "shown" } })),
       safeCount(() => prisma.consentEvent.count({ where: { type: "accept" } })),
       safeCount(() => prisma.consentEvent.count({ where: { type: "reject" } })),
@@ -58,6 +69,25 @@ export default async function AdminDashboardPage() {
         prisma.consentEvent.count({
           where: { type: "shown", source: "campaign", inApp: true },
         }),
+      ),
+      // Navegador in-app de qualquer origem, e não só da campanha: é o
+      // segmento onde a decisão quase não acontece (1 aceite em 276 exibições
+      // medidas em 29/10/2026).
+      safeCount(() =>
+        prisma.consentEvent.count({ where: { type: "shown", inApp: true } }),
+      ),
+      safeCount(() =>
+        prisma.consentEvent.count({ where: { type: "accept", inApp: true } }),
+      ),
+      // Segunda chamada: a barra compacta que reaparece para quem não decidiu.
+      safeCount(() =>
+        prisma.consentEvent.count({ where: { type: "shown", retomada: true } }),
+      ),
+      safeCount(() =>
+        prisma.consentEvent.count({ where: { type: "accept", retomada: true } }),
+      ),
+      safeCount(() =>
+        prisma.consentEvent.count({ where: { type: "reject", retomada: true } }),
       ),
     ])
   const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0)
@@ -138,6 +168,29 @@ export default async function AdminDashboardPage() {
           icon={Smartphone}
           label={`Via app IG/FB · ${pct(cCampInApp, cCampShown)}% da campanha`}
           value={cCampInApp}
+        />
+      </div>
+
+      {/*
+        As duas linhas que a medição de 29/10/2026 pediu: o navegador in-app,
+        onde quase ninguém decide, e o que a segunda chamada do banner
+        consegue arrancar de quem já tinha ignorado o banner inteiro.
+      */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StatCard
+          icon={Smartphone}
+          label={`Aceitou via app IG/FB · ${pct(cInAppAccept, cInAppShown)}% de ${cInAppShown}`}
+          value={cInAppAccept}
+        />
+        <StatCard
+          icon={Cookie}
+          label="2ª chamada exibida"
+          value={cRetShown}
+        />
+        <StatCard
+          icon={Check}
+          label={`Decidiu na 2ª chamada · ${pct(cRetAccept + cRetReject, cRetShown)}%`}
+          value={cRetAccept + cRetReject}
         />
       </div>
 
