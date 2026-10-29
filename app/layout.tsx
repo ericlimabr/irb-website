@@ -61,6 +61,15 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     type: "website",
   },
+  // Verificação do domínio no Meta (Gerenciador de Negócios → Segurança da
+  // marca → Domínios). É ela que libera a priorização de eventos do pixel e da
+  // Conversions API (docs/meta-conversions-api.md). O valor é público: sai no
+  // HTML de toda página, que é justamente como o Meta o encontra.
+  verification: {
+    other: {
+      "facebook-domain-verification": "14ljr8iqbsvqnscw2edh5ctacsnask",
+    },
+  },
 }
 
 export default function RootLayout({

@@ -529,7 +529,7 @@ export const PRIVACY_POLICY: {
   intro: string
   sections: PolicySection[]
 } = {
-  updatedAt: "20 de agosto de 2026",
+  updatedAt: "29 de outubro de 2026",
   intro:
     `Esta Política explica como a ${CHURCH_NAME} trata os dados pessoais de quem ` +
     `visita este site, em conformidade com a Lei Geral de Proteção de Dados ` +
@@ -564,6 +564,14 @@ export const PRIVACY_POLICY: {
             "cookies. O endereço IP é usado de forma anonimizada pelas ferramentas.",
         },
         {
+          term: "Dados da inscrição em conferência",
+          text:
+            "quando você se inscreve em um evento nosso: nome, e-mail, WhatsApp, " +
+            "quantas pessoas, os dias escolhidos, de onde você vem e, se o Pix " +
+            "for pago por outra pessoa, o nome dela. Eles existem para emitir a " +
+            "sua inscrição e para conferir o pagamento no extrato da igreja.",
+        },
+        {
           term: "Gravação de sessão (Microsoft Clarity)",
           text:
             "registro anônimo da interação — movimento do cursor, cliques e rolagem — " +
@@ -593,6 +601,9 @@ export const PRIVACY_POLICY: {
       paragraphs: [
         `Formulário de contato: tratamos os dados para atender à sua própria ` +
           `solicitação (art. 7º, incisos V e IX da LGPD).`,
+        `Inscrição em conferência: tratamos os dados para executar o que você ` +
+          `mesmo pediu, a sua inscrição e a conferência do pagamento ` +
+          `(art. 7º, incisos V e IX da LGPD).`,
         `Análise de uso, gravação de sessão e marketing: tratamos com base no seu ` +
           `consentimento (art. 7º, inciso I), coletado por meio do banner de cookies. ` +
           `Você pode recusar sem qualquer prejuízo ao uso do site, e pode revogar o ` +
@@ -621,6 +632,18 @@ export const PRIVACY_POLICY: {
           `tratando dados em nosso nome:`,
       ],
       list: [
+        {
+          term: "Meta (Facebook e Instagram)",
+          text:
+            "medição dos anúncios da igreja. Quando, e somente quando, você " +
+            "aceita os cookies no banner, informamos à Meta que uma inscrição " +
+            "aconteceu, para sabermos qual anúncio a trouxe. Nesse aviso o seu " +
+            "e-mail, telefone e nome não vão legíveis: vão embaralhados por um " +
+            "cálculo sem volta (SHA-256), que permite à Meta reconhecer quem " +
+            "ela já conhece sem receber os seus dados em texto. Se você " +
+            "recusar o banner, nada é enviado, nem na hora da inscrição, nem " +
+            "depois.",
+        },
         {
           term: "Google (Analytics e Ads)",
           text: "medição de audiência e campanhas.",

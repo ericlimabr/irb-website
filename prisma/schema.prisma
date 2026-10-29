@@ -251,6 +251,17 @@ model Inscricao {
   valor    Int     @default(0)
   txid     String? @unique
 
+  /// O que o navegador de quem se inscreveu contou, para o envio do evento
+  /// pelo servidor ao Meta (Conversions API, lib/meta-capi.ts). `metaFbp` e
+  /// `metaFbc` são os cookies do pixel, e são eles que casam a inscrição com o
+  /// anúncio que a trouxe. `metaConsent` guarda se o banner de cookies estava
+  /// aceito na hora da inscrição: a baixa do pagamento acontece horas depois,
+  /// quando o navegador da pessoa não está mais por perto, e sem este campo não
+  /// haveria como respeitar a escolha dela naquele momento.
+  metaFbp     String?
+  metaFbc     String?
+  metaConsent Boolean @default(false)
+
   status     InscricaoStatus @default(AGUARDANDO)
   pagoEm     DateTime?
   /// Quando o lembrete da véspera foi enviado, para não enviar duas vezes.

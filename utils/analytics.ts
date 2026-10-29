@@ -11,11 +11,17 @@
  * `conferencia_inscricao` leva `valor`, o total da inscrição em reais, porque é
  * em reais, e não em centavos, que Meta e Ads esperam o campo de valor.
  *
+ * Ele leva também `event_id`, que vem do servidor junto com a inscrição aceita.
+ * O mesmo evento é enviado duas vezes ao Meta, uma pelo pixel daqui e outra
+ * pelo servidor (`lib/meta-capi.ts`), e é esse identificador igual nas duas
+ * pontas que faz o Meta juntar os dois em vez de contar a conversão em dobro.
+ * A tag do Meta na GTM precisa passá-lo no campo **Event ID**.
+ *
  * Os nomes de `event` aqui são o **contrato** que a GTM escuta como Custom Event.
  */
 type DataLayerEvent =
   | { event: "contact_form_submit" }
-  | { event: "conferencia_inscricao"; valor: number }
+  | { event: "conferencia_inscricao"; valor: number; event_id: string }
 
 declare global {
   interface Window {
