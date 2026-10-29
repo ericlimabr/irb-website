@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidatePath, updateTag } from "next/cache"
+import { after } from "next/server"
 import {
   InscricaoComoSoube,
   InscricaoDias,
@@ -17,6 +18,7 @@ import { churchPixPayload, pixQrDataUrl, pixQrPng, PIX_KEY } from "@/lib/pix"
 import { sendInscricaoConfirmationEmail } from "@/lib/mail"
 import { avisaNoWhatsApp } from "@/lib/whatsapp"
 import { registraErro } from "@/lib/log-erro"
+import { contextoDoNavegador, enviaEvento } from "@/lib/meta-capi"
 import { mapsDirectionsUrl } from "@/utils/maps"
 import { SITE_URL } from "@/utils/siteUrl"
 import {
@@ -65,6 +67,12 @@ export type InscricaoResult =
       pessoas: string
       dias: string
       emailEnviado: boolean
+      /**
+       * Chave do evento desta inscrição, que o navegador repassa para a tag do
+       * Meta na GTM. Ela é o que impede a conversão de ser contada duas vezes,
+       * uma pelo pixel e outra pelo servidor.
+       */
+      eventId: string
     }
   | {
       success: false
@@ -115,6 +123,11 @@ export async function submitInscricao(
   // O campo continua existindo como sinal: se vier marcado, a inscrição segue
   // em frente e fica uma linha de aviso pedindo para a igreja conferir se
   // aquela inscrição é de gente.
+  // Lido aqui, no começo, porque só dentro da requisição de quem preencheu
+  // existem o cookie do pixel e o aceite do banner para ler. O envio ao Meta
+  // acontece lá embaixo, depois da resposta, com o que foi lido aqui.
+  const contexto = await contextoDoNavegador()
+
   const iscaMarcada = formData.get(ISCA_CAMPO)
   if (iscaMarcada) {
     await registraErro({
@@ -263,6 +276,9 @@ export async function submitInscricao(
         igreja,
         comoSoube,
         pagador: pagadorBruto || null,
+        metaFbp: contexto.fbp,
+        metaFbc: contexto.fbc,
+        metaConsent: contexto.consentiu,
       },
     })
 
@@ -330,6 +346,23 @@ export async function submitInscricao(
 
     revalidatePath("/admin/inscricoes")
 
+    // O evento do Meta sai DEPOIS da resposta: medição não faz ninguém esperar
+    // na frente do botão. `after` é do Next, e garante que a função ainda roda
+    // na Vercel depois que a resposta já foi entregue.
+    const eventId = `inscricao-${inscricao.id}`
+    after(async () => {
+      await enviaEvento({
+        nome: "CompleteRegistration",
+        eventId,
+        valorEmCentavos: valor,
+        pessoa: { email, telefone: whatsapp, nome },
+        navegador: contexto,
+        consentiu: contexto.consentiu,
+        sourceUrl: `${SITE_URL}${CONFERENCE_PATH}`,
+        conteudo: CONFERENCE_EDITION,
+      })
+    })
+
     return {
       success: true,
       numero: inscricao.numero,
@@ -340,6 +373,7 @@ export async function submitInscricao(
       pessoas,
       dias,
       emailEnviado,
+      eventId,
     }
   } catch (error) {
     await registraErro({
@@ -411,13 +445,38 @@ export async function setInscricoesEncerradas(encerrar: boolean) {
 /** Marca uma inscrição como paga, ou desfaz a marcação. */
 export async function setInscricaoPaga(id: string, paga: boolean) {
   if (!(await getUser())) return
-  await prisma.inscricao.update({
+  const inscricao = await prisma.inscricao.update({
     where: { id },
     data: {
       status: paga ? "PAGA" : "AGUARDANDO",
       pagoEm: paga ? new Date() : null,
     },
   })
+
+  // A compra só existe quando o Pix foi conferido no extrato, e é por isso que
+  // o `Purchase` do Meta nasce aqui, e não na inscrição. Quem clica é a igreja,
+  // horas depois, então nada do navegador de quem clica serve: o que vai são os
+  // cookies do pixel gravados na inscrição e o aceite daquele momento. Desfazer
+  // a baixa não manda nada, e marcar de novo repete o mesmo `event_id`, que o
+  // Meta junta em vez de contar duas vezes.
+  if (paga) {
+    after(async () => {
+      await enviaEvento({
+        nome: "Purchase",
+        eventId: `pago-${inscricao.id}`,
+        valorEmCentavos: inscricao.valor,
+        pessoa: {
+          email: inscricao.email,
+          telefone: inscricao.whatsapp,
+          nome: inscricao.nome,
+        },
+        navegador: { fbp: inscricao.metaFbp, fbc: inscricao.metaFbc },
+        consentiu: inscricao.metaConsent,
+        actionSource: "system_generated",
+        conteudo: CONFERENCE_EDITION,
+      })
+    })
+  }
 
   revalidatePath("/admin/inscricoes")
 }

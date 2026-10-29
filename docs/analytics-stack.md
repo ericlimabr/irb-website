@@ -23,6 +23,7 @@ tags pela UI da GTM sem redeploy.
 | Google Ads — Customer ID | `963-242-4403` | Conta Google Ads |
 | Google Ads — Google tag (unificada) | `GT-TBV4VF4S` | Anexada ao mesmo tag |
 | Meta Pixel (Facebook/Instagram) | `2253501382066542` | Tag (Custom HTML) dentro do GTM |
+| Meta Conversions API — token | `META_CAPI_TOKEN` (**segredo**) | Env server-side (`.env` + Vercel), nunca no HTML |
 
 > Todos os IDs acima são **públicos por natureza** (vão no HTML das páginas). Não
 > são segredos — diferente de credenciais de API (service account do GA4, token
@@ -47,6 +48,7 @@ tags pela UI da GTM sem redeploy.
 | **Google Search Console** | ✅ Integrado | — |
 | **Google Business Profile** | ✅ Integrado | "Igreja Reformada de Brasília", Setor Hoteleiro |
 | **Meta Pixel — PageView** | ✅ Publicado (v9) e validado | `2253501382066542`, Custom HTML na GTM. All Pages + gate `ad_storage` + exceção "Bloqueio - Área interna". Preview confirmou: não dispara sem aceite; dispara 1× após aceite; nada em /admin·/login. Falta só conferir no *Meta Events Manager* (Test Events). |
+| **Meta Conversions API (servidor)** | ✅ Código escrito, token e banco prontos, ⏸️ aguardando deploy | `lib/meta-capi.ts`. Manda `CompleteRegistration` (inscrição gravada) e `Purchase` (igreja dá baixa no Pix) pelo servidor, com e-mail/telefone/nome em SHA-256, travado no cookie `irb_consent_v2` e desduplicado pelo `event_id`. Ver [`meta-conversions-api.md`](./meta-conversions-api.md). Sem `META_CAPI_TOKEN` nada é enviado. |
 | **Meta Pixel — eventos de conversão** | 🟡 Em criação | `Lead` (form), `Contact` (whatsapp), `FindLocation` (rotas), `ViewContent` (youtube). Cada tag reusa o trigger GA4 existente + mesmos 2 guardrails (gate `ad_storage` + exceção admin/login). |
 | **Qualidade do contêiner GTM** | ✅ Excelente | Domínios revisados; 2º admin adicionado (GTM/GA4/Ads) |
 
@@ -87,8 +89,12 @@ triggers).
 | **Marcar eventos-chave no GA4** | 🔴 Próximo (com prazo) | `whatsapp_click`, `directions_click`, `contact_form_submit`. Só aparecem para estrelar no relatório **agregado** ~24–48h após começarem a ser recebidos (Realtime já confirmou). `youtube_click` fica comum. |
 | **Importar eventos-chave como conversão no Ads** | 🟠 Depois do acima | Ads → Metas → Conversões → Importar → GA4. Gera o Conversion Label e liga ao `AW-18399148896`. Exige os eventos-chave já marcados. |
 | **Meta Pixel — tags de evento (GTM)** | 🟡 Em criação | `Lead`/`Contact`/`FindLocation`/`ViewContent`, cada uma no trigger GA4 existente + gate `ad_storage` + exceção admin/login. |
+| **Meta — token da Conversions API** | ✅ Feito (29/10) | `META_CAPI_TOKEN` no `.env` e na Vercel. O token não passa por chat nem por commit. |
+| **Banco — `prisma db push` das colunas do Meta** | ✅ Feito (29/10) | `metaFbp`, `metaFbc` e `metaConsent` em `Inscricao`, banco em sincronia com o schema. |
+| **Meta — verificação do domínio** | 🔴 Falta o deploy | Meta tag `facebook-domain-verification` já em `app/layout.tsx`. Depois do deploy, clicar em "Verificar" em Configurações do negócio → Segurança da marca → Domínios. |
+| **GTM — tag `CompleteRegistration` com `Event ID`** | 🟠 Depois do token | Custom Event `conferencia_inscricao`, nome `CompleteRegistration`, campo `Event ID` = `{{DLV - event_id}}`, mesmos 2 guardrails. Sem o `Event ID` a conversão conta em dobro. |
 | **Meta — verificar domínio** | 🟠 Depois das tags | Business Manager → Segurança da marca → Domínios → `irbrasilia.org`. Pré-requisito do AEM. |
-| **Meta — priorizar eventos (AEM)** | 🟠 Depois das tags | Events Manager → Config. agregadas de eventos → ordenar os até 8 eventos (ex.: `Lead` no topo). Só após começarem a chegar. |
+| **Meta — priorizar eventos (AEM)** | 🟠 Depois das tags | Events Manager → Config. agregadas de eventos → ordenar os até 8 eventos, com `Purchase` e `CompleteRegistration` no topo. Só após começarem a chegar. |
 | **Meta — conferir no Events Manager** | 🔴 Próximo | Test Events do lado do Facebook (exige o Business Manager de vocês) para fechar o ciclo do `PageView` já publicado. |
 | **Meta Pixel — evento `Donate`/`Schedule`** | ⚪ Futuro | Só quando existir dízimo/PIX (`Donate`) ou RSVP na /agenda (`Schedule`). |
 | **Painel de analytics no `/admin`** (GA4 Data API) | ⚪ Planejado | Ver `admin-analytics-integration.md` |

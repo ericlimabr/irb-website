@@ -109,7 +109,13 @@ export default function InscricaoForm() {
         setRecibo(r)
         // Só depois do aceite do servidor: o trigger nativo de envio da GTM
         // conta também a tentativa que o servidor recusou.
-        trackEvent({ event: "conferencia_inscricao", valor: total / 100 })
+        trackEvent({
+          event: "conferencia_inscricao",
+          valor: total / 100,
+          // Mesmo identificador que o servidor usou no envio dele ao Meta: é
+          // o que junta os dois num evento só.
+          event_id: r.eventId,
+        })
         setTimeout(
           () =>
             caixaRecibo.current?.scrollIntoView({
