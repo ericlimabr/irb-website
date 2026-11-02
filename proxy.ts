@@ -8,7 +8,28 @@ import { createServerClient } from "@supabase/ssr"
  * nothing (so /login and the admin shell still render).
  *
  * Next 16 uses the "proxy" file convention (formerly "middleware").
+ *
+ * Também fecha a porta do convite pela metade. O link do e-mail abre uma
+ * sessão de verdade ao ser clicado, antes de a pessoa escrever qualquer senha.
+ * Sem o desvio abaixo, quem clicasse no link e digitasse /admin entrava no
+ * painel inteiro sem senha nenhuma e sem gerar o aviso no WhatsApp, até a
+ * sessão vencer. Agora essa sessão só chega em /definir-senha.
+ *
+ * O teste é o par de marcas que o convite deixa (ver app/actions/usuarios.ts):
+ * `convidadoEm` sem `senhaDefinidaEm` quer dizer convite aceito pela metade.
+ * NÃO basta testar a ausência de `senhaDefinidaEm`: a conta da igreja é
+ * anterior a essas marcas e não tem nenhuma das duas, e o desvio a prenderia
+ * para sempre numa tela de criar senha que ela não precisa.
  */
+
+/** Convite clicado e senha nunca escrita. */
+function faltaEscreverSenha(metadata: Record<string, unknown> | undefined) {
+  if (!metadata) return false
+  return (
+    typeof metadata.convidadoEm === "string" &&
+    typeof metadata.senhaDefinidaEm !== "string"
+  )
+}
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -41,6 +62,10 @@ export async function proxy(request: NextRequest) {
 
   if (!user && path.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/login", request.url))
+  }
+
+  if (user && faltaEscreverSenha(user.user_metadata)) {
+    return NextResponse.redirect(new URL("/definir-senha", request.url))
   }
 
   if (user && path === "/login") {
