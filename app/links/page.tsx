@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import QRCode from "qrcode"
 import Analytics from "@/components/analytics/Analytics"
+import PaginaEmManutencao from "@/components/pages/PaginaEmManutencao"
+import { siteEmManutencao } from "@/lib/manutencao"
 import Logo from "@/components/ui/Logo"
 import ShareButton from "@/components/ui/ShareButton"
 import {
@@ -99,6 +101,10 @@ const links: LinkItem[] = [
 ]
 
 export default async function Linktree() {
+  // O portão de manutenção. /links não está dentro de nenhum layout público,
+  // então ele é perguntado aqui mesmo, antes de montar o QR.
+  if (await siteEmManutencao()) return <PaginaEmManutencao />
+
   const year = new Date().getFullYear()
 
   // QR do próprio /links, gerado no servidor (SVG inline, sem JS no cliente).
