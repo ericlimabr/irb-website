@@ -44,7 +44,11 @@ export default async function MensagemDetailPage({
           </h1>
         </div>
 
-        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+        {/*
+          `min-w-0` na coluna do valor: sem ele um e-mail ou um WhatsApp longo
+          estica a coluna `1fr` e empurra a ficha para fora da tela do celular.
+        */}
+        <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-sm [&>dd]:min-w-0 [&>dd]:break-words">
           <dt className="text-muted-foreground">Nome</dt>
           <dd className="text-foreground">{message.name}</dd>
 
@@ -52,7 +56,7 @@ export default async function MensagemDetailPage({
           <dd>
             <a
               href={`mailto:${message.email}`}
-              className="text-gold-600 hover:underline"
+              className="break-all text-gold-600 hover:underline"
             >
               {message.email}
             </a>
@@ -64,7 +68,7 @@ export default async function MensagemDetailPage({
               href={`https://wa.me/${waIntl}`}
               target="_blank"
               rel="noreferrer"
-              className="text-gold-600 hover:underline"
+              className="break-all text-gold-600 hover:underline"
             >
               {message.whatsapp}
             </a>

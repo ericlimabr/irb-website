@@ -2,9 +2,24 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { X } from "lucide-react"
 import { cn } from "@/utils/styling"
 import Logo from "@/components/ui/Logo"
 import { adminMenuData } from "@/constants/adminMenuData"
+import { useMenuDoPainel } from "./MenuContexto"
+
+/**
+ * A barra lateral do painel, que no celular é uma gaveta.
+ *
+ * Até 02/11/2026 ela era `fixed w-64` em qualquer largura, e o conteúdo tinha
+ * `pl-64` cravado: no telefone a barra cobria a tela inteira e o conteúdo
+ * nascia espremido numa faixa de poucos pixels. Agora ela só ocupa lugar de
+ * lg (1024px) em diante; abaixo disso ela desliza por cima, com um véu atrás,
+ * e o botão que a abre mora no cabeçalho.
+ *
+ * `translate-x` e `opacity` são as duas únicas propriedades animadas, que é o
+ * que o navegador anima sem repintar a página.
+ */
 
 export default function AdminSidebar({
   countUnreadMessages,
@@ -15,6 +30,7 @@ export default function AdminSidebar({
   ehDono?: boolean
 }) {
   const pathname = usePathname()
+  const menu = useMenuDoPainel()
 
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin"
@@ -29,94 +45,130 @@ export default function AdminSidebar({
   const systemNavItems = adminMenuData.systemNavItems.filter(visivel)
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-admin-nav-bg-dense border-r border-admin-nav-border">
-      <div className="flex h-full flex-col">
-        {/* Brand */}
-        <div className="flex h-16 items-center border-b border-admin-nav-border px-6 min-h-16">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-admin-nav-active">
-              <Logo variant="mark" tone="gold" height={22} />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-serif text-sm font-bold text-white">
-                Painel IRB
-              </span>
-              <span className="text-xs text-admin-nav-text">
-                Igreja Cristã Reformada
-              </span>
-            </div>
-          </Link>
-        </div>
+    <>
+      {/* O véu. Só existe no celular, e fechar a gaveta é tocar nele. */}
+      <div
+        onClick={menu.fechar}
+        aria-hidden="true"
+        className={cn(
+          "fixed inset-0 z-30 bg-black/60 transition-opacity duration-200 lg:hidden",
+          menu.aberto
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0",
+        )}
+      />
 
-        {/* Main Navigation */}
-        <nav className="flex-1 space-y-1 px-3 py-4">
-          <div className="mb-2 px-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-admin-nav-text/60">
-              Principal
-            </span>
-          </div>
-          {mainNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.isAvailable ? item.href : ""}
-              className={cn(
-                "admin-nav-link justify-between min-h-11",
-                isActive(item.href) && "admin-nav-link-active",
-                !item.isAvailable && "cursor-not-allowed opacity-50",
-              )}
+      <aside
+        className={cn(
+          "fixed left-0 top-0 z-40 h-dvh w-72 max-w-[85vw] border-r border-admin-nav-border bg-admin-nav-bg-dense",
+          "transition-transform duration-200 ease-out lg:w-64 lg:translate-x-0 lg:transition-none",
+          menu.aberto ? "translate-x-0" : "-translate-x-full",
+        )}
+        /*
+          Sem `inert` aqui de propósito: ele dependeria de `menu.aberto`, que
+          no computador é sempre falso (lá a barra está presa na tela e não
+          abre nem fecha). Marcar inert por esse estado deixaria o menu do
+          computador inteiro sem clique.
+        */
+      >
+        <div className="flex h-full flex-col overflow-y-auto">
+          {/* Brand */}
+          <div className="flex h-16 min-h-16 items-center gap-2 border-b border-admin-nav-border px-4 lg:px-6">
+            <Link href="/" className="flex min-w-0 items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-admin-nav-active">
+                <Logo variant="mark" tone="gold" height={22} />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-serif text-sm font-bold text-white">
+                  Painel IRB
+                </span>
+                <span className="text-xs text-admin-nav-text">
+                  Igreja Cristã Reformada
+                </span>
+              </div>
+            </Link>
+
+            {/* Fechar. Só no celular: no computador a barra não fecha. */}
+            <button
+              type="button"
+              onClick={menu.fechar}
+              aria-label="Fechar menu"
+              className="ml-auto p-2 text-admin-nav-text transition-colors hover:text-white lg:hidden"
             >
-              <div className="flex items-center gap-3">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Main Navigation */}
+          <nav className="flex-1 space-y-1 px-3 py-4">
+            <div className="mb-2 px-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-admin-nav-text/60">
+                Principal
+              </span>
+            </div>
+            {mainNavItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.isAvailable ? item.href : ""}
+                className={cn(
+                  "admin-nav-link justify-between min-h-11",
+                  isActive(item.href) && "admin-nav-link-active",
+                  !item.isAvailable && "cursor-not-allowed opacity-50",
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <item.icon className="h-5 w-5 shrink-0" />
+                  <span>{item.label}</span>
+                </div>
+                {item.label === "Mensagens" &&
+                  countUnreadMessages &&
+                  countUnreadMessages > 0 && (
+                    <span className="inline-flex items-center rounded-full bg-red-600 px-2 py-1 text-xs font-medium text-white">
+                      {countUnreadMessages > 99 ? "99+" : countUnreadMessages}
+                    </span>
+                  )}
+              </Link>
+            ))}
+
+            <div className="mb-2 mt-8 px-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-admin-nav-text/60">
+                Sistema
+              </span>
+            </div>
+            {systemNavItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.isAvailable ? item.href : ""}
+                className={cn(
+                  "admin-nav-link",
+                  isActive(item.href) && "admin-nav-link-active",
+                  !item.isAvailable && "cursor-not-allowed opacity-50",
+                )}
+              >
                 <item.icon className="h-5 w-5 shrink-0" />
                 <span>{item.label}</span>
+              </Link>
+            ))}
+          </nav>
+
+          {/* Footer */}
+          <div className="border-t border-admin-nav-border p-4">
+            <div className="flex items-center gap-3 rounded-lg bg-admin-nav-border/40 px-3 py-2">
+              <div className="h-8 w-8 rounded-full bg-admin-nav-active/20 flex items-center justify-center">
+                <span className="text-xs font-semibold text-admin-nav-active">
+                  IRB
+                </span>
               </div>
-              {item.label === "Mensagens" &&
-                countUnreadMessages &&
-                countUnreadMessages > 0 && (
-                  <span className="inline-flex items-center rounded-full bg-red-600 px-2 py-1 text-xs font-medium text-white">
-                    {countUnreadMessages > 99 ? "99+" : countUnreadMessages}
-                  </span>
-                )}
-            </Link>
-          ))}
-
-          <div className="mb-2 mt-8 px-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-admin-nav-text/60">
-              Sistema
-            </span>
-          </div>
-          {systemNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.isAvailable ? item.href : ""}
-              className={cn(
-                "admin-nav-link",
-                isActive(item.href) && "admin-nav-link-active",
-                !item.isAvailable && "cursor-not-allowed opacity-50",
-              )}
-            >
-              <item.icon className="h-5 w-5 shrink-0" />
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </nav>
-
-        {/* Footer */}
-        <div className="border-t border-admin-nav-border p-4">
-          <div className="flex items-center gap-3 rounded-lg bg-admin-nav-border/40 px-3 py-2">
-            <div className="h-8 w-8 rounded-full bg-admin-nav-active/20 flex items-center justify-center">
-              <span className="text-xs font-semibold text-admin-nav-active">
-                IRB
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-white">
-                Administrador
-              </span>
-              <span className="text-xs text-admin-nav-text">Sistema</span>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-white">
+                  Administrador
+                </span>
+                <span className="text-xs text-admin-nav-text">Sistema</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   )
 }

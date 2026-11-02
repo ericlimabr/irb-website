@@ -136,11 +136,16 @@ export default async function InscricoesPage() {
                   {String(i.numero).padStart(4, "0")}
                 </span>
 
-                <div className="min-w-[180px] flex-1">
+                {/*
+                  No celular este bloco toma a linha inteira (`basis-full`) e
+                  pode encolher (`min-w-0`): com largura mínima de 180px e um
+                  e-mail longo sem quebra, a linha vazava para fora da tela.
+                */}
+                <div className="min-w-0 flex-1 basis-full sm:basis-auto sm:min-w-[180px]">
                   <p className="text-sm font-semibold text-foreground">
                     {i.nome}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="break-words text-xs text-muted-foreground">
                     {i.email} · {i.whatsapp}
                   </p>
                   {i.pagador && (
@@ -150,7 +155,7 @@ export default async function InscricoesPage() {
                   )}
                 </div>
 
-                <div className="min-w-[150px] text-xs text-muted-foreground">
+                <div className="min-w-0 basis-full text-xs text-muted-foreground sm:basis-auto sm:min-w-[150px]">
                   <p>{pessoasLabel(i.adultos, i.criancas)}</p>
                   <p>
                     {diasLabel(i.dias)} · {VINCULO[i.vinculo] ?? i.vinculo}

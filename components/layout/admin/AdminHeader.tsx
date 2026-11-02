@@ -1,6 +1,6 @@
 "use client"
 
-import { ExternalLink, Bell, ChevronRight, LogOut } from "lucide-react"
+import { ExternalLink, Bell, ChevronRight, LogOut, Menu } from "lucide-react"
 import { Button } from "@/components/ui/primitives/button"
 import {
   Avatar,
@@ -16,8 +16,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/primitives/dropdown-menu"
 import { useRouter } from "next/navigation"
+import { cn } from "@/utils/styling"
 import { useToast } from "@/hooks/use-toast"
 import { createBrowserClient } from "@supabase/ssr"
+import { useMenuDoPainel } from "./MenuContexto"
 
 interface AdminHeaderProps {
   breadcrumbs?: { label: string; href?: string }[]
@@ -28,6 +30,7 @@ export default function AdminHeader({
 }: AdminHeaderProps) {
   const router = useRouter()
   const { toast } = useToast()
+  const menu = useMenuDoPainel()
 
   const handleLogout = async () => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -61,11 +64,32 @@ export default function AdminHeader({
 
   return (
     <header className="sticky top-0 z-30 h-16 border-b border-admin-nav-border bg-admin-nav-bg">
-      <div className="flex h-full items-center justify-between px-6">
-        {/* Breadcrumbs */}
-        <nav className="flex items-center gap-1 text-sm">
+      <div className="flex h-full items-center justify-between gap-2 px-4 lg:px-6">
+        {/* Abre a gaveta do menu. Só no celular. */}
+        <button
+          type="button"
+          onClick={menu.abrir}
+          aria-label="Abrir menu"
+          aria-expanded={menu.aberto}
+          className="-ml-2 shrink-0 p-2 text-admin-nav-text transition-colors hover:text-white lg:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
+        {/*
+          Breadcrumbs. No celular aparece só o último degrau: "Painel >
+          Inscrições" em tela de 360px empurraria os botões da direita para
+          fora.
+        */}
+        <nav className="flex min-w-0 items-center gap-1 text-sm">
           {breadcrumbs.map((crumb, index) => (
-            <div key={index} className="flex items-center gap-1">
+            <div
+              key={index}
+              className={cn(
+                "flex items-center gap-1",
+                index < breadcrumbs.length - 1 && "hidden sm:flex",
+              )}
+            >
               {index > 0 && (
                 <ChevronRight className="h-4 w-4 text-admin-nav-text/50" />
               )}
@@ -90,8 +114,8 @@ export default function AdminHeader({
             className="border-admin-nav-border bg-transparent text-admin-nav-text hover:bg-admin-nav-border hover:text-white"
             onClick={() => window.open("/", "_blank")}
           >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            Ver Site
+            <ExternalLink className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Ver Site</span>
           </Button>
 
           <Button
