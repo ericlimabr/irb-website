@@ -281,3 +281,121 @@ export async function sendInscricaoConfirmationEmail({
     return { success: false }
   }
 }
+
+/**
+ * Convite para o painel da igreja.
+ *
+ * Por que o e-mail sai por aqui e não pelo Supabase: o Supabase tem um
+ * disparador próprio de convite, mas o embutido dele é limitado a poucas
+ * mensagens por hora e o texto só se edita no painel dele, em inglês por
+ * padrão. O SMTP da igreja já entrega o contato e a inscrição da conferência,
+ * então o convite anda pelo mesmo caminho que já funciona.
+ *
+ * NENHUMA SENHA VIAJA NESTE E-MAIL. O link leva a pessoa a criar a dela, e é
+ * de uso único: depois de usado não serve mais nem para ela nem para quem
+ * tiver acesso à caixa depois.
+ */
+interface ConviteEmailPayload {
+  /** Para quem o convite vai. */
+  email: string
+  /** Como a pessoa foi chamada no convite, se foi informado. */
+  nome?: string | null
+  /** Link de uso único que abre a criação de senha. */
+  link: string
+}
+
+export async function sendConviteAdminEmail({
+  email,
+  nome,
+  link,
+}: ConviteEmailPayload) {
+  const tratamento = nome?.trim() ? escapeHtml(nome.trim().split(/\s+/)[0]) : null
+
+  const html = `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e9e7e2;padding:24px 12px">
+<tr><td align="center">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff">
+
+  <tr><td style="background:#00172e;padding:30px 36px" align="center">
+    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#d9b45f">Igreja Reformada de Brasília</p>
+    <p style="margin:10px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.2;color:#ffffff">Painel da igreja</p>
+  </td></tr>
+
+  <tr><td style="padding:36px 36px 0">
+    <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.35;color:#00172e">${
+      tratamento ? `${tratamento}, você` : "Você"
+    } recebeu acesso ao painel.</p>
+    <p style="margin:16px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.65;color:#5c5c5c">
+      O painel é a área administrativa do site da igreja. O seu acesso ainda não tem senha: o botão abaixo abre a tela onde você cria a sua.
+    </p>
+  </td></tr>
+
+  <tr><td style="padding:28px 36px 0" align="center">
+    <table role="presentation" cellpadding="0" cellspacing="0" align="center">
+      <tr><td style="background:#c9a227">
+        <a href="${link}" style="display:inline-block;padding:16px 30px;font-family:Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#00172e;text-decoration:none">Criar a minha senha</a>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:24px 36px 0">
+    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.65;color:#5c5c5c">
+      Se o botão não abrir, copie este endereço e cole no navegador:
+    </p>
+    <p style="margin:10px 0 0;padding:12px;background:#f7f6f3;border:1px solid #e6e3dc;font-family:'Courier New',monospace;font-size:11px;line-height:1.5;color:#1a1a1a;word-break:break-all">${escapeHtml(link)}</p>
+  </td></tr>
+
+  <tr><td style="padding:28px 36px 0">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f6f3;border-left:4px solid #c9a227">
+      <tr><td style="padding:18px 20px">
+        <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.7;color:#5c5c5c">
+          O link é de uso único e vale para o endereço <strong>${escapeHtml(email)}</strong>. Depois de criar a senha, é por ela que você entra. Ninguém da igreja sabe a sua senha, nem precisa saber.
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:32px 36px 40px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e6e3dc">
+      <tr><td style="padding-top:22px">
+        <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.7;color:#8a8a8a">
+          Não esperava este convite? Então ele não é para você: ignore este e-mail e nada acontece. Se quiser avisar, responda esta mensagem.
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>`
+
+  const text = [
+    tratamento ? `${tratamento}, você recebeu acesso ao painel da igreja.` : "Você recebeu acesso ao painel da igreja.",
+    "",
+    "O painel é a área administrativa do site. O seu acesso ainda não tem senha; o link abaixo abre a tela onde você cria a sua.",
+    "",
+    link,
+    "",
+    `O link é de uso único e vale para o endereço ${email}.`,
+    "Ninguém da igreja sabe a sua senha, nem precisa saber.",
+    "",
+    "Não esperava este convite? Ignore este e-mail e nada acontece.",
+    "",
+    "Igreja Reformada de Brasília",
+  ].join("\n")
+
+  try {
+    await transporter.sendMail({
+      from: `"Igreja Reformada de Brasília" <${process.env.SMTP_USER}>`,
+      replyTo: process.env.CONTACT_EMAIL_DESTINATION,
+      to: email,
+      subject: "Seu acesso ao painel da Igreja Reformada de Brasília",
+      text,
+      html,
+    })
+    return { success: true }
+  } catch (error) {
+    console.error("Erro no SMTP (convite do painel):", error)
+    return { success: false }
+  }
+}

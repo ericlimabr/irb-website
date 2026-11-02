@@ -13,6 +13,7 @@ import {
   ListChecks,
   ClipboardList,
   AlertTriangle,
+  PowerOff,
 } from "lucide-react"
 
 export interface NavItem {
@@ -20,6 +21,12 @@ export interface NavItem {
   label: string
   href: string
   isAvailable: boolean
+  /**
+   * Item que só existe para a conta da igreja (utils/dono.ts). Para as outras
+   * contas ele nao aparece no menu, e a propria tela responde 404: esconder o
+   * botao nao protege nada por si.
+   */
+  apenasDono?: boolean
 }
 
 const quickActions: NavItem[] = [
@@ -60,13 +67,13 @@ const mainNavItems: NavItem[] = [
     icon: Tag,
     label: "Categorias",
     href: "/admin/categorias",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     icon: FileText,
     label: "Publicações",
     href: "/admin/publicacoes",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     icon: Video,
@@ -78,7 +85,7 @@ const mainNavItems: NavItem[] = [
     icon: ImageIcon,
     label: "Mídia",
     href: "/admin/media",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     icon: MessageCircle,
@@ -105,19 +112,29 @@ const systemNavItems: NavItem[] = [
     icon: Users,
     label: "Usuários",
     href: "/admin/usuarios",
-    isAvailable: false,
+    isAvailable: true,
+    apenasDono: true,
+  },
+  {
+    // Tira o site do ar e devolve. Só a conta da igreja, e a tela responde 404
+    // para as outras: ver app/admin/manutencao/page.tsx.
+    icon: PowerOff,
+    label: "Manutenção",
+    href: "/admin/manutencao",
+    isAvailable: true,
+    apenasDono: true,
   },
   {
     icon: ListChecks,
     label: "FAQ",
     href: "/admin/faq",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     icon: Settings,
     label: "Configurações",
     href: "/admin/configuracoes",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     icon: HelpCircle,

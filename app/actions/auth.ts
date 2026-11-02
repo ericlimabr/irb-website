@@ -39,3 +39,55 @@ export async function signIn(
   revalidatePath("/admin", "layout")
   redirect("/admin")
 }
+
+export type SenhaState = { error?: string } | null
+
+/**
+ * Escreve a senha de quem acabou de aceitar um convite (ou pediu uma nova).
+ *
+ * O link do e-mail já virou sessão em /auth/confirm, então aqui só existe uma
+ * pessoa possível: a que está com a sessão aberta. É por isso que não há
+ * e-mail nem token neste formulário, e é por isso que ele não serve para
+ * trocar a senha de mais ninguém.
+ *
+ * O piso de 8 caracteres é nosso, não do Supabase, que aceita 6 por padrão.
+ */
+export async function defineSenha(
+  _prev: SenhaState,
+  formData: FormData,
+): Promise<SenhaState> {
+  const senha = String(formData.get("password") ?? "")
+  const confirmacao = String(formData.get("confirm") ?? "")
+  const nome = String(formData.get("nome") ?? "").trim()
+
+  if (senha.length < 8) {
+    return { error: "A senha precisa de pelo menos 8 caracteres." }
+  }
+  if (senha !== confirmacao) {
+    return { error: "As duas senhas digitadas não são iguais." }
+  }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return {
+      error:
+        "O link não vale mais. Peça um convite novo para a conta da igreja.",
+    }
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: senha,
+    ...(nome ? { data: { full_name: nome } } : {}),
+  })
+
+  if (error) {
+    return { error: "Não foi possível salvar a senha. Tente outra." }
+  }
+
+  revalidatePath("/admin", "layout")
+  redirect("/admin")
+}

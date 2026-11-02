@@ -1,4 +1,6 @@
 import Analytics from "@/components/analytics/Analytics"
+import PaginaEmManutencao from "@/components/pages/PaginaEmManutencao"
+import { siteEmManutencao } from "@/lib/manutencao"
 import { ReactNode } from "react"
 
 /**
@@ -15,12 +17,18 @@ import { ReactNode } from "react"
  * Não monta o WhatsAppButton: a barra presa no pé da tela
  * (components/pages/conferencia/BarraInscricao.tsx) ocupa esse canto, e os
  * dois juntos se cobrem no celular.
+ *
+ * Tem o portão de manutenção, como o layout do site: quando a igreja tira o
+ * site do ar, esta página sai também. Ela é destino de anúncio pago, então
+ * vale saber disso antes de ligar o interruptor.
  */
-export default function ConferenciaLayout({
+export default async function ConferenciaLayout({
   children,
 }: {
   children: ReactNode
 }) {
+  if (await siteEmManutencao()) return <PaginaEmManutencao />
+
   return (
     <>
       <Analytics />

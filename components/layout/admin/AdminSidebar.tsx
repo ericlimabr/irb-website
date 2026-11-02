@@ -8,8 +8,11 @@ import { adminMenuData } from "@/constants/adminMenuData"
 
 export default function AdminSidebar({
   countUnreadMessages,
+  ehDono = false,
 }: {
   countUnreadMessages?: number
+  /** Verdadeiro so para a conta da igreja. Libera os itens `apenasDono`. */
+  ehDono?: boolean
 }) {
   const pathname = usePathname()
 
@@ -18,7 +21,12 @@ export default function AdminSidebar({
     return pathname.startsWith(href)
   }
 
-  const { mainNavItems, systemNavItems } = adminMenuData
+  // Item marcado como `apenasDono` nao e desenhado para as outras contas: a
+  // tela correspondente tambem responde 404 para elas.
+  const visivel = (item: { apenasDono?: boolean }) => !item.apenasDono || ehDono
+
+  const mainNavItems = adminMenuData.mainNavItems.filter(visivel)
+  const systemNavItems = adminMenuData.systemNavItems.filter(visivel)
 
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-admin-nav-bg-dense border-r border-admin-nav-border">
