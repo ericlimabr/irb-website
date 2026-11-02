@@ -3,6 +3,8 @@
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { createClient } from "@/utils/supabase/server"
+import { avisaConviteAceito } from "@/lib/aviso-acesso"
+import { ehDono } from "@/utils/dono"
 
 export type SignInState = { error?: string } | null
 
@@ -51,6 +53,11 @@ export type SenhaState = { error?: string } | null
  * trocar a senha de mais ninguém.
  *
  * O piso de 8 caracteres é nosso, não do Supabase, que aceita 6 por padrão.
+ *
+ * É aqui que o aviso de acesso novo sai no WhatsApp, e por isso a leitura do
+ * `user_metadata` acontece ANTES de salvar: depois de salvar, `senhaDefinidaEm`
+ * já estaria preenchida e a primeira senha ficaria indistinguível de uma
+ * troca. Ver lib/aviso-acesso.ts.
  */
 export async function defineSenha(
   _prev: SenhaState,
@@ -79,13 +86,29 @@ export async function defineSenha(
     }
   }
 
+  const metadata = (user.user_metadata ?? {}) as Record<string, unknown>
+  const foiConvidado = typeof metadata.convidadoEm === "string"
+  const jaTinhaSenha = typeof metadata.senhaDefinidaEm === "string"
+
   const { error } = await supabase.auth.updateUser({
     password: senha,
-    ...(nome ? { data: { full_name: nome } } : {}),
+    data: {
+      ...(nome ? { full_name: nome } : {}),
+      senhaDefinidaEm: new Date().toISOString(),
+    },
   })
 
   if (error) {
     return { error: "Não foi possível salvar a senha. Tente outra." }
+  }
+
+  // Convidado estreando: avisa. Quem só pediu senha nova, não, e a conta da
+  // igreja nunca, que não foi convidada por ninguém.
+  if (foiConvidado && !jaTinhaSenha && !ehDono(user.email)) {
+    await avisaConviteAceito({
+      email: user.email ?? null,
+      nome: nome || (metadata.full_name as string | undefined) || null,
+    })
   }
 
   revalidatePath("/admin", "layout")

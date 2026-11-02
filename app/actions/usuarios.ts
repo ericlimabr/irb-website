@@ -21,6 +21,10 @@ import { ehDono } from "@/utils/dono"
  * /definir-senha. Senha nenhuma passa por e-mail, por este código ou pelo
  * banco em texto.
  *
+ * Quando ela escreve essa senha, o WhatsApp da igreja recebe um aviso: o
+ * convite é assíncrono e ninguém ficaria olhando esta tela para saber que
+ * alguém entrou. Ver lib/aviso-acesso.ts.
+ *
  * Importante sobre o que o convidado pode fazer: o painel não tem papéis.
  * Quem entra vê tudo o que o dono vê, menos esta tela. Enquanto não houver
  * papéis, convidar alguém é dar acesso inteiro.
@@ -127,7 +131,15 @@ export async function convidaUsuario(
   const { data, error } = await admin.auth.admin.generateLink({
     type: "invite",
     email,
-    options: nome ? { data: { full_name: nome } } : undefined,
+    // `convidadoEm` marca a conta como nascida de um convite nosso. É o que
+    // permite avisar no WhatsApp quando ela criar a senha, sem confundir isso
+    // com uma troca de senha de quem já usava o painel: ver lib/aviso-acesso.ts.
+    options: {
+      data: {
+        ...(nome ? { full_name: nome } : {}),
+        convidadoEm: new Date().toISOString(),
+      },
+    },
   })
 
   if (error || !data?.properties?.hashed_token) {
