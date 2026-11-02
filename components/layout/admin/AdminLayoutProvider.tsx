@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/primitives/toaster"
 import { Toaster as Sonner } from "@/components/ui/primitives/sonner"
 import { TooltipProvider } from "@/components/ui/primitives/tooltip"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { MenuDoPainelProvider } from "./MenuContexto"
 
 export default function AdminLayoutProvider({
   children,
@@ -23,9 +24,11 @@ export default function AdminLayoutProvider({
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        {children}
+        <MenuDoPainelProvider>
+          <Toaster />
+          <Sonner />
+          {children}
+        </MenuDoPainelProvider>
       </TooltipProvider>
     </QueryClientProvider>
   )

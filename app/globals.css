@@ -457,3 +457,32 @@
     border: 2px solid var(--surface, #fff);
   }
 }
+
+/* O PAINEL TEM A PRÓPRIA ESCALA DE TEXTO NO CELULAR.
+   O site público nasceu com o tier menor em 0.64rem (10.2px) no celular, e
+   só no desktop ele sobe para o piso de ~11.5px: lá o texto miúdo é rótulo
+   decorativo, e o que importa está em corpo grande. No painel é o contrário:
+   rótulo, data, valor e detalhe de linha SÃO o conteúdo, e a igreja lê isso
+   no telefone. Com 10px ninguém lê.
+   Só o celular muda (abaixo de lg, onde o painel já troca de forma): no
+   computador a escala fica exatamente como está hoje. E só vale dentro de
+   `/admin`, então nada no site público muda de tamanho por causa disto.
+   `text-xs` e `text-sm` são tamanhos fixos do Tailwind, e não variáveis, por
+   isso estas duas só podem ser alcançadas sobrescrevendo a própria classe.
+   E ESTE BLOCO FICA FORA DE QUALQUER @layer DE PROPÓSITO: regra sem camada
+   vence regra em camada, e as utilitárias do Tailwind moram na camada
+   `utilities`, que vem depois de `components`. Dentro de @layer components as
+   duas linhas abaixo seriam ignoradas, por mais específicas que fossem. */
+@media (max-width: 1023px) {
+  .painel-escala {
+    /* text-2xs e os tiers .text-fs-* passam a 13.1px */
+    --text-floor: 0.82rem;
+    --text-size-xs: 0.82rem;
+  }
+  .painel-escala .text-xs {
+    font-size: 0.85rem; /* 13.6px, era 12 */
+  }
+  .painel-escala .text-sm {
+    font-size: 0.95rem; /* 15.2px, era 14 */
+  }
+}

@@ -21,11 +21,17 @@ export default async function AdminLayout({
 
   return (
     <AdminLayoutProvider>
-      <div className="min-h-screen bg-background">
+      <div className="painel-escala min-h-screen bg-background">
         <ServersideAdminSidebar />
-        <div className="pl-64">
+        {/*
+          A margem da barra lateral só existe de lg (1024px) em diante, que é
+          onde a barra ocupa lugar de verdade. Antes disso ela é uma gaveta que
+          desliza por cima, e `pl-64` cravado deixava o conteúdo espremido numa
+          faixa estreita no celular.
+        */}
+        <div className="lg:pl-64">
           <AdminHeader />
-          <main className="p-6">{children}</main>
+          <main className="p-4 sm:p-5 lg:p-6">{children}</main>
         </div>
       </div>
     </AdminLayoutProvider>

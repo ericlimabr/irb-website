@@ -24,12 +24,23 @@ declare const globalThis: {
 // callers already guard (try/catch in the dashboard's safeCount, a getUser()
 // check in the contact actions). This lets the admin shell render before the
 // database is configured, instead of 500-ing the whole route on import.
+//
+// O CLIENTE É GUARDADO SEMPRE, inclusive em produção. Até 02/11/2026 a linha
+// abaixo era `if (NODE_ENV !== "production")`, copiada do padrão que existe
+// para sobreviver ao hot reload do desenvolvimento. Só que aqui o acesso é por
+// Proxy, e `getClient()` roda a CADA propriedade lida: sem guardar, em
+// produção `prisma.inscricao` e `prisma.logErro` na mesma função criavam DOIS
+// PrismaClient, cada um com o próprio pool de conexões. Uma tela que lê quinze
+// tabelas abria quinze pools contra o pooler do Supabase, que recusa a partir
+// de certo ponto. As consultas recusadas caíam no catch de quem chamou e
+// viravam ZERO na tela: foi assim que a visão geral mostrou "0 falhas sem
+// baixa" existindo duas.
 function getClient(): PrismaClient {
   const existing = globalThis.prismaGlobal
   if (existing) return existing
 
   const client = prismaClientSingleton()
-  if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = client
+  globalThis.prismaGlobal = client
   return client
 }
 
