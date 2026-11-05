@@ -14,7 +14,6 @@ import {
 } from "@/lib/inscricoes-estado"
 import { getUser } from "@/utils/getUser"
 import { isValidEmail, sanitizeEmail } from "@/utils/strings"
-import { churchPixPayload, pixQrDataUrl, pixQrPng, PIX_KEY } from "@/lib/pix"
 import { sendInscricaoConfirmationEmail } from "@/lib/mail"
 import { avisaNoWhatsApp } from "@/lib/whatsapp"
 import { registraErro } from "@/lib/log-erro"
@@ -22,11 +21,10 @@ import { contextoDoNavegador, enviaEvento } from "@/lib/meta-capi"
 import { mapsDirectionsUrl } from "@/utils/maps"
 import { SITE_URL } from "@/utils/siteUrl"
 import {
-  brl,
   comoSoubeLabel,
   diasLabel,
   inscricaoTotalCents,
-  pessoasLabel,
+  pessoasContagem,
   vinculoLabel,
 } from "@/utils/inscricao"
 import {
@@ -43,7 +41,21 @@ import {
 /**
  * Inscrição na 2ª Conferência Reformada.
  *
- * O pagamento é Pix sem intermediário: ninguém avisa que caiu. A inscrição
+ * DESDE 05/11/2026 A CONFERÊNCIA NÃO É COBRADA, por decisão dele: a página
+ * não fala de dinheiro, o e-mail de confirmação não cobra nada e a inscrição
+ * não depende mais da `PIX_KEY` no ambiente. Nenhum dos dois anuncia que é de
+ * graça: *"Basta não cobrar nada"*.
+ *
+ * O que sobrou aqui do pagamento é interno e invisível para quem se inscreve:
+ * o `valor`, os `centavos` e o `txid` continuam gravados na linha da
+ * inscrição, porque o painel, a planilha do credenciamento e o evento do Meta
+ * leem esses campos. O `status`, que era AGUARDANDO até a igreja ver o Pix no
+ * extrato, passou a ser a aprovação manual da inscrição, que é como ele
+ * descreveu o processo em 05/11.
+ *
+ * O texto abaixo é de quando havia cobrança, e fica como história do campo.
+ *
+ * O pagamento era Pix sem intermediário: ninguém avisa que caiu. A inscrição
  * nasce AGUARDANDO e quem a marca como paga é a igreja, conferindo o extrato
  * pelo NOME DE QUEM PAGA. Os 7 centavos do valor não identificam a pessoa:
  * são iguais em toda inscrição e só marcam que aquele Pix é da conferência.
@@ -62,8 +74,6 @@ export type InscricaoResult =
       numero: number
       valor: number
       centavos: number
-      brCode: string
-      qr: string
       pessoas: string
       dias: string
       emailEnviado: boolean
@@ -136,8 +146,7 @@ export async function submitInscricao(
       nivel: "AVISO",
       mensagem:
         "A isca de robô veio marcada e a inscrição seguiu em frente de " +
-        "propósito. Confira se esta inscrição é de gente antes de dar baixa " +
-        "no pagamento.",
+        "propósito. Confira se esta inscrição é de gente antes de aprová-la.",
       pessoa: String(formData.get("nome") ?? "").trim() || null,
       contato: String(formData.get("email") ?? "").trim() || null,
       causa: `valor recebido no campo da isca: ${String(iscaMarcada).slice(0, 200)}`,
@@ -222,24 +231,6 @@ export async function submitInscricao(
       falarComAIgreja: true,
     }
   }
-  if (!PIX_KEY) {
-    // Sem chave não existe Pix que preste: é melhor não inscrever ninguém do
-    // que entregar um código que não paga a igreja.
-    await registraErro({
-      origem: "inscricao",
-      codigo: "PIX_KEY_AUSENTE",
-      mensagem:
-        "Falta a variável PIX_KEY no ambiente: ninguém consegue se inscrever " +
-        "até ela voltar.",
-      pessoa: nome || null,
-      contato: email || null,
-    })
-    return {
-      success: false,
-      error:
-        "A inscrição está temporariamente indisponível. Fale com a igreja pelo WhatsApp.",
-    }
-  }
   // Se a contagem falhar, a inscrição segue: barrar quem não fez nada é pior
   // do que deixar passar uma repetição. O erro fica registrado.
   try {
@@ -291,13 +282,7 @@ export async function submitInscricao(
       data: { centavos, valor, txid },
     })
 
-    const brCode = churchPixPayload(valor, txid)
-    const [qr, qrPng] = await Promise.all([
-      pixQrDataUrl(brCode),
-      pixQrPng(brCode),
-    ])
-
-    const pessoas = pessoasLabel(adultos, criancas)
+    const pessoas = pessoasContagem(adultos, criancas)
     const dias = diasLabel(diasBruto)
 
     // Os dois envios saem juntos: o e-mail para quem se inscreveu e o aviso
@@ -309,9 +294,6 @@ export async function submitInscricao(
         email,
         dias,
         pessoas,
-        valor,
-        brCode,
-        qr: qrPng,
         agendaUrl: `${SITE_URL}${CONFERENCE_PATH}/agenda`,
         mapsUrl: mapsDirectionsUrl(),
       }),
@@ -323,7 +305,7 @@ export async function submitInscricao(
           pessoas,
           `${dias} · ${vinculoLabel(vinculoBruto)}${igreja ? `, ${igreja}` : ""}`,
           ...(comoSoube ? [`Soube: ${comoSoubeLabel(comoSoube)}`] : []),
-          `${brl(valor)} por Pix, aguardando pagamento`,
+          "Aguardando a sua aprovação",
           "",
           `${SITE_URL}/admin/inscricoes`,
         ].join("\n"),
@@ -336,8 +318,8 @@ export async function submitInscricao(
         codigo: "EMAIL_NAO_ENVIADO",
         mensagem:
           `A inscrição ${String(inscricao.numero).padStart(4, "0")} foi gravada, ` +
-          "mas o e-mail com o QR Code não saiu. A pessoa viu o código na tela; " +
-          "quem quiser o e-mail precisa receber na mão.",
+          "mas o e-mail de confirmação não saiu. A pessoa viu a confirmação na " +
+          "tela, com o número da inscrição.",
         nivel: "AVISO",
         pessoa: nome,
         contato: email,
@@ -368,8 +350,6 @@ export async function submitInscricao(
       numero: inscricao.numero,
       valor,
       centavos,
-      brCode,
-      qr,
       pessoas,
       dias,
       emailEnviado,

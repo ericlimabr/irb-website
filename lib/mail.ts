@@ -65,29 +65,31 @@ export async function sendContactNotificationEmail({
 }
 
 /**
- * Confirmação da inscrição na conferência, com o Pix para pagar.
+ * Confirmação da inscrição na conferência. NÃO cobra nada.
  *
- * Três decisões de formato, todas por causa de cliente de e-mail:
- * tabela e estilo inline (nada de classe CSS), QR embutido por cid (o Gmail
- * descarta `src="data:..."`), e o BR Code também em texto, porque ler QR na
- * própria tela onde o e-mail está aberto é impossível.
+ * Em 05/11/2026 ele decidiu que a conferência não é cobrada, e este e-mail era
+ * o último lugar que ainda cobrava: saíram o valor do assunto, a frase do
+ * "falta só o Pix", a linha "A pagar", o bloco do Pix com o QR e o anexo
+ * `pix-conferencia.png`.
  *
- * Nada aqui promete o que a igreja ainda não confirmou: não diz que dá para
- * pagar no dia, nem que há limite de vagas. Ver docs/conferencia-inscricoes.md.
+ * Ele também decidiu que o e-mail NÃO anuncia que é de graça: *"Não precisa
+ * dizer que é gratuito, lembra? Basta não cobrar nada"*. Por isso nenhuma
+ * linha aqui fala de dinheiro, nem para dizer que não há. O que a pessoa lê é
+ * que o lugar está guardado e que basta chegar.
+ *
+ * O formato continua sendo tabela com estilo inline, nada de classe CSS,
+ * porque cliente de e-mail não lê folha de estilo.
+ *
+ * Nada aqui promete o que a igreja ainda não confirmou: não diz que há limite
+ * de vagas. Ver docs/conferencia-inscricoes.md.
  */
 interface InscricaoEmailPayload {
   nome: string
   email: string
   /** Rótulo pronto dos dias escolhidos, ex. "Sábado e domingo". */
   dias: string
-  /** Linha das pessoas, ex. "2 adultos a R$ 20, e 1 criança que não paga". */
+  /** Linha das pessoas, ex. "2 adultos e 1 criança". */
   pessoas: string
-  /** Valor total em centavos. */
-  valor: number
-  /** O "copia e cola" do Pix. */
-  brCode: string
-  /** PNG do QR, embutido por cid. */
-  qr: Buffer
   /** Link absoluto de adicionar à agenda. */
   agendaUrl: string
   /** Link absoluto da rota no Maps. */
@@ -107,16 +109,11 @@ export async function sendInscricaoConfirmationEmail({
   email,
   dias,
   pessoas,
-  valor,
-  brCode,
-  qr,
   agendaUrl,
   mapsUrl,
 }: InscricaoEmailPayload) {
   const safeNome = escapeHtml(nome)
   const primeiroNome = escapeHtml(nome.trim().split(/\s+/)[0] ?? nome)
-  const total = `R$ ${(valor / 100).toFixed(2).replace(".", ",")}`
-  const centavos = valor % 100
 
   const rot =
     "font-family:Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5c5c5c"
@@ -154,36 +151,14 @@ export async function sendInscricaoConfirmationEmail({
   </td></tr>
 
   <tr><td style="padding:36px 36px 0">
-    <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.3;color:#00172e">Inscrição recebida, ${primeiroNome}.</p>
+    <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.3;color:#00172e">Inscrição confirmada, ${primeiroNome}.</p>
     <p style="margin:14px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.65;color:#5c5c5c">
-      Guardamos o seu lugar. Falta só o Pix abaixo para a inscrição ficar completa.
+      O seu lugar está guardado. Basta chegar no sábado e dizer o seu nome no credenciamento.
     </p>
   </td></tr>
 
   <tr><td style="padding:28px 36px 0">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${linha("Em nome de", safeNome)}${linha("Dias", escapeHtml(dias))}${linha("Pessoas", escapeHtml(pessoas))}${linha("A pagar", total, true)}
-    </table>
-  </td></tr>
-
-  <tr><td style="padding:28px 36px 0">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f6f3;border:1px solid #e6e3dc">
-      <tr><td style="padding:28px 28px 8px" align="center">
-        <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#5c5c5c">Pagamento por Pix</p>
-        <p style="margin:10px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:30px;color:#00172e">${total}</p>
-        <p style="margin:6px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.6;color:#5c5c5c">
-          O valor termina em ${centavos} centavos, que marcam que este Pix é da conferência. Eles entram uma vez só, não por adulto. Pague o valor exato, sem arredondar: é pelo valor e pelo nome de quem paga que encontramos a sua inscrição no extrato.
-        </p>
-      </td></tr>
-      <tr><td align="center" style="padding:18px 28px 0">
-        <img src="cid:pix-qr" width="200" alt="QR Code do Pix" style="display:block;border:8px solid #ffffff;background:#ffffff">
-      </td></tr>
-      <tr><td style="padding:18px 28px 28px">
-        <p style="margin:0 0 8px;font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#5c5c5c">Ou copie e cole no seu banco</p>
-        <p style="margin:0;padding:14px;background:#ffffff;border:1px solid #e6e3dc;font-family:'Courier New',monospace;font-size:11px;line-height:1.5;color:#1a1a1a;word-break:break-all">${escapeHtml(brCode)}</p>
-        <p style="margin:14px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.6;color:#5c5c5c">
-          Não precisa mandar comprovante. Conferimos pelo nome do pagador e pelo valor. Se o Pix sair da conta de outra pessoa, responda este e-mail dizendo o nome dela.
-        </p>
-      </td></tr>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${linha("Em nome de", safeNome)}${linha("Dias", escapeHtml(dias))}${linha("Pessoas", escapeHtml(pessoas))}
     </table>
   </td></tr>
 
@@ -236,19 +211,14 @@ export async function sendInscricaoConfirmationEmail({
 </table>`
 
   const text = [
-    `Inscrição recebida, ${nome.trim().split(/\s+/)[0]}.`,
+    `Inscrição confirmada, ${nome.trim().split(/\s+/)[0]}.`,
     "",
-    "Guardamos o seu lugar. Falta só o Pix para a inscrição ficar completa.",
+    "O seu lugar está guardado. Basta chegar no sábado e dizer o seu nome no",
+    "credenciamento.",
     "",
     `Em nome de: ${nome}`,
     `Dias: ${dias}`,
     `Pessoas: ${pessoas}`,
-    `A pagar: ${total}`,
-    "",
-    `O valor termina em ${centavos} centavos, que marcam que este Pix é da conferência. Pague o valor exato, sem arredondar.`,
-    "",
-    "Pix copia e cola:",
-    brCode,
     "",
     `Adicionar à agenda: ${agendaUrl}`,
     `Como chegar: ${mapsUrl}`,
@@ -263,17 +233,9 @@ export async function sendInscricaoConfirmationEmail({
       replyTo: process.env.CONTACT_EMAIL_DESTINATION,
       to: email,
       bcc: process.env.CONTACT_EMAIL_DESTINATION,
-      subject: `Inscrição recebida · 2ª Conferência Reformada (${total} por Pix)`,
+      subject: "Inscrição confirmada · 2ª Conferência Reformada",
       text,
       html,
-      attachments: [
-        {
-          filename: "pix-conferencia.png",
-          content: qr,
-          cid: "pix-qr",
-          contentType: "image/png",
-        },
-      ],
     })
     return { success: true }
   } catch (error) {
@@ -309,7 +271,9 @@ export async function sendConviteAdminEmail({
   nome,
   link,
 }: ConviteEmailPayload) {
-  const tratamento = nome?.trim() ? escapeHtml(nome.trim().split(/\s+/)[0]) : null
+  const tratamento = nome?.trim()
+    ? escapeHtml(nome.trim().split(/\s+/)[0])
+    : null
 
   const html = `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e9e7e2;padding:24px 12px">
@@ -370,7 +334,9 @@ export async function sendConviteAdminEmail({
 </table>`
 
   const text = [
-    tratamento ? `${tratamento}, você recebeu acesso ao painel da igreja.` : "Você recebeu acesso ao painel da igreja.",
+    tratamento
+      ? `${tratamento}, você recebeu acesso ao painel da igreja.`
+      : "Você recebeu acesso ao painel da igreja.",
     "",
     "O painel é a área administrativa do site. O seu acesso ainda não tem senha; o link abaixo abre a tela onde você cria a sua.",
     "",

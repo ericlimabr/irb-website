@@ -31,6 +31,20 @@ export function pessoasLabel(adultos: number, criancas: number): string {
   return `${a}, e ${c}`
 }
 
+/**
+ * "2 adultos e 1 criança": a mesma contagem de `pessoasLabel`, sem o dinheiro.
+ *
+ * Existe porque a tela da conferência não fala de valor desde 05/11/2026, e
+ * `pessoasLabel` escreve o preço no meio da frase. Quem usa esta é o
+ * formulário; o e-mail, o painel e a planilha continuam com a outra.
+ */
+export function pessoasContagem(adultos: number, criancas: number): string {
+  const a = `${adultos} ${adultos > 1 ? "adultos" : "adulto"}`
+  if (!criancas) return a
+  const c = `${criancas} ${criancas > 1 ? "crianças" : "criança"}`
+  return `${a} e ${c}`
+}
+
 /** Rótulo dos dias, do mesmo lugar de onde saem os botões do formulário. */
 export function diasLabel(dias: string): string {
   return (

@@ -7,14 +7,13 @@ import {
   CONFERENCE_DAY_CHOICES,
   CONFERENCE_MAX_ADULTS,
   CONFERENCE_MAX_CHILDREN,
-  CONFERENCE_PRICE_LABEL,
   CONFERENCE_SOURCE_CHOICES,
   CONFERENCE_TIE_ASKS_CHURCH,
   CONFERENCE_TIE_CHOICES,
   ISCA_ATRIBUTOS,
   ISCA_CAMPO,
 } from "@/const"
-import { brl, inscricaoTotalCents, pessoasLabel } from "@/utils/inscricao"
+import { pessoasContagem } from "@/utils/inscricao"
 import {
   arrumaNome,
   mascaraEmail,
@@ -33,9 +32,15 @@ import { whatsappLink } from "@/utils/whatsapp"
  * erro na tela e o botão que trava depois de enviar, para ninguém se inscrever
  * duas vezes no mesmo clique duplo.
  *
- * Os 7 centavos já entram no total desde o começo, porque são fixos. O texto
- * NÃO diz que eles identificam a pessoa: quem identifica no extrato é o nome
- * de quem paga.
+ * Desde 05/11/2026, por decisão dele, este formulário não fala de valor, de
+ * taxa nem de Pix: saíram o total na tela, a pergunta sobre de quem sai o Pix,
+ * o nome do pagador e o QR do fim. O que entrou no lugar do Pix é a
+ * confirmação com o número da inscrição.
+ *
+ * O servidor NÃO mudou: ele continua calculando o valor, gerando o código e
+ * mandando o e-mail de confirmação com ele. As classes `.conta-total`,
+ * `.pg-valor`, `.pg-qr` e `.pg-copia` ficaram no CSS, e `.pg-valor` passou a
+ * vestir o número da inscrição, que é o que a caixa mostra agora.
  *
  * Os campos de texto se formatam enquanto a pessoa digita: o telefone ganha
  * parêntese e traço, o e-mail desce para minúscula e os três nomes (o da
@@ -74,7 +79,6 @@ export default function InscricaoForm() {
   const [nome, setNome] = useState("")
   const [whatsapp, setWhatsapp] = useState("")
   const [email, setEmail] = useState("")
-  const [pagador, setPagador] = useState("")
   const [adultos, setAdultos] = useState(1)
   const [criancas, setCriancas] = useState(0)
   const [dias, setDias] = useState<string>(CONFERENCE_DAY_CHOICES[0].value)
@@ -82,7 +86,6 @@ export default function InscricaoForm() {
     CONFERENCE_TIE_CHOICES[0].value,
   )
   const [igreja, setIgreja] = useState("")
-  const [proprio, setProprio] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
   // Quando o servidor recusa por motivo que não é culpa de quem preencheu, a
   // mensagem vem acompanhada do caminho de saída: o WhatsApp da igreja.
@@ -91,11 +94,8 @@ export default function InscricaoForm() {
     InscricaoResult,
     { success: true }
   > | null>(null)
-  const [copiado, setCopiado] = useState(false)
   const [enviando, iniciar] = useTransition()
   const caixaRecibo = useRef<HTMLDivElement>(null)
-
-  const total = inscricaoTotalCents(adultos)
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -111,7 +111,9 @@ export default function InscricaoForm() {
         // conta também a tentativa que o servidor recusou.
         trackEvent({
           event: "conferencia_inscricao",
-          valor: total / 100,
+          // O valor vem do servidor, que é quem ainda faz essa conta. A tela
+          // não o mostra em lugar nenhum; o contrato da GTM continua o mesmo.
+          valor: r.valor / 100,
           // Mesmo identificador que o servidor usou no envio dele ao Meta: é
           // o que junta os dois num evento só.
           event_id: r.eventId,
@@ -129,17 +131,6 @@ export default function InscricaoForm() {
         setSaidaNoWhatsapp(!!r.falarComAIgreja)
       }
     })
-  }
-
-  async function copiar() {
-    if (!recibo) return
-    try {
-      await navigator.clipboard.writeText(recibo.brCode)
-      setCopiado(true)
-      setTimeout(() => setCopiado(false), 2500)
-    } catch {
-      setErro("Não deu para copiar daqui. Selecione o código acima.")
-    }
   }
 
   return (
@@ -230,9 +221,7 @@ export default function InscricaoForm() {
 
       <div className="dois">
         <div className="campo">
-          <label htmlFor="adultos">
-            Adultos, 12 anos ou mais, {CONFERENCE_PRICE_LABEL} cada
-          </label>
+          <label htmlFor="adultos">Adultos, 12 anos ou mais</label>
           <select
             id="adultos"
             name="adultos"
@@ -249,7 +238,7 @@ export default function InscricaoForm() {
           </select>
         </div>
         <div className="campo">
-          <label htmlFor="criancas">Crianças, até 11 anos, não pagam</label>
+          <label htmlFor="criancas">Crianças, até 11 anos</label>
           <select
             id="criancas"
             name="criancas"
@@ -328,44 +317,6 @@ export default function InscricaoForm() {
         />
       </div>
 
-      <div className="campo">
-        <label>O Pix vai sair da sua própria conta</label>
-        <Escolhas
-          opcoes={[
-            { value: "sim", label: "Sim" },
-            { value: "nao", label: "Não, de outra pessoa" },
-          ]}
-          valor={proprio ? "sim" : "nao"}
-          onEscolher={(v) => setProprio(v === "sim")}
-        />
-      </div>
-
-      {!proprio && (
-        <div className="campo">
-          <label htmlFor="pagador">Nome de quem vai fazer o Pix</label>
-          <input
-            id="pagador"
-            name="pagador"
-            autoComplete="name"
-            placeholder="É por esse nome que encontramos o pagamento no extrato"
-            value={pagador}
-            onChange={(e) => setPagador(mascaraNome(e.target.value))}
-            onBlur={() => setPagador((n) => arrumaNome(n))}
-          />
-        </div>
-      )}
-
-      <div className="conta-total">
-        <div>
-          <p className="rot">Total da inscrição</p>
-          <p className="det">{pessoasLabel(adultos, criancas)}</p>
-          <p className="det" style={{ marginTop: 2 }}>
-            Mais os 7 centavos da conferência, somados uma vez só
-          </p>
-        </div>
-        <p className="val">{brl(total)}</p>
-      </div>
-
       <button
         className="bt"
         type="submit"
@@ -376,8 +327,8 @@ export default function InscricaoForm() {
         {recibo
           ? "Inscrição enviada"
           : enviando
-            ? "Gerando o seu Pix…"
-            : "Confirmar e ver o Pix"}
+            ? "Enviando a sua inscrição…"
+            : "Confirmar a minha inscrição"}
       </button>
 
       {/*
@@ -387,7 +338,7 @@ export default function InscricaoForm() {
       */}
       <p className="aguarde" role="status" aria-live="polite">
         {enviando
-          ? "Isso leva alguns segundos. Estamos gravando a sua inscrição, montando o código do Pix e enviando a confirmação para o seu e-mail. Não feche a página nem clique de novo."
+          ? "Isso leva alguns segundos. Estamos gravando a sua inscrição e enviando a confirmação para o seu e-mail. Não feche a página nem clique de novo."
           : null}
       </p>
 
@@ -419,33 +370,17 @@ export default function InscricaoForm() {
       <div id="recibo" className={recibo ? "on" : undefined} ref={caixaRecibo}>
         {recibo && (
           <>
-            <p className="olho">Falta só o pagamento</p>
-            <h3 className="pg-valor">{brl(recibo.valor)}</h3>
+            <p className="olho">Inscrição confirmada</p>
+            <h3 className="pg-valor">nº {recibo.numero}</h3>
             <p className="pg-txt">
-              O valor termina em <b>{recibo.centavos} centavos</b>, que marcam
-              que este Pix é da conferência. Eles entram uma vez só, não por
-              adulto, e por isso o total nunca é redondo. Pague o valor exato.
+              {pessoasContagem(adultos, criancas)}, {recibo.dias.toLowerCase()}.
+              O seu lugar está guardado.
             </p>
-            {/* O QR vem do servidor como data URL já pronto: nada de
-                biblioteca de QR no navegador nem requisição de imagem. */}
-            {/* eslint-disable-next-line @next/next/no-img-element -- o QR é
-                um data URL gerado no servidor; o <Image> do Next não tem o que
-                otimizar nele e ainda tentaria buscá-lo por URL. */}
-            <img className="pg-qr" src={recibo.qr} alt="QR Code do Pix" />
-            <p className="olho" style={{ marginTop: 22 }}>
-              Ou copie e cole no seu banco
-            </p>
-            <p className="pg-copia">{recibo.brCode}</p>
-            <button type="button" className="bt vazio-escuro" onClick={copiar}>
-              {copiado ? "Código copiado" : "Copiar o código"}
-            </button>
             <p className="pg-nota">
               {recibo.emailEnviado
-                ? "Mandamos este mesmo código para o seu e-mail."
-                : "Não conseguimos enviar o e-mail agora, então guarde este código."}{" "}
-              Não precisa enviar comprovante: conferimos pelo nome de quem paga
-              e pelo valor. Inscrição nº {recibo.numero}, {recibo.pessoas},{" "}
-              {recibo.dias.toLowerCase()}.
+                ? "Mandamos a confirmação para o seu e-mail."
+                : "Não conseguimos enviar o e-mail agora, então guarde o número desta inscrição."}{" "}
+              Na chegada, diga o seu nome no credenciamento.
             </p>
           </>
         )}
