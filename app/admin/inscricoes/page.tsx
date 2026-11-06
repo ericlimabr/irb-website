@@ -14,9 +14,14 @@ import { CONFERENCE_EDITION, CONFERENCE_PATH } from "@/const"
  *
  * `getInscricoes()` já exige sessão; sem ela a lista volta vazia.
  *
- * O botão de Excel aponta para /admin/inscricoes/excel, que monta o arquivo
- * na hora a partir do banco. Não existe planilha guardada em lugar nenhum: o
- * que a igreja baixa é sempre o estado daquele instante.
+ * Os dois botões de baixar apontam para rotas que montam o arquivo na hora a
+ * partir do banco: /admin/inscricoes/excel e /admin/inscricoes/pdf. Não existe
+ * planilha nem folha guardada em lugar nenhum, e o que a igreja baixa é sempre
+ * o estado daquele instante.
+ *
+ * O Excel é a via de conciliação, com valor e situação do pagamento. O PDF é a
+ * lista de quem vem, para imprimir e levar: ele não fala de dinheiro, porque a
+ * conferência não cobra nada desde 05/11/2026.
  *
  * O estado das inscrições é lido direto do banco, sem cache, porque esta é a
  * tela de controle: ela tem de mostrar o que vale agora, e não o que valia
@@ -73,6 +78,18 @@ export default async function InscricoesPage() {
             aria-disabled={inscricoes.length === 0}
           >
             Baixar em Excel
+          </a>
+
+          <a
+            href="/admin/inscricoes/pdf"
+            className={`border px-4 py-2 font-mono text-2xs uppercase tracking-[0.1em] transition-colors ${
+              inscricoes.length === 0
+                ? "pointer-events-none border-border text-muted-foreground opacity-50"
+                : "border-gold-500 text-foreground hover:bg-gold-500 hover:text-navy-900"
+            }`}
+            aria-disabled={inscricoes.length === 0}
+          >
+            Baixar em PDF
           </a>
         </div>
       </div>

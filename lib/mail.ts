@@ -365,3 +365,113 @@ export async function sendConviteAdminEmail({
     return { success: false }
   }
 }
+
+/**
+ * A lista de inscritos em PDF, anexada, para quem cuida da conferência.
+ *
+ * Quem monta a folha é lib/inscricoes-pdf.ts, o MESMO gerador do botão do
+ * admin: esta função só põe o arquivo no envelope. Ela não lê o banco nem
+ * decide colunas, de propósito.
+ *
+ * O anexo tem nome, e-mail e WhatsApp de quem se inscreveu. Por isso o corpo
+ * da mensagem repete isso em uma linha: quem recebe precisa saber o que está
+ * encaminhando antes de encaminhar.
+ */
+interface ListaInscritosPayload {
+  /** Para quem a folha vai. */
+  para: string
+  /** O PDF pronto. */
+  arquivo: Buffer
+  nomeDoArquivo: string
+  /** Quantas inscrições e quantas pessoas a folha lista. */
+  inscricoes: number
+  pessoas: number
+  /** O instante que o PDF cita no rodapé, escrito por extenso. */
+  quando: string
+}
+
+export async function sendListaInscritosEmail({
+  para,
+  arquivo,
+  nomeDoArquivo,
+  inscricoes,
+  pessoas,
+  quando,
+}: ListaInscritosPayload) {
+  const texto = [
+    "Lista de inscritos da 2ª Conferência Reformada, em anexo.",
+    "",
+    `Inscrições: ${inscricoes}`,
+    `Pessoas esperadas: ${pessoas}`,
+    `Gerada em ${quando}.`,
+    "",
+    "A folha saiu do banco no instante em que foi gerada, pelo mesmo gerador",
+    "do botão do painel. Ela tem nome, e-mail e WhatsApp de quem se inscreveu:",
+    "é documento de uso interno da igreja.",
+  ].join("\n")
+
+  const html = `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e9e7e2;padding:24px 12px">
+<tr><td align="center">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff">
+
+  <tr><td style="background:#00172e;padding:26px 32px">
+    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#d9b45f">2ª Conferência Reformada</p>
+    <p style="margin:8px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:26px;color:#ffffff">Lista de inscritos</p>
+  </td></tr>
+
+  <tr><td style="padding:30px 32px 0">
+    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.65;color:#5c5c5c">
+      A folha vai anexada, em PDF, pronta para imprimir.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px">
+      <tr>
+        <td style="border-bottom:1px solid #e6e3dc;padding:10px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5c5c5c">Inscrições</td>
+        <td align="right" style="border-bottom:1px solid #e6e3dc;padding:10px 0;font-family:Georgia,'Times New Roman',serif;font-size:20px;color:#00172e">${inscricoes}</td>
+      </tr>
+      <tr>
+        <td style="border-bottom:1px solid #e6e3dc;padding:10px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5c5c5c">Pessoas esperadas</td>
+        <td align="right" style="border-bottom:1px solid #e6e3dc;padding:10px 0;font-family:Georgia,'Times New Roman',serif;font-size:20px;color:#00172e">${pessoas}</td>
+      </tr>
+      <tr>
+        <td style="border-bottom:1px solid #e6e3dc;padding:10px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5c5c5c">Gerada em</td>
+        <td align="right" style="border-bottom:1px solid #e6e3dc;padding:10px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#1a1a1a">${escapeHtml(quando)}</td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:24px 32px 36px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f6f3;border-left:4px solid #c9a227">
+      <tr><td style="padding:16px 18px">
+        <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.7;color:#5c5c5c">
+          O anexo tem nome, e-mail e WhatsApp de quem se inscreveu. É documento de uso interno da igreja.
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>`
+
+  try {
+    await transporter.sendMail({
+      from: `"Igreja Reformada de Brasília" <${process.env.SMTP_USER}>`,
+      to: para,
+      subject: `Lista de inscritos · ${inscricoes} inscrições, ${pessoas} pessoas`,
+      text: texto,
+      html,
+      attachments: [
+        {
+          filename: nomeDoArquivo,
+          content: arquivo,
+          contentType: "application/pdf",
+        },
+      ],
+    })
+    return { success: true }
+  } catch (error) {
+    console.error("Erro no SMTP (lista de inscritos):", error)
+    return { success: false }
+  }
+}
