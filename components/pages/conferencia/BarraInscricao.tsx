@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CONFERENCE_DATES_SHORT, CONFERENCE_PRICE_LABEL } from "@/const"
+import { CHURCH_ADDRESS, CONFERENCE_DATES_SHORT } from "@/const"
 
 /**
  * A barra presa no pé da tela, do mockup. Só aparece depois que o herói sai de
@@ -27,7 +27,7 @@ export default function BarraInscricao() {
   return (
     <div className={visivel ? "presa on" : "presa"} aria-hidden={!visivel}>
       <div className="txt">
-        <b>{CONFERENCE_DATES_SHORT}</b> · {CONFERENCE_PRICE_LABEL} por adulto
+        <b>{CONFERENCE_DATES_SHORT}</b> · {CHURCH_ADDRESS.district}
       </div>
       <a className="bt" href="#inscricao" tabIndex={visivel ? 0 : -1}>
         Inscrever-me

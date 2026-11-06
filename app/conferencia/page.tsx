@@ -16,7 +16,6 @@ import {
   CONFERENCE_EDITION,
   CONFERENCE_LECTURES,
   CONFERENCE_PATH,
-  CONFERENCE_PRICE_LABEL,
   CONFERENCE_SCHEDULE,
   CONFERENCE_SPEAKERS,
   CONFERENCE_SUBTITLE,
@@ -26,7 +25,7 @@ import {
 import "./conferencia.css"
 
 /**
- * 2ª Conferência Reformada — a página do evento, com inscrição e Pix.
+ * 2ª Conferência Reformada — a página do evento, com a inscrição no topo.
  *
  * É a PORTA do mockup ~/Documentos/igreja/conferencia/MOCKUP-CONFERENCIA.html,
  * não uma releitura: o desenho, a marcação e os nomes de classe são os dele, e
@@ -48,6 +47,18 @@ import "./conferencia.css"
  * a moldura dourada atrás da foto do preletor e as fotos do local contando com
  * um <img> direto, e o <Image> do Next embrulharia tudo em outra caixa.
  *
+ * Duas decisões dele, de 05/11/2026, afastam esta página do mockup e são de
+ * propósito. A primeira: a inscrição é a PRIMEIRA seção depois do herói, e não
+ * a penúltima, porque quem chega pelo convite decide ali, antes de rolar a
+ * página inteira. O botão do herói continua existindo e desliza até ela, que
+ * está logo abaixo. A segunda: a página não fala de valor, de taxa nem de Pix
+ * em lugar nenhum, e os campos que existiam só por causa do pagamento saíram.
+ *
+ * O que NÃO mudou, e está FORA desta tela: o servidor continua calculando o
+ * valor, gerando o código do Pix e mandando o e-mail de confirmação com ele
+ * (app/actions/inscricao.ts, lib/pix.ts, lib/mail.ts), e o painel e a planilha
+ * continuam mostrando valor e pagamento. Isso não foi pedido e não foi tocado.
+ *
  * O que NÃO veio do mockup: a tarja de "mockup não publicado" com a lista do
  * que falta confirmar, que é conversa interna. Essa lista está em
  * docs/conferencia-inscricoes.md.
@@ -58,8 +69,8 @@ const MAPA_PINO = "-15.8343651,-48.0508161"
 
 const DESCRICAO =
   `${CONFERENCE_DATES_LABEL}, em ${CHURCH_ADDRESS.district}. Duas palestras no sábado ` +
-  `e a pregação do culto de domingo, sobre a doutrina da criação. Inscrição por ` +
-  `${CONFERENCE_PRICE_LABEL} por adulto, de 12 anos em diante.`
+  `e a pregação do culto de domingo, sobre a doutrina da criação. A inscrição é ` +
+  `aqui na página e leva menos de um minuto.`
 
 export const metadata: Metadata = {
   title: `${CONFERENCE_EDITION} · ${CONFERENCE_TITLE}`,
@@ -102,10 +113,6 @@ export default async function ConferenciaPage() {
             </span>
             <b>·</b>
             <span>{CONFERENCE_DATES_LABEL}</span>
-            <b>·</b>
-            <span>
-              {CONFERENCE_PRICE_LABEL} por adulto, a partir de 12 anos
-            </span>
           </div>
           <p className="nome-evento">{CONFERENCE_EDITION}</p>
           <h1>
@@ -115,8 +122,7 @@ export default async function ConferenciaPage() {
           <p className="publico">
             Duas palestras no sábado e a pregação do culto de domingo, sobre a
             doutrina da criação. Abertas a membros, visitantes e a quem tem
-            dúvidas sobre a fé. A inscrição é de {CONFERENCE_PRICE_LABEL} por
-            adulto, a partir de 12 anos, e crianças de até 11 anos não pagam.
+            dúvidas sobre a fé.
           </p>
           {/* Os dois dias com a hora, na primeira tela. Quem chega pelo
               convite decide pelo horário antes de ler qualquer outra coisa, e
@@ -152,6 +158,38 @@ export default async function ConferenciaPage() {
           </div>
         </div>
       </header>
+
+      <section className="secao inscricao" id="inscricao">
+        <div className="wrap">
+          {encerrada ? (
+            <>
+              <p className="olho">{CONFERENCE_CLOSED.olho}</p>
+              <h2 className="pergunta">{CONFERENCE_CLOSED.titulo}</h2>
+              <p className="resposta">{CONFERENCE_CLOSED.texto}</p>
+              <div className="botoes">
+                <a className="bt" href="/contato">
+                  {CONFERENCE_CLOSED.acao}
+                </a>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="olho">Inscrição</p>
+              <h2 className="pergunta">Preciso me inscrever para assistir?</h2>
+              <p className="resposta">
+                Sim, e leva menos de um minuto. É a inscrição que guarda o seu
+                lugar e o seu crachá, e é por ela que a igreja sabe quantas
+                pessoas preparar no café, no material e na estrutura dos dois
+                dias. Assim que você enviar, a confirmação aparece aqui na tela
+                e chega também no seu e-mail.
+              </p>
+              <InscricaoForm />
+            </>
+          )}
+        </div>
+      </section>
+
+      <hr className="linha-fina" />
 
       <section className="secao tema">
         <div className="wrap">
@@ -276,37 +314,6 @@ export default async function ConferenciaPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="secao inscricao" id="inscricao">
-        <div className="wrap">
-          {encerrada ? (
-            <>
-              <p className="olho">{CONFERENCE_CLOSED.olho}</p>
-              <h2 className="pergunta">{CONFERENCE_CLOSED.titulo}</h2>
-              <p className="resposta">{CONFERENCE_CLOSED.texto}</p>
-              <div className="botoes">
-                <a className="bt" href="/contato">
-                  {CONFERENCE_CLOSED.acao}
-                </a>
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="olho">Inscrição</p>
-              <h2 className="pergunta">Preciso me inscrever para assistir?</h2>
-              <p className="resposta">
-                Sim, e leva menos de um minuto. A inscrição custa{" "}
-                <b>{CONFERENCE_PRICE_LABEL} por adulto, a partir de 12 anos</b>,
-                um valor simbólico que ajuda no café, no material e na estrutura
-                dos dois dias. Crianças de até 11 anos não pagam nada. Assim que
-                você enviar, o Pix aparece aqui na tela com o valor já
-                calculado, e o mesmo código chega no seu e-mail.
-              </p>
-              <InscricaoForm />
-            </>
-          )}
         </div>
       </section>
 
